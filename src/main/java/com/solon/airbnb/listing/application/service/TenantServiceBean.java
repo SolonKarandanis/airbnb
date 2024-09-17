@@ -16,7 +16,7 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 public class TenantServiceBean implements TenantService{
 
-    
+
     @Override
     public Page<DisplayCardListingDTO> getAllByCategory(Pageable pageable, BookingCategory category) {
         return null;
