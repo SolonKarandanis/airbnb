@@ -1,5 +1,6 @@
 package com.solon.airbnb.user.domain;
 
+import com.solon.airbnb.shared.domain.AbstractAuditingEntity;
 import jakarta.persistence.*;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -10,7 +11,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "airbnb_user")
-public class User {
+public class User extends AbstractAuditingEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userSequenceGenerator")
@@ -39,7 +40,7 @@ public class User {
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "name")})
     private Set<Authority> authorities = new HashSet<>();
-    
+
     public Long getId() {
         return id;
     }
