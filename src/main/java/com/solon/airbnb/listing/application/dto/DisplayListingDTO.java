@@ -5,6 +5,7 @@ import com.solon.airbnb.listing.application.dto.sub.LandlordListingDTO;
 import com.solon.airbnb.listing.application.dto.sub.ListingInfoDTO;
 import com.solon.airbnb.listing.application.dto.sub.PictureDTO;
 import com.solon.airbnb.listing.application.dto.vo.PriceVO;
+import com.solon.airbnb.listing.domain.BookingCategory;
 
 import java.util.List;
 
