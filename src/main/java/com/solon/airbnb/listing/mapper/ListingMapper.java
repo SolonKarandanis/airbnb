@@ -1,9 +1,6 @@
 package com.solon.airbnb.listing.mapper;
 
-import com.solon.airbnb.listing.application.dto.DisplayCardListingDTO;
-import com.solon.airbnb.listing.application.dto.DisplayListingDTO;
-import com.solon.airbnb.listing.application.dto.ListingCreateBookingDTO;
-import com.solon.airbnb.listing.application.dto.SaveListingDTO;
+import com.solon.airbnb.listing.application.dto.*;
 import com.solon.airbnb.listing.application.dto.vo.PriceVO;
 import com.solon.airbnb.listing.domain.Listing;
 import org.mapstruct.Mapper;
