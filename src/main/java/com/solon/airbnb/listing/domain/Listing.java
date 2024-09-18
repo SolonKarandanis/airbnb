@@ -5,6 +5,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.UuidGenerator;
 
 import com.solon.airbnb.shared.domain.AbstractAuditingEntity;
@@ -32,6 +33,7 @@ public class Listing extends AbstractAuditingEntity<Long> implements UuidEntity{
     @Column(name = "id")
     private Long id;
 
+    @NaturalId
     @UuidGenerator
     @Column(name = "public_id", nullable = false)
     private UUID publicId;

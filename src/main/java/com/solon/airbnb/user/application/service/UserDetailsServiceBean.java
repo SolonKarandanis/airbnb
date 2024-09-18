@@ -12,7 +12,7 @@ import com.solon.airbnb.user.repository.UserRepository;
 
 @Service
 @Transactional(readOnly = true)
-public class UserDetailsServiceBean implements UserDetailsService{
+public class UserDetailsServiceBean extends BaseUserAccountServiceBean implements UserDetailsService{
 	
 	private final UserRepository userRepository;
 
