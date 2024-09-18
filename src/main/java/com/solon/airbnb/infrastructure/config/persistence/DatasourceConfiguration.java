@@ -36,7 +36,7 @@ import com.zaxxer.hikari.HikariDataSource;
         entityManagerFactoryRef = "airbnbManagerFactory",
         transactionManagerRef = "airbnbTransactionManager"
 )
-public class AirbnbDatasourceConfiguration {
+public class DatasourceConfiguration {
     
     @Bean
     @Primary
