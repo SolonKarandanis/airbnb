@@ -30,6 +30,12 @@ public class User extends AbstractAuditingEntity<Long> implements UuidEntity{
     @SequenceGenerator(name = "userSequenceGenerator", sequenceName = "user_generator", allocationSize = 1)
     @Column(name = "id")
     private Long id;
+    
+    @Column(name = "username")
+    private String username;
+
+    @Column(name = "password")
+    private String password;
 
     @Column(name = "last_name")
     private String lastName;
@@ -42,6 +48,9 @@ public class User extends AbstractAuditingEntity<Long> implements UuidEntity{
 
     @Column(name = "image_url")
     private String imageUrl;
+    
+    @Column(name = "status")
+    private AccountStatus status;
 
     @UuidGenerator
     @Column(name = "public_id", nullable = false)
@@ -112,7 +121,31 @@ public class User extends AbstractAuditingEntity<Long> implements UuidEntity{
     }
 
 
-    @Override
+    public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public AccountStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(AccountStatus status) {
+		this.status = status;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
