@@ -29,8 +29,11 @@
 	<properties>
 		<java.version>21</java.version>
 		<mapstruct.version>1.6.2</mapstruct.version>
+		<querydsl.version>5.0.0</querydsl.version>
 	</properties>
 	<dependencies>
+	
+		<!-- Spring Dependencies Start-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -48,21 +51,30 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.liquibase</groupId>
-			<artifactId>liquibase-core</artifactId>
-		</dependency>
-
-		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency>
+		<!-- Spring Dependencies End-->
+			
 		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<scope>runtime</scope>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+		</dependency>
+		
+		<!-- Utility Dependencies Start-->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -74,15 +86,27 @@
 			<version>${mapstruct.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
 		</dependency>
+		<!-- Utility Dependencies End-->
+		
+		<!-- QueryDSL Dependencies Start-->
 		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-test</artifactId>
-			<scope>test</scope>
-		</dependency>
+	        <groupId>com.querydsl</groupId>
+	        <artifactId>querydsl-apt</artifactId>
+	        <version>${querydsl.version}</version>
+	        <classifier>jakarta</classifier>
+	        <scope>provided</scope>
+	    </dependency>
+	    <dependency>
+	        <groupId>com.querydsl</groupId>
+	        <artifactId>querydsl-jpa</artifactId>
+	        <version>${querydsl.version}</version>
+	        <classifier>jakarta</classifier>
+	    </dependency>
+	    <!-- QueryDSL Dependencies End-->
 	</dependencies>
 
 	<build>
@@ -114,6 +138,14 @@
 						</path>
 					</annotationProcessorPaths>
 				</configuration>
+				<dependencies>
+	              <dependency>
+	                <groupId>com.querydsl</groupId>
+	                <artifactId>querydsl-apt</artifactId>
+	                <version>${querydsl.version}</version>
+	                <classifier>jakarta</classifier>
+	              </dependency>
+            	</dependencies>
 			</plugin>
 		</plugins>
 	</build>
