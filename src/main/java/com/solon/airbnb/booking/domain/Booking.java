@@ -1,16 +1,25 @@
 package com.solon.airbnb.booking.domain;
 
-import com.solon.airbnb.shared.domain.AbstractAuditingEntity;
-import jakarta.persistence.*;
-import org.hibernate.annotations.UuidGenerator;
-
 import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
+import org.hibernate.annotations.UuidGenerator;
+
+import com.solon.airbnb.shared.domain.AbstractAuditingEntity;
+import com.solon.airbnb.shared.domain.UuidEntity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+
 @Entity
 @Table(name = "booking")
-public class Booking extends AbstractAuditingEntity<Long> {
+public class Booking extends AbstractAuditingEntity<Long> implements UuidEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bookingSequenceGenerator")
@@ -29,10 +38,10 @@ public class Booking extends AbstractAuditingEntity<Long> {
     private OffsetDateTime endDate;
 
     @Column(name = "total_price", nullable = false)
-    private int totalPrice;
+    private Integer totalPrice;
 
     @Column(name = "nb_of_travelers", nullable = false)
-    private int numberOfTravelers;
+    private Integer numberOfTravelers;
 
     @Column(name = "fk_tenant", nullable = false)
     private UUID fkTenant;
@@ -49,7 +58,8 @@ public class Booking extends AbstractAuditingEntity<Long> {
         this.id = id;
     }
 
-    public UUID getPublicId() {
+    @Override
+	public UUID getPublicId() {
         return publicId;
     }
 
@@ -77,7 +87,7 @@ public class Booking extends AbstractAuditingEntity<Long> {
         return totalPrice;
     }
 
-    public void setTotalPrice(int totalPrice) {
+    public void setTotalPrice(Integer totalPrice) {
         this.totalPrice = totalPrice;
     }
 
@@ -85,7 +95,7 @@ public class Booking extends AbstractAuditingEntity<Long> {
         return numberOfTravelers;
     }
 
-    public void setNumberOfTravelers(int numberOfTravelers) {
+    public void setNumberOfTravelers(Integer numberOfTravelers) {
         this.numberOfTravelers = numberOfTravelers;
     }
 

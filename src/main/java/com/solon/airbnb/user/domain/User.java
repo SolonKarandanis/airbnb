@@ -1,17 +1,29 @@
 package com.solon.airbnb.user.domain;
 
-import com.solon.airbnb.shared.domain.AbstractAuditingEntity;
-import jakarta.persistence.*;
-import org.hibernate.annotations.UuidGenerator;
-
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+import org.hibernate.annotations.UuidGenerator;
+
+import com.solon.airbnb.shared.domain.AbstractAuditingEntity;
+import com.solon.airbnb.shared.domain.UuidEntity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+
 @Entity
 @Table(name = "airbnb_user")
-public class User extends AbstractAuditingEntity<Long> {
+public class User extends AbstractAuditingEntity<Long> implements UuidEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userSequenceGenerator")
@@ -41,7 +53,8 @@ public class User extends AbstractAuditingEntity<Long> {
             inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "name")})
     private Set<Authority> authorities = new HashSet<>();
 
-    public Long getId() {
+    @Override
+	public Long getId() {
         return id;
     }
 
@@ -81,7 +94,8 @@ public class User extends AbstractAuditingEntity<Long> {
         this.imageUrl = imageUrl;
     }
 
-    public UUID getPublicId() {
+    @Override
+	public UUID getPublicId() {
         return publicId;
     }
 

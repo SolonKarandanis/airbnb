@@ -1,17 +1,30 @@
 package com.solon.airbnb.listing.domain;
 
-import com.solon.airbnb.shared.domain.AbstractAuditingEntity;
-import jakarta.persistence.*;
-import org.hibernate.annotations.UuidGenerator;
-
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+import org.hibernate.annotations.UuidGenerator;
+
+import com.solon.airbnb.shared.domain.AbstractAuditingEntity;
+import com.solon.airbnb.shared.domain.UuidEntity;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+
 @Entity
 @Table(name = "listing")
-public class Listing extends AbstractAuditingEntity<Long> {
+public class Listing extends AbstractAuditingEntity<Long> implements UuidEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "listingSequenceGenerator")
@@ -30,16 +43,19 @@ public class Listing extends AbstractAuditingEntity<Long> {
     private String description;
 
     @Column(name = "guests")
-    private int guests;
+    private Integer guests;
+    
     @Column(name = "bedrooms")
-    private int bedrooms;
+    private Integer bedrooms;
+    
     @Column(name = "beds")
-    private int beds;
+    private Integer beds;
+    
     @Column(name = "bathrooms")
-    private int bathrooms;
+    private Integer bathrooms;
 
     @Column(name = "price")
-    private int price;
+    private Integer price;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category")
@@ -63,7 +79,8 @@ public class Listing extends AbstractAuditingEntity<Long> {
         this.id = id;
     }
 
-    public UUID getPublicId() {
+    @Override
+	public UUID getPublicId() {
         return publicId;
     }
 
@@ -91,7 +108,7 @@ public class Listing extends AbstractAuditingEntity<Long> {
         return guests;
     }
 
-    public void setGuests(int guests) {
+    public void setGuests(Integer guests) {
         this.guests = guests;
     }
 
@@ -99,7 +116,7 @@ public class Listing extends AbstractAuditingEntity<Long> {
         return bedrooms;
     }
 
-    public void setBedrooms(int bedrooms) {
+    public void setBedrooms(Integer bedrooms) {
         this.bedrooms = bedrooms;
     }
 
@@ -107,7 +124,7 @@ public class Listing extends AbstractAuditingEntity<Long> {
         return beds;
     }
 
-    public void setBeds(int beds) {
+    public void setBeds(Integer beds) {
         this.beds = beds;
     }
 
@@ -115,7 +132,7 @@ public class Listing extends AbstractAuditingEntity<Long> {
         return bathrooms;
     }
 
-    public void setBathrooms(int bathrooms) {
+    public void setBathrooms(Integer bathrooms) {
         this.bathrooms = bathrooms;
     }
 
@@ -123,7 +140,7 @@ public class Listing extends AbstractAuditingEntity<Long> {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 

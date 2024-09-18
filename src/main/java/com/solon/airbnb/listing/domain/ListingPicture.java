@@ -1,10 +1,20 @@
 package com.solon.airbnb.listing.domain;
 
-import com.solon.airbnb.shared.domain.AbstractAuditingEntity;
-import jakarta.persistence.*;
-
 import java.util.Arrays;
 import java.util.Objects;
+
+import com.solon.airbnb.shared.domain.AbstractAuditingEntity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "listing_picture")
@@ -28,7 +38,7 @@ public class ListingPicture extends AbstractAuditingEntity<Long> {
     private String fileContentType;
 
     @Column(name = "is_cover")
-    private boolean isCover;
+    private Boolean isCover;
 
     @Override
     public Long getId() {
@@ -63,11 +73,11 @@ public class ListingPicture extends AbstractAuditingEntity<Long> {
         this.fileContentType = fileContentType;
     }
 
-    public boolean isCover() {
+    public Boolean isCover() {
         return isCover;
     }
 
-    public void setCover(boolean cover) {
+    public void setCover(Boolean cover) {
         isCover = cover;
     }
 
