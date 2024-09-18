@@ -12,6 +12,7 @@ import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -19,6 +20,11 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.Assert;
 
+import com.solon.airbnb.booking.domain.Booking;
+import com.solon.airbnb.listing.domain.Listing;
+import com.solon.airbnb.listing.domain.ListingPicture;
+import com.solon.airbnb.user.domain.Authority;
+import com.solon.airbnb.user.domain.User;
 import com.zaxxer.hikari.HikariDataSource;
 
 /**
@@ -36,7 +42,16 @@ import com.zaxxer.hikari.HikariDataSource;
         entityManagerFactoryRef = "airbnbManagerFactory",
         transactionManagerRef = "airbnbTransactionManager"
 )
+@EnableJpaAuditing
 public class DatasourceConfiguration {
+	
+	public static final Class<?>[] ENTITY_CLASSES = {
+			User.class,
+			Authority.class,
+			Booking.class,
+			Listing.class,
+			ListingPicture.class
+	};
     
     @Bean
     @Primary
@@ -69,14 +84,14 @@ public class DatasourceConfiguration {
     public LocalContainerEntityManagerFactoryBean dutManagerFactory(EntityManagerFactoryBuilder builder){
         return builder
                 .dataSource(dutDatasource())
-                .packages("com.solon.dut.entity")
+                .packages(ENTITY_CLASSES)
                 .build();
     }
     
     @Primary
     @Bean
     public PlatformTransactionManager dutTransactionManager(
-            final @Qualifier("airbnbTransactionManager") LocalContainerEntityManagerFactoryBean dutManagerFactory
+            final @Qualifier("airbnbManagerFactory") LocalContainerEntityManagerFactoryBean dutManagerFactory
     ){
     	Assert.notNull(dutManagerFactory,"The class must not be null");
         return new JpaTransactionManager(dutManagerFactory.getObject());
