@@ -6,9 +6,13 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.solon.airbnb.user.application.dto.serializer.CustomAuthorityDeserializer;
 import com.solon.airbnb.user.domain.AccountStatus;
+import com.solon.airbnb.user.domain.Authority;
 
 
 public class UserDTO implements UserDetails{
@@ -24,9 +28,16 @@ public class UserDTO implements UserDetails{
 	private String imageUrl;
 	private UUID publicId;
 	private AccountStatus status;
-    private List<String> roleNames = new ArrayList<>();
+	private List<Authority> authorities= new ArrayList<>();
+    private List<String> authorityNames = new ArrayList<>();
     
-    
+    @JsonDeserialize(using = CustomAuthorityDeserializer.class)
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+    	 return authorities.stream()
+         		.map(role-> new SimpleGrantedAuthority(role.getName()))
+         		.toList();
+	}
     
     
 	public Long getId() {
@@ -84,23 +95,12 @@ public class UserDTO implements UserDetails{
 		this.status = status;
 	}
 	
-	public List<String> getRoleNames() {
-		return roleNames;
-	}
 	
-	public void setRoleNames(List<String> roleNames) {
-		this.roleNames = roleNames;
-	}
-	
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	@Override
 	public String getPassword() {
 		return password;
 	}
+	
 	@Override
 	public String getUsername() {
 		return username;
@@ -112,6 +112,17 @@ public class UserDTO implements UserDetails{
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	public List<String> getAuthorityNames() {
+		return authorityNames;
+	}
+	public void setAuthorityNames(List<String> authorityNames) {
+		this.authorityNames = authorityNames;
+	}
+	public void setAuthorities(List<Authority> authorities) {
+		this.authorities = authorities;
+	}
+	
+	
     
     
 }
