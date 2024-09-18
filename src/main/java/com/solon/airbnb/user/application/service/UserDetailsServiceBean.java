@@ -6,7 +6,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.solon.airbnb.user.application.dto.UserDTO;
+import com.solon.airbnb.user.domain.User;
 import com.solon.airbnb.user.repository.UserRepository;
+
 
 
 
@@ -22,8 +25,14 @@ public class UserDetailsServiceBean extends BaseUserAccountServiceBean implement
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		// TODO Auto-generated method stub
-		return null;
+		return userRepository
+                .findByUsername(username)
+                .map(this::createSpringSecurityUser)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 	}
+	
+	private UserDTO createSpringSecurityUser(User user) {
+		return convertToDTO(user,true);
+    }
 
 }
