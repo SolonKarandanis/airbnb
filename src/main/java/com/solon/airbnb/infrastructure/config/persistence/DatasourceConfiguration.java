@@ -45,7 +45,7 @@ import com.zaxxer.hikari.HikariDataSource;
 @EnableJpaAuditing
 public class DatasourceConfiguration {
 	
-	public static final Class<?>[] ENTITY_CLASSES = {
+	protected static final Class<?>[] ENTITY_CLASSES = {
 			User.class,
 			Authority.class,
 			Booking.class,
@@ -89,7 +89,7 @@ public class DatasourceConfiguration {
     }
     
     @Primary
-    @Bean
+    @Bean(name = "airbnbTransactionManager")
     public PlatformTransactionManager dutTransactionManager(
             final @Qualifier("airbnbManagerFactory") LocalContainerEntityManagerFactoryBean dutManagerFactory
     ){

@@ -6,13 +6,23 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.solon.airbnb.infrastructure.component.RequestMatcherBuilder;
 import com.solon.airbnb.user.domain.Authority;
 import com.solon.airbnb.user.repository.AuthorityRepository;
+
 
 @Configuration
 @EnableWebSecurity
@@ -27,6 +37,26 @@ public class WebSecurityConfiguration {
         this.jwtAuthFilter=jwtAuthFilter;
         this.authorityRepository=authorityRepository;
     }
+	
+	@Bean
+    public SecurityFilterChain configure(HttpSecurity httpSecurity, RequestMatcherBuilder mvc) throws Exception {
+		httpSecurity
+		.csrf(AbstractHttpConfigurer::disable)
+        .cors(c->c.configurationSource(corsConfigurationSource()))
+        .authorizeHttpRequests(auth-> auth
+                .requestMatchers(mvc.matchers(SecurityConstants.AUTH_WHITELIST)).permitAll()
+                .requestMatchers(mvc.pattern(HttpMethod.POST, "/authenticate")).permitAll()
+                .anyRequest()
+                .hasAnyAuthority(getAuthorityNames())
+        )
+        .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+        .sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .exceptionHandling(ex -> 
+        	ex.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+        		.accessDeniedHandler(new CustomAccessDeniedHandler())
+        );
+		return httpSecurity.build();
+	}
 	
 	@Bean
     CorsConfigurationSource corsConfigurationSource() {
