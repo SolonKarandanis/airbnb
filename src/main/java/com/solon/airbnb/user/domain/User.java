@@ -6,25 +6,42 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UuidGenerator;
+import org.hibernate.jdbc.Expectation.RowCount;
 
 import com.solon.airbnb.shared.domain.AbstractAuditingEntity;
 import com.solon.airbnb.shared.domain.UuidEntity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
+
+
+@SQLDelete(
+        sql = "UPDATE Users SET status='0' WHERE username=?",
+        verify = RowCount.class
+)
+@NamedEntityGraph(name = User.GRAPH_USERS_AUTHORITIES,
+	attributeNodes = @NamedAttributeNode("authorities")
+)
 @Entity
 @Table(name = "airbnb_user")
 public class User extends AbstractAuditingEntity<Long> implements UuidEntity{
+	
+	public static final String GRAPH_USERS_AUTHORITIES="graph.users.authorities";
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userSequenceGenerator")
@@ -60,7 +77,10 @@ public class User extends AbstractAuditingEntity<Long> implements UuidEntity{
     @Column(name = "public_id", nullable = false)
     private UUID publicId;
 
-    @ManyToMany
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    },fetch = FetchType.LAZY)
     @JoinTable(name = "user_authority",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "name")})
