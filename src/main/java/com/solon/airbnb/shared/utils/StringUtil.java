@@ -36,17 +36,17 @@ import java.util.StringTokenizer;
 import java.util.TimeZone;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
-import lombok.extern.slf4j.Slf4j;
 
 
 
 
-
-@Slf4j
 public abstract class StringUtil {
+	static Logger log = LoggerFactory.getLogger(StringUtil.class);
 
     private static final long serialVersionUID = 1L;
     private static StringBuffer strb;
