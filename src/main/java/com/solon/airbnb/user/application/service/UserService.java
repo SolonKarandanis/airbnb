@@ -1,7 +1,7 @@
 package com.solon.airbnb.user.application.service;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,8 +15,10 @@ import com.solon.airbnb.user.domain.User;
 
 public interface UserService{
 
-    public Optional<ReadUserDTO> getByEmail(String email);
-    public Optional<ReadUserDTO> getByPublicId(UUID publicId);
+	public User findById(Long id) throws NotFoundException;
+	public List<User> findAllUsers();
+    public Optional<ReadUserDTO> getByEmail(String email)throws NotFoundException;
+    public Optional<ReadUserDTO> getByPublicId(String publicId)throws NotFoundException;
     public void deleteUser(String uuid) throws NotFoundException;
     public Page<User> findAllUsers(UsersSearchRequestDTO searchObj,Pageable page);
     public User createUser(UserInputDTO dto) throws NotFoundException;

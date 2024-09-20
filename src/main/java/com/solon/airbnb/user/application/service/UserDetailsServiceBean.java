@@ -1,5 +1,6 @@
 package com.solon.airbnb.user.application.service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -64,15 +65,27 @@ public class UserDetailsServiceBean extends BaseUserAccountServiceBean implement
     }
 
 	@Override
-	public Optional<ReadUserDTO> getByEmail(String email) {
+	public Optional<ReadUserDTO> getByEmail(String email) throws NotFoundException{
 		Optional<User> oneByEmail = userRepository.findOneByEmail(email);
 		return oneByEmail.map(userMapper::readUserDTOToUser);
 	}
 
 	@Override
-	public Optional<ReadUserDTO> getByPublicId(UUID publicId) {
-		Optional<User> oneByPublicId = userRepository.findOneByPublicId(publicId);
+	public Optional<ReadUserDTO> getByPublicId(String publicId) throws NotFoundException{
+		Optional<User> oneByPublicId = userRepository.findOneByPublicId(UUID.fromString(publicId));
 		return oneByPublicId.map(userMapper::readUserDTOToUser);
+	}
+	
+	@Override
+	public User findById(Long id) throws NotFoundException {
+		return userRepository.findById(id)
+				.orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+	}
+	
+	@Override
+	public List<User> findAllUsers() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Transactional
