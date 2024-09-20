@@ -96,6 +96,19 @@
             <version>0.23.0</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
+		<dependency>
+	        <groupId>org.apache.httpcomponents.client5</groupId>
+	        <artifactId>httpclient5</artifactId>
+	    </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20220320</version>
+        </dependency>
 		<!-- Utility Dependencies End-->
 		
 		<!-- JWT Dependencies Start-->

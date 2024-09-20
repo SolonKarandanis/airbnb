@@ -3,7 +3,9 @@ package com.solon.airbnb.shared.exception;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.solon.dut.common.utils.MiscUtil;
+import com.solon.airbnb.shared.utils.MiscUtil;
+
+
 
 /**
  * Entry point exception, with localized messages and unique id generation

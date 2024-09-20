@@ -36,8 +36,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.solon.dut.common.DutConstants;
-import com.solon.dut.common.utils.StringUtil;
+import com.solon.airbnb.shared.common.AirbnbConstants;
+import com.solon.airbnb.shared.utils.StringUtil;
 
 import jakarta.validation.ConstraintViolationException;
 
@@ -240,7 +240,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      * @return
      */
     private Locale getRequestLocale(final WebRequest request) {
-        String langIsoCode = request.getHeader(DutConstants.HEADER_NAME_LANGUAGE_ISO);
+        String langIsoCode = request.getHeader(AirbnbConstants.HEADER_NAME_LANGUAGE_ISO);
         LOG.debug(" Header Language IsoCode: {} ", langIsoCode);
         return (StringUtil.hasLength(langIsoCode)) ? new Locale(langIsoCode) : Locale.ENGLISH;
     }
