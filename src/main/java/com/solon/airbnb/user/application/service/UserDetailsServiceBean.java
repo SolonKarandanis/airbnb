@@ -19,6 +19,7 @@ import com.solon.airbnb.user.application.dto.UserDTO;
 import com.solon.airbnb.user.application.dto.UserInputDTO;
 import com.solon.airbnb.user.application.dto.UsersSearchRequestDTO;
 import com.solon.airbnb.user.domain.User;
+import com.solon.airbnb.user.repository.AuthorityRepository;
 import com.solon.airbnb.user.repository.UserRepository;
 
 
@@ -31,9 +32,11 @@ public class UserDetailsServiceBean extends BaseUserAccountServiceBean implement
 	private static final Logger log = LoggerFactory.getLogger(UserDetailsServiceBean.class);
 	
 	private final UserRepository userRepository;
+	private final AuthorityRepository authorityRepository;
 
-    public UserDetailsServiceBean(UserRepository userRepository) {
+    public UserDetailsServiceBean(UserRepository userRepository,AuthorityRepository authorityRepository) {
         this.userRepository = userRepository;
+        this.authorityRepository = authorityRepository;
     }
 
 	@Override
@@ -60,6 +63,7 @@ public class UserDetailsServiceBean extends BaseUserAccountServiceBean implement
 		return null;
 	}
 
+	@Transactional
 	@Override
 	public void deleteUser(String uuid) throws NotFoundException {
 		// TODO Auto-generated method stub
@@ -72,12 +76,14 @@ public class UserDetailsServiceBean extends BaseUserAccountServiceBean implement
 		return null;
 	}
 
+	@Transactional
 	@Override
 	public User createUser(UserInputDTO dto) throws NotFoundException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Transactional
 	@Override
 	public User updateUser(UserInputDTO dto) throws NotFoundException {
 		// TODO Auto-generated method stub
