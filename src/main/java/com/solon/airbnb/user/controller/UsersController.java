@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -52,8 +53,14 @@ public class UsersController extends GenericController{
 	 }
 	 
 	 @GetMapping("/{id}")
-	 public ResponseEntity<ReadUserDTO> viewUser(@PathVariable(required=true) String id) throws NotFoundException{
-		 return ResponseEntity.ok(getUserDTOByPublicId(id));
+	 public ResponseEntity<ReadUserDTO> viewUser(@PathVariable(name= "id", required=true) String publicId) throws NotFoundException{
+		 return ResponseEntity.ok(getUserDTOByPublicId(publicId));
+	 }
+	 
+	 @GetMapping(value="/account")
+	 public ResponseEntity<ReadUserDTO> getUserByToken(Authentication authentication) throws NotFoundException{
+		 String publicId = getLoggedInUserUUID(authentication);
+		 return ResponseEntity.ok(getUserDTOByPublicId(publicId));
 	 }
 
 }
