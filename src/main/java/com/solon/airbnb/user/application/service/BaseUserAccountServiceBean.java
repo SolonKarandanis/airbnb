@@ -59,4 +59,9 @@ public class BaseUserAccountServiceBean extends GenericServiceBean implements Ba
 				.toList();
 	}
 
+	@Override
+	public ReadUserDTO convertToReadUserDTO(User user) {
+		return userMapper.readUserDTOToUser(user);
+	}
+
 }
