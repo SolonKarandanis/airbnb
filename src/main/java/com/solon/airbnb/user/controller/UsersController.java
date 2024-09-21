@@ -5,16 +5,24 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.solon.airbnb.shared.controller.GenericController;
+import com.solon.airbnb.shared.dto.SearchResults;
+import com.solon.airbnb.user.application.dto.ReadUserDTO;
+import com.solon.airbnb.user.application.dto.UsersSearchRequestDTO;
 import com.solon.airbnb.user.application.utils.UserExcelExportUtils;
 import com.solon.airbnb.user.domain.User;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 
 @PreAuthorize("isAuthenticated()")
 @RestController
@@ -33,5 +41,12 @@ public class UsersController extends GenericController{
         List<User> allUsers = usersService.findAllUsers();
         UserExcelExportUtils exportUtils = new UserExcelExportUtils(allUsers);
     }
+	
+	 @PostMapping("/search")
+	 public ResponseEntity<SearchResults<ReadUserDTO>> findAllUsers(@RequestBody @Valid UsersSearchRequestDTO searchObj){
+		 Page<User> results = usersService.findAllUsers(searchObj);
+		 List<ReadUserDTO> dtos = usersService.convertToReadUserListDTO(results.getContent());
+		 return ResponseEntity.ok().body(new SearchResults<ReadUserDTO>(Math.toIntExact(results.getTotalElements()), dtos));
+	 }
 
 }

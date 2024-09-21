@@ -2,14 +2,20 @@ package com.solon.airbnb.user.application.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.solon.airbnb.shared.service.GenericServiceBean;
+import com.solon.airbnb.user.application.dto.ReadUserDTO;
 import com.solon.airbnb.user.application.dto.UserDTO;
 import com.solon.airbnb.user.domain.User;
+import com.solon.airbnb.user.mapper.UserMapper;
 
 @Service(value="BaseUserAccountService")
 public class BaseUserAccountServiceBean extends GenericServiceBean implements BaseUserAccountService{
+	
+	@Autowired
+	protected UserMapper userMapper;
 
 	@Override
 	public UserDTO convertToDTO(User user, boolean addAuthorities) {
@@ -44,6 +50,13 @@ public class BaseUserAccountServiceBean extends GenericServiceBean implements Ba
 		return userList.stream()
                 .map(user-> convertToDTO(user,addAuthorities))
                 .toList();
+	}
+
+	@Override
+	public List<ReadUserDTO> convertToReadUserListDTO(List<User> userList) {
+		return userList.stream()
+				.map(userMapper::readUserDTOToUser)
+				.toList();
 	}
 
 }

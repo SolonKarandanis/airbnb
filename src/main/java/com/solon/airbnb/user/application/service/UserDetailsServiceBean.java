@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,7 +22,6 @@ import com.solon.airbnb.user.application.dto.UserInputDTO;
 import com.solon.airbnb.user.application.dto.UsersSearchRequestDTO;
 import com.solon.airbnb.user.domain.AccountStatus;
 import com.solon.airbnb.user.domain.User;
-import com.solon.airbnb.user.mapper.UserMapper;
 import com.solon.airbnb.user.repository.AuthorityRepository;
 import com.solon.airbnb.user.repository.UserRepository;
 import com.solon.airbnb.user.repository.UsersSpecification;
@@ -41,15 +40,12 @@ public class UserDetailsServiceBean extends BaseUserAccountServiceBean implement
 	
 	private final UserRepository userRepository;
 	private final AuthorityRepository authorityRepository;
-	private final UserMapper userMapper;
 
     public UserDetailsServiceBean(
     		UserRepository userRepository,
-    		AuthorityRepository authorityRepository,
-    		UserMapper userMapper) {
+    		AuthorityRepository authorityRepository) {
         this.userRepository = userRepository;
         this.authorityRepository = authorityRepository;
-        this.userMapper = userMapper;
     }
 
 	@Override
@@ -84,8 +80,7 @@ public class UserDetailsServiceBean extends BaseUserAccountServiceBean implement
 	
 	@Override
 	public List<User> findAllUsers() {
-		// TODO Auto-generated method stub
-		return null;
+		return userRepository.findAll();
 	}
 
 	@Transactional
@@ -100,12 +95,14 @@ public class UserDetailsServiceBean extends BaseUserAccountServiceBean implement
 	}
 
 	@Override
-	public Page<User> findAllUsers(UsersSearchRequestDTO searchObj, Pageable page) {
+	public Page<User> findAllUsers(UsersSearchRequestDTO searchObj) {
 		User user = new User();
     	BeanUtils.copyProperties(searchObj, user);
     	user.setStatus(AccountStatus.valueOf(searchObj.getStatus()));
-    	return  userRepository.findAll( new UsersSpecification(user),page);
+    	PageRequest pageRequest = toPageRequest(searchObj.getPaging())	;
+    	return  userRepository.findAll( new UsersSpecification(user),pageRequest);
 	}
+	
 
 	@Transactional
 	@Override
