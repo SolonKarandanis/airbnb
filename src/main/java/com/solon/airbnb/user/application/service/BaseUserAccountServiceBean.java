@@ -13,6 +13,8 @@ import com.solon.airbnb.user.mapper.UserMapper;
 
 @Service(value="BaseUserAccountService")
 public class BaseUserAccountServiceBean extends GenericServiceBean implements BaseUserAccountService{
+
+	protected static final String USER_NOT_FOUND="User not found";
 	
 	@Autowired
 	protected UserMapper userMapper;
