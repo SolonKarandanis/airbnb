@@ -59,7 +59,7 @@ public class JwtServiceBean implements JwtService{
 		        .claim("email", user.getEmail())
 		        .claim("publicId", user.getPublicId())
 		        .claim("status", user.getStatus())
-		        .claim("authorities", user.getAuthorityNames())
+		        .claim("authorities", user.getAuthorities().stream().toList())
 		        .subject(user.getUsername())
 		        .issuedAt(new Date(System.currentTimeMillis()))
 		        .expiration(expireDate)	        
