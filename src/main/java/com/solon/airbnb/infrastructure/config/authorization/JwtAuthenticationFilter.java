@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.solon.airbnb.user.application.dto.UserDTO;
-import com.solon.airbnb.user.application.service.AuthService;
 import com.solon.airbnb.user.application.service.JwtService;
 import com.solon.airbnb.user.domain.AccountStatus;
 
@@ -27,9 +27,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 
 	@Autowired
 	private JwtService jwtService;
-	
-	@Autowired
-	private AuthService authService;
+
 	
 	@Override
 	protected void doFilterInternal(
@@ -47,9 +45,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 	    jwt = authHeader.substring(SecurityConstants.BEARER_TOKEN_PREFIX.length());
 	    username = jwtService.extractUsername(jwt);
 	    
-	    if (username != null && authService.getAuthContext() == null) {
+	    if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 	    	UsernamePasswordAuthenticationToken authToken = getAuthentication(request,jwt);
-	    	authService.setAuthentication(authToken);
+			SecurityContextHolder.getContext().setAuthentication(authToken);
 	    	filterChain.doFilter(request, response);
 	    }
 		

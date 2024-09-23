@@ -30,7 +30,7 @@ public class BaseUserAccountServiceBean extends GenericServiceBean implements Ba
 		dto.setPublicId(user.getPublicId());
 		dto.setStatus(user.getStatus());
 		if(addAuthorities) {
-			dto.setAuthorities(user.getAuthorities().stream().toList());
+			dto.setAuthorityEntities(user.getAuthorities().stream().toList());
 		}
 		return dto;
 	}

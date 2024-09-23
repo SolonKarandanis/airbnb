@@ -28,13 +28,13 @@ public class UserDTO implements UserDetails{
 	private String imageUrl;
 	private UUID publicId;
 	private AccountStatus status;
-	private List<Authority> authorities= new ArrayList<>();
+	private List<Authority> authorityEntities= new ArrayList<>();
     private List<String> authorityNames = new ArrayList<>();
     
     @JsonDeserialize(using = CustomAuthorityDeserializer.class)
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-    	 return authorities.stream()
+    	 return authorityEntities.stream()
          		.map(role-> new SimpleGrantedAuthority(role.getName()))
          		.toList();
 	}
@@ -118,11 +118,12 @@ public class UserDTO implements UserDetails{
 	public void setAuthorityNames(List<String> authorityNames) {
 		this.authorityNames = authorityNames;
 	}
-	public void setAuthorities(List<Authority> authorities) {
-		this.authorities = authorities;
+
+	public List<Authority> getAuthorityEntities() {
+		return authorityEntities;
 	}
-	
-	
-    
-    
+
+	public void setAuthorityEntities(List<Authority> authorityEntities) {
+		this.authorityEntities = authorityEntities;
+	}
 }

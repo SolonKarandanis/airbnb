@@ -54,7 +54,6 @@ public class JwtServiceBean implements JwtService{
 		String token = Jwts
 		        .builder()
 		        .claim("username", user.getUsername())
-		        .claim("password", user.getPassword())
 		        .claim("firstName", user.getFirstName())
 		        .claim("lastName", user.getLastName())
 		        .claim("email", user.getEmail())
@@ -97,6 +96,6 @@ public class JwtServiceBean implements JwtService{
     }
 	
 	private SecretKey getSecretKey() {
-		return Keys.hmacShaKeyFor(Decoders.BASE64.decode(signKey));
+		return Keys.hmacShaKeyFor(signKey.getBytes());
 	}
 }

@@ -15,7 +15,7 @@ import com.solon.airbnb.user.application.dto.UserDTO;
 @Service
 public class AuthServiceBean extends GenericServiceBean implements AuthService{
 	
-private final AuthenticationManager authenticationManager;
+	private final AuthenticationManager authenticationManager;
 	
 	public AuthServiceBean(AuthenticationManager authenticationManager) {
 		this.authenticationManager=authenticationManager;
