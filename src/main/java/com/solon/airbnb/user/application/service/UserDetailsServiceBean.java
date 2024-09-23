@@ -107,9 +107,12 @@ public class UserDetailsServiceBean extends BaseUserAccountServiceBean implement
 	@Transactional
 	@Override
 	public User createUser(UserInputDTO dto) throws NotFoundException {
-		User user  = userRepository
-                .findByUsername(dto.getUsername())
-                .orElseThrow(() -> new NotFoundException("User already exists with that username"));	
+		Optional<User> userMaybe  = userRepository.findByUsername(dto.getUsername());
+
+		if(userMaybe.isPresent()){
+			throw new NotFoundException("User already exists with that username");
+		}
+		User user = new User();
 		user.setUsername(dto.getUsername());
         user.setPassword(dto.getPassword());
         user.setFirstName(dto.getFirstName());
