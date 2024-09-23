@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.solon.airbnb.user.application.dto.UserDTO;
 import com.solon.airbnb.user.domain.User;
-import com.solon.airbnb.user.repository.AuthorityRepository;
 import com.solon.airbnb.user.repository.UserRepository;
 
 
@@ -26,15 +25,12 @@ public class UserDetailsServiceBean extends BaseUserAccountServiceBean implement
 	private static final String USER_NOT_FOUND="User not found";
 	
 	private final UserRepository userRepository;
-	private final AuthorityRepository authorityRepository;
 	
 
     public UserDetailsServiceBean(
-    		UserRepository userRepository,
-    		AuthorityRepository authorityRepository
+    		UserRepository userRepository
 	) {
         this.userRepository = userRepository;
-        this.authorityRepository = authorityRepository;
     }
 
 	@Override
