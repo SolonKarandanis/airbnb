@@ -43,19 +43,6 @@ public class UserInputDTO {
     @Size(min = 1, max = 150, message = "{user.email.size}")
     private String email;
     
-    @NotNull(message = "{user.phone.notNull}")
-    @Size(min = 1, max = 30, message = "{user.phone.size}")
-    private String phone;
-    
-    @Size(min = 1, max = 30, message = "{user.fax.size}")
-    private String fax;
-    
-    @Size(min = 1, max = 50, message = "{user.firstNameEn.size}")
-    private String firstNameEn;
-    
-    @Size(min = 1, max = 50, message = "{user.lastNameEn.size}")
-    private String lastNameEn;
-    
     @NotNull(message = "{user.status.notNull}")
     private String status;
 
@@ -97,38 +84,6 @@ public class UserInputDTO {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
-	public String getFax() {
-		return fax;
-	}
-
-	public void setFax(String fax) {
-		this.fax = fax;
-	}
-
-	public String getFirstNameEn() {
-		return firstNameEn;
-	}
-
-	public void setFirstNameEn(String firstNameEn) {
-		this.firstNameEn = firstNameEn;
-	}
-
-	public String getLastNameEn() {
-		return lastNameEn;
-	}
-
-	public void setLastNameEn(String lastNameEn) {
-		this.lastNameEn = lastNameEn;
 	}
 
 	public String getStatus() {

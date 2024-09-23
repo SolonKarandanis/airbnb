@@ -46,6 +46,7 @@ public class WebSecurityConfiguration {
         .authorizeHttpRequests(auth-> auth
                 .requestMatchers(mvc.matchers(SecurityConstants.AUTH_WHITELIST)).permitAll()
                 .requestMatchers(mvc.pattern(HttpMethod.POST, "/authenticate")).permitAll()
+//                .requestMatchers(mvc.pattern(HttpMethod.POST, "/users")).permitAll()
                 .anyRequest()
                 .hasAnyAuthority(getAuthorityNames())
         )
