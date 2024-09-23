@@ -3,6 +3,7 @@ package com.solon.airbnb.infrastructure.config.authorization;
 import java.util.Arrays;
 import java.util.List;
 
+import com.solon.airbnb.infrastructure.security.NoAuthenticationRequestMatcher;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -32,10 +34,15 @@ public class WebSecurityConfiguration {
     private String signKey;
 	private final JwtAuthenticationFilter jwtAuthFilter;
 	private final AuthorityRepository authorityRepository;
+    private final NoAuthenticationRequestMatcher noAuthenticationRequestMatcher;
 	
-	public WebSecurityConfiguration(JwtAuthenticationFilter jwtAuthFilter,AuthorityRepository authorityRepository) {
+	public WebSecurityConfiguration(
+            JwtAuthenticationFilter jwtAuthFilter,
+            AuthorityRepository authorityRepository,
+            NoAuthenticationRequestMatcher noAuthenticationRequestMatcher) {
         this.jwtAuthFilter=jwtAuthFilter;
         this.authorityRepository=authorityRepository;
+        this.noAuthenticationRequestMatcher=noAuthenticationRequestMatcher;
     }
 	
 	@Bean
@@ -60,7 +67,7 @@ public class WebSecurityConfiguration {
 	}
 	
 	@Bean
-    CorsConfigurationSource corsConfigurationSource() {
+    public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOriginPatterns(Arrays.asList(SecurityConstants.ALLOWED_ORIGIN_PATTERNS));
         configuration.setAllowedMethods(Arrays.asList(SecurityConstants.ALLOWED_METHODS));
@@ -83,6 +90,11 @@ public class WebSecurityConfiguration {
         }
 
         return authorityNamesArr;
+    }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer(){
+        return web -> web.ignoring().requestMatchers(noAuthenticationRequestMatcher);
     }
 
 }

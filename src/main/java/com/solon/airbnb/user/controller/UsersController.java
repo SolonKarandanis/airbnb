@@ -3,6 +3,7 @@ package com.solon.airbnb.user.controller;
 import java.io.IOException;
 import java.util.List;
 
+import com.solon.airbnb.infrastructure.security.NoAuthentication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -67,7 +68,8 @@ public class UsersController extends GenericController{
 		 String publicId = getLoggedInUserUUID(authentication);
 		 return ResponseEntity.ok(getUserDTOByPublicId(publicId));
 	 }
-	 
+
+	 @NoAuthentication
 	 @PostMapping
 	 public ResponseEntity<ReadUserDTO> saveUser(@RequestBody @Valid UserInputDTO user) throws NotFoundException{
 		 log.info("UsersController->saveUser->RequestBody: {}" , user);
