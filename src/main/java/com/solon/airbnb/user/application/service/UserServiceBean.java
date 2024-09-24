@@ -13,7 +13,6 @@ import com.solon.airbnb.user.domain.VerificationToken;
 import com.solon.airbnb.user.repository.AuthorityRepository;
 import com.solon.airbnb.user.repository.UserRepository;
 import com.solon.airbnb.user.repository.UsersSpecification;
-import com.solon.airbnb.user.repository.VerificationTokenRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -36,17 +35,17 @@ public class UserServiceBean extends BaseUserAccountServiceBean implements UserS
 
     private final UserRepository userRepository;
     private final AuthorityRepository authorityRepository;
-    private final VerificationTokenRepository tokenRepository;
+    private final VerificationTokenService verificationTokenService;
     private final PasswordEncoder passwordEncoder;
 
     public UserServiceBean(
             UserRepository userRepository,
             AuthorityRepository authorityRepository,
-            VerificationTokenRepository tokenRepository,
+            VerificationTokenService verificationTokenService,
             PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.authorityRepository = authorityRepository;
-        this.tokenRepository = tokenRepository;
+        this.verificationTokenService = verificationTokenService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -135,9 +134,12 @@ public class UserServiceBean extends BaseUserAccountServiceBean implements UserS
 
     @Override
     public void verifyEmail(String token) throws BusinessException {
-        VerificationToken theToken = tokenRepository.findByToken(token);
-        if(theToken.getUser().getVerified()){
-            throw new BusinessException("error.user.already.verified");
+        VerificationToken verificationToken = verificationTokenService.findByToken(token);
+        Boolean verificationResult = verificationTokenService.validateToken(verificationToken);
+        if(verificationResult){
+            User user = verificationToken.getUser();
+            user.setVerified(Boolean.TRUE);
+            userRepository.save(user);
         }
     }
 }
