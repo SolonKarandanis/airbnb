@@ -84,7 +84,7 @@ public class UserServiceBean extends BaseUserAccountServiceBean implements UserS
 
     @Transactional
     @Override
-    public User createUser(UserInputDTO dto) throws NotFoundException {
+    public User registerUser(UserInputDTO dto) throws NotFoundException {
         Optional<User> userMaybe  = userRepository.findByUsername(dto.getUsername());
 
         if(userMaybe.isPresent()){

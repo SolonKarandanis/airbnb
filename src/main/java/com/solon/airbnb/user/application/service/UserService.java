@@ -20,6 +20,6 @@ public interface UserService extends BaseUserAccountService{
     public Optional<ReadUserDTO> getByPublicId(String publicId)throws NotFoundException;
     public void deleteUser(String uuid) throws NotFoundException;
     public Page<User> findAllUsers(UsersSearchRequestDTO searchObj);
-    public User createUser(UserInputDTO dto) throws NotFoundException;
+    public User registerUser(UserInputDTO dto) throws NotFoundException;
     public User updateUser(UserInputDTO dto) throws NotFoundException;
 }

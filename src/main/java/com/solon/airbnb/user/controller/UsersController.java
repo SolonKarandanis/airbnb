@@ -71,9 +71,9 @@ public class UsersController extends GenericController{
 
 	 @NoAuthentication
 	 @PostMapping
-	 public ResponseEntity<ReadUserDTO> saveUser(@RequestBody @Valid UserInputDTO user) throws NotFoundException{
-		 log.info("UsersController->saveUser->RequestBody: {}" , user);
-		 User userSaved=usersService.createUser(user);
+	 public ResponseEntity<ReadUserDTO> registerUser(@RequestBody @Valid UserInputDTO user) throws NotFoundException{
+		 log.info("UsersController->registerUser->RequestBody: {}" , user);
+		 User userSaved=usersService.registerUser(user);
 		 ReadUserDTO dto = usersService.convertToReadUserDTO(userSaved);
 		 return ResponseEntity.ok(dto);
 	 }
