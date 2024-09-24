@@ -132,6 +132,7 @@ public class UserServiceBean extends BaseUserAccountServiceBean implements UserS
         return userRepository.save(user);
     }
 
+    @Transactional
     @Override
     public void verifyEmail(String token) throws BusinessException {
         VerificationToken verificationToken = verificationTokenService.findByToken(token);

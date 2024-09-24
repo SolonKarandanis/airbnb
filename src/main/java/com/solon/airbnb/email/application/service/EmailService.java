@@ -2,6 +2,7 @@ package com.solon.airbnb.email.application.service;
 
 import com.solon.airbnb.email.application.dto.EmailDTO;
 import com.solon.airbnb.email.domain.Email;
+import com.solon.airbnb.email.domain.EmailStatus;
 import com.solon.airbnb.email.domain.EmailType;
 import com.solon.airbnb.shared.exception.AirbnbException;
 
@@ -70,7 +71,7 @@ public interface EmailService {
     /**
      * Saves the email in the database.
      */
-    Integer saveEmail(Email email, String status) throws AirbnbException;
+    Integer saveEmail(Email email, EmailStatus status) throws AirbnbException;
 
     public EmailDTO convertToDTO(Email email, Boolean withMsgBody);
 

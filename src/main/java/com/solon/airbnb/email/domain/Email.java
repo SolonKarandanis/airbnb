@@ -9,10 +9,6 @@ import java.util.List;
 @Table(name = "emails")
 public class Email {
 
-    public static final String STATUS_PENDING = "PENDING";
-    public static final String STATUS_FAILED = "FAILED";
-    public static final String STATUS_SENT = "SENT";
-
     @Id
     @SequenceGenerator(name = "EMAILS_ID_GENERATOR", sequenceName = "email_generator", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EMAILS_ID_GENERATOR")

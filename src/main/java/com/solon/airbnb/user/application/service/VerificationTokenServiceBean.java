@@ -1,6 +1,7 @@
 package com.solon.airbnb.user.application.service;
 
 import com.solon.airbnb.shared.exception.BusinessException;
+import com.solon.airbnb.user.domain.User;
 import com.solon.airbnb.user.domain.VerificationToken;
 import com.solon.airbnb.user.repository.VerificationTokenRepository;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ public class VerificationTokenServiceBean implements VerificationTokenService{
         this.verificationTokenRepository = verificationTokenRepository;
     }
 
+    @Transactional
     @Override
     public Boolean validateToken(VerificationToken verificationToken) throws BusinessException {
         if(verificationToken == null){
@@ -38,5 +40,12 @@ public class VerificationTokenServiceBean implements VerificationTokenService{
     @Override
     public VerificationToken findByToken(String theToken) {
         return verificationTokenRepository.findByToken(theToken);
+    }
+
+    @Transactional
+    @Override
+    public void saveUserVerificationToken(User theUser, String token) {
+        var verificationToken = new VerificationToken(token, theUser);
+        verificationTokenRepository.save(verificationToken);
     }
 }
