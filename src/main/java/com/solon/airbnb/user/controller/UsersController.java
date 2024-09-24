@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.solon.airbnb.infrastructure.security.NoAuthentication;
+import com.solon.airbnb.shared.exception.BusinessException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,14 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.solon.airbnb.shared.controller.GenericController;
 import com.solon.airbnb.shared.dto.SearchResults;
@@ -93,6 +87,12 @@ public class UsersController extends GenericController{
         usersService.deleteUser(publicId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+	@GetMapping("/verifyEmail")
+	public ResponseEntity<Void> verifyEmail(@RequestParam("token") String token)throws BusinessException {
+		usersService.verifyEmail(token);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
 
 	public String applicationUrl(HttpServletRequest request) {
 		return "http://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath();
