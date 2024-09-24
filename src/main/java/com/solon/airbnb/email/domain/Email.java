@@ -47,6 +47,9 @@ public class Email {
     @Column(name = "header_to")
     private String headerTo;
 
+    @Column(name = "status")
+    private EmailStatus status;
+
     @Basic(fetch = FetchType.LAZY)
     @Column(name = "message_body")
     private String messageBody;
@@ -191,5 +194,13 @@ public class Email {
 
     public void setDetails1(String details1) {
         this.details1 = details1;
+    }
+
+    public EmailStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(EmailStatus status) {
+        this.status = status;
     }
 }
