@@ -96,15 +96,8 @@ public class UserServiceBean extends BaseUserAccountServiceBean implements UserS
         user.setFirstName(dto.getFirstName());
         user.setLastName(dto.getLastName());
         user.setEmail(dto.getEmail());
-        if(AccountStatus.ACTIVE.getValue().equals(dto.getStatus())) {
-            user.setStatus(AccountStatus.ACTIVE);
-        }
-        else if(AccountStatus.INACTIVE.getValue().equals(dto.getStatus())){
-            user.setStatus(AccountStatus.INACTIVE);
-        }
-        else {
-            user.setStatus(AccountStatus.DELETED);
-        }
+        user.setStatus(AccountStatus.INACTIVE);
+        user.setVerified(Boolean.FALSE);
         UUID uuid = UUID.randomUUID();
         user.setPublicId(uuid);
         return userRepository.save(user);
@@ -120,16 +113,6 @@ public class UserServiceBean extends BaseUserAccountServiceBean implements UserS
         user.setFirstName(dto.getFirstName());
         user.setLastName(dto.getLastName());
         user.setEmail(dto.getEmail());
-        if(AccountStatus.ACTIVE.getValue().equals(dto.getStatus())) {
-            user.setStatus(AccountStatus.ACTIVE);
-        }
-        else if(AccountStatus.INACTIVE.getValue().equals(dto.getStatus())){
-            user.setStatus(AccountStatus.INACTIVE);
-        }
-        else {
-            user.setStatus(AccountStatus.DELETED);
-        }
-
         return userRepository.save(user);
     }
 }

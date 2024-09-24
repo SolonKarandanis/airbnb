@@ -86,6 +86,9 @@ public class User extends AbstractAuditingEntity<Long> implements UuidEntity{
             inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "name")})
     private Set<Authority> authorities = new HashSet<>();
 
+    @Column(name = "is_verified")
+    private Boolean isVerified = false;
+
     @Override
 	public Long getId() {
         return id;
@@ -169,7 +172,15 @@ public class User extends AbstractAuditingEntity<Long> implements UuidEntity{
 		this.status = status;
 	}
 
-	@Override
+    public Boolean getVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(Boolean verified) {
+        isVerified = verified;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

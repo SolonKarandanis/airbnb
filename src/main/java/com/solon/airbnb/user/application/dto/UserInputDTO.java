@@ -42,9 +42,6 @@ public class UserInputDTO {
     @NotNull(message = "{user.email.notNull}")
     @Size(min = 1, max = 150, message = "{user.email.size}")
     private String email;
-    
-    @NotNull(message = "{user.status.notNull}")
-    private String status;
 
 	public String getUsername() {
 		return username;
@@ -85,18 +82,5 @@ public class UserInputDTO {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-
-
-    
-    
     
 }
