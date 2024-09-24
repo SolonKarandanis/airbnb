@@ -5,6 +5,7 @@ import com.solon.airbnb.user.application.dto.ReadUserDTO;
 import com.solon.airbnb.user.application.dto.UserInputDTO;
 import com.solon.airbnb.user.application.dto.UsersSearchRequestDTO;
 import com.solon.airbnb.user.domain.AccountStatus;
+import com.solon.airbnb.user.domain.Authority;
 import com.solon.airbnb.user.domain.User;
 import com.solon.airbnb.user.repository.AuthorityRepository;
 import com.solon.airbnb.user.repository.UserRepository;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -100,6 +102,9 @@ public class UserServiceBean extends BaseUserAccountServiceBean implements UserS
         user.setVerified(Boolean.FALSE);
         UUID uuid = UUID.randomUUID();
         user.setPublicId(uuid);
+
+        Authority role = authorityRepository.findByName(dto.getRole());
+        user.setAuthorities(Set.of(role));
         return userRepository.save(user);
     }
 

@@ -42,6 +42,9 @@ public class UserInputDTO {
     @NotNull(message = "{user.email.notNull}")
     @Size(min = 1, max = 150, message = "{user.email.size}")
     private String email;
+	@NotNull(message = "{user.role.notNull}")
+	@Size(min = 1, max = 150, message = "{user.role.size}")
+	private String role;
 
 	public String getUsername() {
 		return username;
@@ -82,5 +85,12 @@ public class UserInputDTO {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-    
+
+	public @NotNull(message = "{user.role.notNull}") @Size(min = 1, max = 150, message = "{user.role.size}") String getRole() {
+		return role;
+	}
+
+	public void setRole(@NotNull(message = "{user.role.notNull}") @Size(min = 1, max = 150, message = "{user.role.size}") String role) {
+		this.role = role;
+	}
 }
