@@ -73,6 +73,11 @@ public class EMailDelegateServiceBean extends GenericServiceBean implements EMai
 
     }
 
+    protected void sendMailWithAttachements(String to, String from, String subject,String mailContent, Map<String, Object> mailParams, List<EmailAttachment> attachments)
+            throws AirbnbException{
+        sendMailWithAttachements(to,from,subject,mailContent,mailParams,attachments);
+    }
+
     protected Email initializeEmail(String to, String from, String subject,String mailContent, Map<String, Object> mailParams,String details1){
         Email mail = new Email();
         mail.setHeaderTo(to);
