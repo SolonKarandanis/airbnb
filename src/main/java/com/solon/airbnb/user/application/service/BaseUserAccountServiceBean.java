@@ -29,6 +29,7 @@ public class BaseUserAccountServiceBean extends GenericServiceBean implements Ba
 		dto.setEmail(user.getEmail());
 		dto.setPublicId(user.getPublicId());
 		dto.setStatus(user.getStatus());
+		dto.setVerified(user.getVerified());
 		if(addAuthorities) {
 			dto.setAuthorityEntities(user.getAuthorities().stream().toList());
 		}
@@ -44,6 +45,7 @@ public class BaseUserAccountServiceBean extends GenericServiceBean implements Ba
         user.setEmail(dto.getEmail());
         user.setPublicId(dto.getPublicId());
         user.setStatus(dto.getStatus());
+		user.setVerified(dto.getVerified());
         return user;
 	}
 

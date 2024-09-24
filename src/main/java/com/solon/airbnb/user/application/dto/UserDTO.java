@@ -30,6 +30,7 @@ public class UserDTO implements UserDetails{
 	private AccountStatus status;
 	private List<Authority> authorityEntities= new ArrayList<>();
     private List<String> authorityNames = new ArrayList<>();
+	private Boolean isVerified;
     
     @JsonDeserialize(using = CustomAuthorityDeserializer.class)
 	@Override
@@ -37,6 +38,26 @@ public class UserDTO implements UserDetails{
     	 return authorityEntities.stream()
          		.map(role-> new SimpleGrantedAuthority(role.getName()))
          		.toList();
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return UserDetails.super.isAccountNonExpired();
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return UserDetails.super.isAccountNonLocked();
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return UserDetails.super.isCredentialsNonExpired();
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return UserDetails.super.isEnabled();
 	}
     
     
@@ -94,8 +115,8 @@ public class UserDTO implements UserDetails{
 	public void setStatus(AccountStatus status) {
 		this.status = status;
 	}
-	
-	
+
+
 	@Override
 	public String getPassword() {
 		return password;
@@ -105,7 +126,7 @@ public class UserDTO implements UserDetails{
 	public String getUsername() {
 		return username;
 	}
-	
+
 	public void setUsername(String username) {
 		this.username = username;
 	}
@@ -125,5 +146,13 @@ public class UserDTO implements UserDetails{
 
 	public void setAuthorityEntities(List<Authority> authorityEntities) {
 		this.authorityEntities = authorityEntities;
+	}
+
+	public Boolean getVerified() {
+		return isVerified;
+	}
+
+	public void setVerified(Boolean verified) {
+		isVerified = verified;
 	}
 }
