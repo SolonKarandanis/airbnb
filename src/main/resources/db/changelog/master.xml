@@ -15,5 +15,5 @@
     <include file="/db/changelog/00000000000003_booking.xml" relativeToChangelogFile="false"/>
     <include file="/db/changelog/00000000000004_add_status_username_password_in_user.xml" relativeToChangelogFile="false"/>
     <include file="/db/changelog/00000000000005_change_password_length.xml" relativeToChangelogFile="false"/>
-
+    <include file="/db/changelog/00000000000006_add_is_verified_field.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>
