@@ -1,6 +1,7 @@
 package com.solon.airbnb.user.application.event;
 
 
+import com.solon.airbnb.email.application.service.EMailDelegateService;
 import com.solon.airbnb.user.application.service.VerificationTokenService;
 import com.solon.airbnb.user.domain.User;
 import org.slf4j.Logger;
@@ -15,23 +16,27 @@ public class UserRegistrationCompleteEventListener implements ApplicationListene
     private static final Logger log = LoggerFactory.getLogger(UserRegistrationCompleteEvent.class);
 
     private final VerificationTokenService tokenService;
-    private User theUser;
+    private final EMailDelegateService eMailDelegateService;
+    private User user;
 
-    public UserRegistrationCompleteEventListener(VerificationTokenService tokenService) {
+    public UserRegistrationCompleteEventListener(
+            VerificationTokenService tokenService,
+            EMailDelegateService eMailDelegateService) {
         this.tokenService = tokenService;
+        this.eMailDelegateService = eMailDelegateService;
     }
 
     @Override
     public void onApplicationEvent(UserRegistrationCompleteEvent event) {
         // 1. Get the newly registered user
-        theUser = event.getUser();
+        user = event.getUser();
         //2. Create a verification token for the user
         String verificationToken = UUID.randomUUID().toString();
         //3. Save the verification token for the user
-        tokenService.saveUserVerificationToken(theUser, verificationToken);
+        tokenService.saveUserVerificationToken(user, verificationToken);
         //4 Build the verification url to be sent to the user
         String url = event.getApplicationUrl()+"/register/verifyEmail?token="+verificationToken;
-
+        eMailDelegateService.sendVerificationEmail(url,user);
         log.info("UserRegistrationCompleteEventListener -> onApplicationEvent ->  url:  {}", url);
     }
 }
