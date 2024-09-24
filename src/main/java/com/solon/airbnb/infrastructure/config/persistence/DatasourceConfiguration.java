@@ -5,6 +5,7 @@
  */
 package com.solon.airbnb.infrastructure.config.persistence;
 
+import com.solon.airbnb.email.domain.EmailType;
 import com.solon.airbnb.user.domain.VerificationToken;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
@@ -38,7 +39,8 @@ import com.zaxxer.hikari.HikariDataSource;
         basePackages = {
         		"com.solon.airbnb.booking.repository",
         		"com.solon.airbnb.listing.repository",
-        		"com.solon.airbnb.user.repository"
+        		"com.solon.airbnb.user.repository",
+                "com.solon.airbnb.email.repository"
         },
         entityManagerFactoryRef = "airbnbManagerFactory",
         transactionManagerRef = "airbnbTransactionManager"
@@ -52,7 +54,8 @@ public class DatasourceConfiguration {
 			Booking.class,
 			Listing.class,
 			ListingPicture.class,
-            VerificationToken.class
+            VerificationToken.class,
+            EmailType.class
 	};
     
     @Bean
