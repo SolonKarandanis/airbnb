@@ -22,17 +22,14 @@ public class EmailServiceBean implements EmailService{
     private final EmailRepository emailRepository;
     private final EmailTypeRepository emailTypeRepository;
     private final EmailAttachmentRepository emailAttachmentRepository;
-    private final EmailService emailService;
 
     public EmailServiceBean(
             EmailRepository emailRepository,
             EmailTypeRepository emailTypeRepository,
-            EmailAttachmentRepository emailAttachmentRepository,
-            EmailService emailService) {
+            EmailAttachmentRepository emailAttachmentRepository) {
         this.emailRepository = emailRepository;
         this.emailTypeRepository = emailTypeRepository;
         this.emailAttachmentRepository = emailAttachmentRepository;
-        this.emailService = emailService;
     }
 
     @Override

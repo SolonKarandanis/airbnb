@@ -9,6 +9,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -35,10 +36,13 @@ public class GenericServiceBean {
     private PlatformTransactionManager transactionManager;
 	
 	@Autowired
-    protected MessageSource messageSource;
+	private MessageSource messageSource;
 
 	@Autowired
-	protected ApplicationEventPublisher publisher;
+	private ApplicationEventPublisher publisher;
+
+	@Autowired
+	private JmsTemplate jmsTemplate;
 	
 	
 	protected EntityManager getEntityManager() {
@@ -63,6 +67,10 @@ public class GenericServiceBean {
 
 	public ApplicationEventPublisher getPublisher() {
 		return publisher;
+	}
+
+	public JmsTemplate getJmsTemplate() {
+		return jmsTemplate;
 	}
 
 	protected PageRequest toPageRequest(Paging paging) {
