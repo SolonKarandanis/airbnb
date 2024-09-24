@@ -5,6 +5,8 @@
  */
 package com.solon.airbnb.infrastructure.config.persistence;
 
+import com.solon.airbnb.email.domain.Email;
+import com.solon.airbnb.email.domain.EmailAttachment;
 import com.solon.airbnb.email.domain.EmailType;
 import com.solon.airbnb.user.domain.VerificationToken;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -55,7 +57,9 @@ public class DatasourceConfiguration {
 			Listing.class,
 			ListingPicture.class,
             VerificationToken.class,
-            EmailType.class
+            EmailType.class,
+            Email.class,
+            EmailAttachment.class
 	};
     
     @Bean

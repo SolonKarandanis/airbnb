@@ -1,9 +1,8 @@
 package com.solon.airbnb.email.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "email_types")
@@ -17,8 +16,8 @@ public class EmailType {
     private String resourceKey;
 
     //bi-directional many-to-one association to Email
-//    @OneToMany(mappedBy = "emailType")
-//    private List<Email> emails;
+    @OneToMany(mappedBy = "emailType")
+    private List<Email> emails;
 
 
     public Integer getId() {
@@ -35,5 +34,13 @@ public class EmailType {
 
     public void setResourceKey(String resourceKey) {
         this.resourceKey = resourceKey;
+    }
+
+    public List<Email> getEmails() {
+        return emails;
+    }
+
+    public void setEmails(List<Email> emails) {
+        this.emails = emails;
     }
 }
