@@ -4,6 +4,7 @@ import java.util.Locale;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -35,6 +36,9 @@ public class GenericServiceBean {
 	
 	@Autowired
     protected MessageSource messageSource;
+
+	@Autowired
+	protected ApplicationEventPublisher publisher;
 	
 	
 	protected EntityManager getEntityManager() {
@@ -56,7 +60,11 @@ public class GenericServiceBean {
 	protected Locale getDefaultLocale() {
 	        return Locale.ENGLISH;
 	}
-	
+
+	public ApplicationEventPublisher getPublisher() {
+		return publisher;
+	}
+
 	protected PageRequest toPageRequest(Paging paging) {
 		Sort sortBy = Sort.by(Direction.valueOf(paging.getSortingDirection()), paging.getSortingColumn());
 		return PageRequest.of(paging.getPagingStart(), paging.getPagingSize(), sortBy);
