@@ -19,4 +19,5 @@
     <include file="/db/changelog/00000000000007_verification_token.xml" relativeToChangelogFile="false"/>
     <include file="/db/changelog/00000000000008_email_types.xml" relativeToChangelogFile="false"/>
     <include file="/db/changelog/00000000000009_email_types_data.xml" relativeToChangelogFile="false"/>
+    <include file="/db/changelog/000000000000010_email.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>
