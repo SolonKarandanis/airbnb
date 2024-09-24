@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.solon.airbnb.infrastructure.security.NoAuthentication;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -71,9 +72,9 @@ public class UsersController extends GenericController{
 
 	 @NoAuthentication
 	 @PostMapping
-	 public ResponseEntity<ReadUserDTO> registerUser(@RequestBody @Valid UserInputDTO user) throws NotFoundException{
+	 public ResponseEntity<ReadUserDTO> registerUser(@RequestBody @Valid UserInputDTO user,final HttpServletRequest request) throws NotFoundException{
 		 log.info("UsersController->registerUser->RequestBody: {}" , user);
-		 User userSaved=usersService.registerUser(user);
+		 User userSaved=usersService.registerUser(user, applicationUrl(request));
 		 ReadUserDTO dto = usersService.convertToReadUserDTO(userSaved);
 		 return ResponseEntity.ok(dto);
 	 }
@@ -92,5 +93,9 @@ public class UsersController extends GenericController{
         usersService.deleteUser(publicId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+	public String applicationUrl(HttpServletRequest request) {
+		return "http://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath();
+	}
 
 }

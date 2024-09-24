@@ -41,8 +41,8 @@ public class GenericServiceBean {
 	@Autowired
 	private ApplicationEventPublisher publisher;
 
-	@Autowired
-	private JmsTemplate jmsTemplate;
+//	@Autowired
+//	private JmsTemplate jmsTemplate;
 	
 	
 	protected EntityManager getEntityManager() {
@@ -69,9 +69,9 @@ public class GenericServiceBean {
 		return publisher;
 	}
 
-	public JmsTemplate getJmsTemplate() {
-		return jmsTemplate;
-	}
+//	public JmsTemplate getJmsTemplate() {
+//		return jmsTemplate;
+//	}
 
 	protected PageRequest toPageRequest(Paging paging) {
 		Sort sortBy = Sort.by(Direction.valueOf(paging.getSortingDirection()), paging.getSortingColumn());

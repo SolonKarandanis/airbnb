@@ -1,15 +1,19 @@
 package com.solon.airbnb.user.application.service;
 
+import com.solon.airbnb.shared.exception.BusinessException;
 import com.solon.airbnb.shared.exception.NotFoundException;
 import com.solon.airbnb.user.application.dto.ReadUserDTO;
 import com.solon.airbnb.user.application.dto.UserInputDTO;
 import com.solon.airbnb.user.application.dto.UsersSearchRequestDTO;
+import com.solon.airbnb.user.application.event.UserRegistrationCompleteEvent;
 import com.solon.airbnb.user.domain.AccountStatus;
 import com.solon.airbnb.user.domain.Authority;
 import com.solon.airbnb.user.domain.User;
+import com.solon.airbnb.user.domain.VerificationToken;
 import com.solon.airbnb.user.repository.AuthorityRepository;
 import com.solon.airbnb.user.repository.UserRepository;
 import com.solon.airbnb.user.repository.UsersSpecification;
+import com.solon.airbnb.user.repository.VerificationTokenRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -32,11 +36,17 @@ public class UserServiceBean extends BaseUserAccountServiceBean implements UserS
 
     private final UserRepository userRepository;
     private final AuthorityRepository authorityRepository;
+    private final VerificationTokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserServiceBean(UserRepository userRepository, AuthorityRepository authorityRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceBean(
+            UserRepository userRepository,
+            AuthorityRepository authorityRepository,
+            VerificationTokenRepository tokenRepository,
+            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.authorityRepository = authorityRepository;
+        this.tokenRepository = tokenRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -70,7 +80,7 @@ public class UserServiceBean extends BaseUserAccountServiceBean implements UserS
                 .findOneByPublicId(UUID.fromString(uuid));
         usrOpt.ifPresentOrElse(
                 userRepository::delete,
-                ()-> new NotFoundException("User with uuid:" + uuid + " Not Found!")
+                ()-> new NotFoundException(USER_NOT_FOUND)
         );
     }
 
@@ -86,11 +96,11 @@ public class UserServiceBean extends BaseUserAccountServiceBean implements UserS
 
     @Transactional
     @Override
-    public User registerUser(UserInputDTO dto) throws NotFoundException {
+    public User registerUser(UserInputDTO dto, String applicationUrl) throws NotFoundException {
         Optional<User> userMaybe  = userRepository.findByUsername(dto.getUsername());
 
         if(userMaybe.isPresent()){
-            throw new NotFoundException("User already exists with that username");
+            throw new NotFoundException("error.username.exists");
         }
         User user = new User();
         user.setUsername(dto.getUsername());
@@ -105,7 +115,9 @@ public class UserServiceBean extends BaseUserAccountServiceBean implements UserS
 
         Authority role = authorityRepository.findByName(dto.getRole());
         user.setAuthorities(Set.of(role));
-        return userRepository.save(user);
+        user = userRepository.save(user);
+        getPublisher().publishEvent(new UserRegistrationCompleteEvent(user, applicationUrl));
+        return user;
     }
 
     @Transactional
@@ -119,5 +131,13 @@ public class UserServiceBean extends BaseUserAccountServiceBean implements UserS
         user.setLastName(dto.getLastName());
         user.setEmail(dto.getEmail());
         return userRepository.save(user);
+    }
+
+    @Override
+    public void verifyEmail(String token) throws BusinessException {
+        VerificationToken theToken = tokenRepository.findByToken(token);
+        if(theToken.getUser().getVerified()){
+            throw new BusinessException("error.user.already.verified");
+        }
     }
 }

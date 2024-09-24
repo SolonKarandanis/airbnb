@@ -7,6 +7,7 @@ import com.solon.airbnb.email.repository.EmailAttachmentRepository;
 import com.solon.airbnb.email.repository.EmailRepository;
 import com.solon.airbnb.email.repository.EmailTypeRepository;
 import com.solon.airbnb.shared.exception.AirbnbException;
+import com.solon.airbnb.shared.service.GenericServiceBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service("emailService")
-public class EmailServiceBean implements EmailService{
+public class EmailServiceBean extends GenericServiceBean implements EmailService{
 
     private static final Logger log = LoggerFactory.getLogger(EmailServiceBean.class);
 
