@@ -7,7 +7,6 @@ import com.solon.airbnb.email.domain.EmailType;
 import com.solon.airbnb.shared.exception.AirbnbException;
 
 import java.util.List;
-import java.util.Map;
 
 public interface EmailService {
     /**

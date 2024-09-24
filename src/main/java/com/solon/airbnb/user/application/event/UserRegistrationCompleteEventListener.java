@@ -2,6 +2,7 @@ package com.solon.airbnb.user.application.event;
 
 
 import com.solon.airbnb.email.application.service.EMailDelegateService;
+import com.solon.airbnb.shared.exception.AirbnbException;
 import com.solon.airbnb.user.application.service.VerificationTokenService;
 import com.solon.airbnb.user.domain.User;
 import org.slf4j.Logger;
@@ -36,7 +37,11 @@ public class UserRegistrationCompleteEventListener implements ApplicationListene
         tokenService.saveUserVerificationToken(user, verificationToken);
         //4 Build the verification url to be sent to the user
         String url = event.getApplicationUrl()+"/register/verifyEmail?token="+verificationToken;
-        eMailDelegateService.sendVerificationEmail(url,user);
+        try {
+            eMailDelegateService.sendVerificationEmail(url,user);
+        } catch (AirbnbException e) {
+            throw new RuntimeException(e);
+        }
         log.info("UserRegistrationCompleteEventListener -> onApplicationEvent ->  url:  {}", url);
     }
 }
