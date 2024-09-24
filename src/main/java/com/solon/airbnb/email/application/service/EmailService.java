@@ -71,12 +71,8 @@ public interface EmailService {
     /**
      * Saves the email in the database.
      */
-    Integer saveEmail(Email email, EmailStatus status) throws AirbnbException;
+    Email saveEmail(Email email, EmailStatus status) throws AirbnbException;
 
     public EmailDTO convertToDTO(Email email, Boolean withMsgBody);
-
-    public Map<String, String> getEmailColumnMap();
-
-    public Map<String, String> getEmailSortingFieldsMap();
 
 }
