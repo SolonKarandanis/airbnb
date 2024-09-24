@@ -5,6 +5,7 @@
  */
 package com.solon.airbnb.user.application.dto;
 
+import com.solon.airbnb.user.application.validation.Authority;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -42,6 +43,8 @@ public class UserInputDTO {
     @NotNull(message = "{user.email.notNull}")
     @Size(min = 1, max = 150, message = "{user.email.size}")
     private String email;
+
+	@Authority
 	@NotNull(message = "{user.role.notNull}")
 	@Size(min = 1, max = 150, message = "{user.role.size}")
 	private String role;
