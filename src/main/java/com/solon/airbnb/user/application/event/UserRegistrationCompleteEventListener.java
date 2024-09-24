@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Component
 public class UserRegistrationCompleteEventListener implements ApplicationListener<UserRegistrationCompleteEvent> {
-    private static final Logger log = LoggerFactory.getLogger(UserRegistrationCompleteEvent.class);
+    private static final Logger log = LoggerFactory.getLogger(UserRegistrationCompleteEventListener.class);
 
     private final VerificationTokenService tokenService;
     private final EMailDelegateService eMailDelegateService;
