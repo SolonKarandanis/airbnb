@@ -1,4 +1,4 @@
-package com.solon.airbnb.email.application.constants;
+package com.solon.airbnb.email.constants;
 
 public class EMailConstants {
 

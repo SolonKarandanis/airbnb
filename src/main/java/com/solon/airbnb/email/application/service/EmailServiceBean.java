@@ -1,6 +1,6 @@
 package com.solon.airbnb.email.application.service;
 
-import com.solon.airbnb.email.application.constants.EMailConstants;
+import com.solon.airbnb.email.constants.EMailConstants;
 import com.solon.airbnb.email.application.dto.EmailDTO;
 import com.solon.airbnb.email.domain.Email;
 import com.solon.airbnb.email.domain.EmailAttachment;
