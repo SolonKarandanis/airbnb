@@ -5,6 +5,7 @@ import com.solon.airbnb.fileinfo.domain.QFileInfo;
 import com.solon.airbnb.shared.exception.AirbnbException;
 import com.solon.airbnb.shared.repository.AbstractRepository;
 import jakarta.persistence.Query;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -20,12 +21,31 @@ public class FileInfoCustomRepositoryImpl extends AbstractRepository<FileInfo,Lo
 
     @Override
     public FileInfo findByFileRefId(Long fid) {
-        return null;
+        return getJpaQueryFactory()
+                .select(fileInfo)
+                .from(fileInfo)
+                .where(fileInfo.fileRefId.eq(fid))
+                .fetchOne();
     }
 
     @Override
     public void deleteByFileRefIds(List<Long> fileReferencesToDelete) {
-
+        if(!CollectionUtils.isEmpty(fileReferencesToDelete)) {
+            int batchSize = 1000;
+            int size = fileReferencesToDelete.size();
+            int times = (size / batchSize);
+            times = (size % batchSize > 0) ? times + 1 : times;
+            int index = 0;
+            int toIndex = 0;
+            for (int i = 1; i <= times; i++) {
+                toIndex = (i == times) ? size : index + batchSize;
+                List<Long> sublist = fileReferencesToDelete.subList(index, toIndex);
+                getJpaQueryFactory()
+                        .delete(fileInfo)
+                        .where(fileInfo.fileRefId.in(sublist))
+                        .execute();
+            }
+        }
     }
 
     /**
