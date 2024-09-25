@@ -1,9 +1,11 @@
 package com.solon.airbnb.email.application.service;
 
 import com.solon.airbnb.email.application.dto.EmailDTO;
+import com.solon.airbnb.email.application.dto.EmailSearchRequestDTO;
 import com.solon.airbnb.email.domain.Email;
 import com.solon.airbnb.email.domain.EmailStatus;
 import com.solon.airbnb.email.domain.EmailType;
+import com.solon.airbnb.shared.dto.SearchResults;
 import com.solon.airbnb.shared.exception.AirbnbException;
 
 import java.util.List;
@@ -73,5 +75,7 @@ public interface EmailService {
     Email saveEmail(Email email, EmailStatus status) throws AirbnbException;
 
     public EmailDTO convertToDTO(Email email, Boolean withMsgBody);
+
+    SearchResults<Email> findEmails(EmailSearchRequestDTO searchRequest);
 
 }

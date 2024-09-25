@@ -1,5 +1,6 @@
 package com.solon.airbnb.email.application.service;
 
+import com.solon.airbnb.email.application.dto.EmailSearchRequestDTO;
 import com.solon.airbnb.email.constants.EMailConstants;
 import com.solon.airbnb.email.application.dto.EmailDTO;
 import com.solon.airbnb.email.domain.Email;
@@ -14,6 +15,7 @@ import com.solon.airbnb.fileinfo.constants.FileConstants;
 import com.solon.airbnb.fileinfo.domain.FileInfo;
 import com.solon.airbnb.fileinfo.util.FileUtil;
 import com.solon.airbnb.shared.common.mail.AttachmentDataSource;
+import com.solon.airbnb.shared.dto.SearchResults;
 import com.solon.airbnb.shared.exception.AirbnbException;
 import com.solon.airbnb.shared.service.GenericServiceBean;
 import jakarta.activation.DataHandler;
@@ -253,6 +255,11 @@ public class EmailServiceBean extends GenericServiceBean implements EmailService
             emailDTO.setMessageBody(email.getMessageBody());
         }
         return emailDTO;
+    }
+
+    @Override
+    public SearchResults<Email> findEmails(EmailSearchRequestDTO searchRequest) {
+        return null;
     }
 
     protected InternetAddress[] parseAddress(String str) throws AddressException {

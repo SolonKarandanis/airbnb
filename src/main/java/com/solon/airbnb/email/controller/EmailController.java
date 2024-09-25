@@ -4,6 +4,7 @@ import com.solon.airbnb.email.application.dto.EmailDTO;
 import com.solon.airbnb.email.application.dto.EmailSearchRequestDTO;
 import com.solon.airbnb.email.application.dto.EnumTypeDTO;
 import com.solon.airbnb.email.application.service.EmailService;
+import com.solon.airbnb.email.domain.Email;
 import com.solon.airbnb.email.domain.EmailType;
 import com.solon.airbnb.shared.dto.SearchResults;
 import com.solon.airbnb.shared.exception.AirbnbException;
@@ -47,6 +48,15 @@ public class EmailController {
     @PostMapping("/search")
     public ResponseEntity<SearchResults<EmailDTO>> searchEmails(@Valid @RequestBody EmailSearchRequestDTO searchRequest)
             throws AirbnbException{
-        return null;
+        SearchResults<Email> emails = emailService.findEmails(searchRequest);
+        List<EmailDTO> emailDtos = null;
+        if (emails != null) {
+            emailDtos = new ArrayList<>();
+            for (Email email : emails.getList()) {
+                emailDtos.add(emailService.convertToDTO(email, false));
+            }
+        }
+        SearchResults<EmailDTO> emailResults = new SearchResults(emails.getCountRows(), emailDtos);
+        return ResponseEntity.ok(emailResults);
     }
 }
