@@ -21,4 +21,5 @@
     <include file="/db/changelog/00000000000009_email_types_data.xml" relativeToChangelogFile="false"/>
     <include file="/db/changelog/000000000000010_email.xml" relativeToChangelogFile="false"/>
     <include file="/db/changelog/000000000000011_email_attachments.xml" relativeToChangelogFile="false"/>
+    <include file="/db/changelog/000000000000012_file_info.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>
