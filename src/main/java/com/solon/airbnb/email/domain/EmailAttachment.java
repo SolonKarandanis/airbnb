@@ -75,4 +75,12 @@ public class EmailAttachment {
     public void setEmail(Email email) {
         this.email = email;
     }
+
+    public byte[] getData() {
+        return data;
+    }
+
+    public void setData(byte[] data) {
+        this.data = data;
+    }
 }

@@ -1,5 +1,6 @@
 package com.solon.airbnb.email.application.service;
 
+import com.solon.airbnb.email.application.constants.EMailConstants;
 import com.solon.airbnb.email.application.dto.EmailDTO;
 import com.solon.airbnb.email.domain.Email;
 import com.solon.airbnb.email.domain.EmailAttachment;
@@ -8,12 +9,13 @@ import com.solon.airbnb.email.domain.EmailType;
 import com.solon.airbnb.email.repository.EmailAttachmentRepository;
 import com.solon.airbnb.email.repository.EmailRepository;
 import com.solon.airbnb.email.repository.EmailTypeRepository;
+import com.solon.airbnb.shared.common.mail.AttachmentDataSource;
 import com.solon.airbnb.shared.exception.AirbnbException;
 import com.solon.airbnb.shared.service.GenericServiceBean;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.AddressException;
-import jakarta.mail.internet.InternetAddress;
-import jakarta.mail.internet.MimeMessage;
+import jakarta.activation.DataHandler;
+import jakarta.activation.DataSource;
+import jakarta.mail.*;
+import jakarta.mail.internet.*;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +29,7 @@ import org.springframework.util.CollectionUtils;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
+import java.util.Properties;
 
 @Service("emailService")
 public class EmailServiceBean extends GenericServiceBean implements EmailService{
@@ -72,7 +74,84 @@ public class EmailServiceBean extends GenericServiceBean implements EmailService
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void saveAndSendEmailSynchronous(Email eMess) throws AirbnbException {
+        try {
+            Properties props = new Properties();
+            props.setProperty(EMailConstants.EMAIL_SERVER_HOST_NAME, EMailConstants.EMAIL_SERVER_HOST_NAME);
+            props.setProperty(EMailConstants.EMAIL_TRANSPORT_PROTOCOL_NAME, EMailConstants.EMAIL_TRANSPORT_PROTOCOL_VALUE);
+            props.setProperty(EMailConstants.EMAIL_SERVICE_AUTHENTICATION, EMailConstants.EMAIL_SERVICE_AUTHENTICATION_VALUE);
+            Session session = Session.getDefaultInstance(props, null);
+            if (session == null) {
+                log.debug("session is null!!!!!!");
+                throw new AirbnbException("Could not obtain mail session");
+            }
+            // Construct the message
+            MimeMessage msg = new MimeMessage(session);
+            // Set "from" address
+            InternetAddress fromAddress = new InternetAddress(eMess.getHeaderFrom());
+            msg.setFrom(fromAddress);
+            // Add "to" emails
+            InternetAddress[] addresses = parseAddress(eMess.getHeaderTo());
+            log.debug("sendEmailSynchronous: TO= {}" , dumpAddresses(addresses));
+            msg.addRecipients(Message.RecipientType.TO,addresses);
 
+            addresses = parseAddress(eMess.getHeaderCc());
+            log.debug("sendEmailSynchronous: CC= {}" , dumpAddresses(addresses));
+            msg.addRecipients(Message.RecipientType.CC, addresses);
+
+            addresses = parseAddress(eMess.getHeaderBcc());
+            log.debug("sendEmailSynchronous: BCC= {}" , dumpAddresses(addresses));
+            msg.addRecipients(Message.RecipientType.BCC, addresses);
+
+            addresses = parseAddress(eMess.getHeaderReplyTo());
+            log.debug("sendEmailSynchronous: ReplyTo= {}" , dumpAddresses(addresses));
+            msg.setReplyTo(addresses);
+
+            // Set email subject
+            if (eMess.getHeaderSubject() != null) {
+                msg.setSubject(eMess.getHeaderSubject(), "UTF-8");
+            } else {
+                msg.setSubject("");
+            }
+            msg.setSentDate(new Date());
+
+            // Create the message part
+            BodyPart messageBodyPart = new MimeBodyPart();
+
+            String text = eMess.getMessageBody();
+            messageBodyPart.setContent(text, EMailConstants.EMAIL_PLAIN_TEXT_CONTENT_TYPE);
+
+            Multipart multipart = new MimeMultipart();
+            multipart.addBodyPart(messageBodyPart);
+
+            /*
+             * attachments to be added
+             */
+            if (eMess.getEmailAttachments() != null) {
+                List<EmailAttachment> fileList = eMess.getEmailAttachments();
+                for (EmailAttachment emailAttachment : fileList) {
+                    MimeBodyPart attachmenBodyPart = new MimeBodyPart();
+                    DataSource source = new AttachmentDataSource(emailAttachment.getData(),
+                            FileUtil.getContentTypeByFileName(emailAttachment.getFileName()), emailAttachment.getFileName());
+                    attachmenBodyPart.setDataHandler(new DataHandler(source));
+                    attachmenBodyPart.setFileName(emailAttachment.getFileName());
+                    multipart.addBodyPart(attachmenBodyPart);
+                }
+            }
+            // Put parts in message
+            msg.setContent(multipart);
+
+            // Send the mail
+            Transport.send(msg);
+            log.info("message-id: {}" , msg.getHeader("message-id", ","));
+        }
+        catch (SendFailedException e) {
+            saveEmail(eMess, EmailStatus.FAILED);
+            throw new AirbnbException("errors.send.email", e);
+        } catch (MessagingException e) {
+            saveEmail(eMess, EmailStatus.FAILED);
+            throw new AirbnbException("errors.send.email", e);
+
+        }
     }
 
     @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)

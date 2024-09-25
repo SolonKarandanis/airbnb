@@ -4,13 +4,13 @@ public class EMailConstants {
 
     public static final String EMAIL_ACTION = "action";
 
-    public static final String EMAIL_SERVER_HOST_NAME = "mail.smtp.host";
+    public static final String EMAIL_SERVER_HOST_NAME = "mail.gmail.host";
 
 
     public static final String EMAIL_TRANSPORT_PROTOCOL_NAME = "mail.transport.protocol";
 
 
-    public static final String EMAIL_TRANSPORT_PROTOCOL_VALUE = "SMTP";
+    public static final String EMAIL_TRANSPORT_PROTOCOL_VALUE = "smtp";
 
 
     public static final String EMAIL_SERVICE_AUTHENTICATION = "mail.smtp.auth";
