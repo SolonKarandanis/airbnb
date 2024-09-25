@@ -9,7 +9,7 @@ import com.solon.airbnb.email.domain.EmailType;
 import com.solon.airbnb.email.repository.EmailAttachmentRepository;
 import com.solon.airbnb.email.repository.EmailRepository;
 import com.solon.airbnb.email.repository.EmailTypeRepository;
-import com.solon.airbnb.shared.common.file.FileUtil;
+import com.solon.airbnb.fileinfo.util.FileUtil;
 import com.solon.airbnb.shared.common.mail.AttachmentDataSource;
 import com.solon.airbnb.shared.exception.AirbnbException;
 import com.solon.airbnb.shared.service.GenericServiceBean;

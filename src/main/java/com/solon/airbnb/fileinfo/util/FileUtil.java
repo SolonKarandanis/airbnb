@@ -1,4 +1,4 @@
-package com.solon.airbnb.shared.common.file;
+package com.solon.airbnb.fileinfo.util;
 
 import com.solon.airbnb.shared.exception.AirbnbException;
 import lombok.extern.slf4j.Slf4j;
