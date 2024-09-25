@@ -179,8 +179,12 @@ public class EmailServiceBean extends GenericServiceBean implements EmailService
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
-    public void updateEmailStatus(Integer id, String status) {
-
+    public void updateEmailStatus(Integer id, EmailStatus status) {
+        Date dateSent = null;
+        if (EmailStatus.SENT.equals(status)) {
+            dateSent = new Date();
+        }
+        emailRepository.updateEmailStatusAndDateSentById(id,status,dateSent);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
@@ -192,7 +196,7 @@ public class EmailServiceBean extends GenericServiceBean implements EmailService
     @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
     @Override
     public EmailType getEmailTypeByKey(String resourceKey) {
-        return null;
+        return emailTypeRepository.getEmailTypeByKey(resourceKey);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

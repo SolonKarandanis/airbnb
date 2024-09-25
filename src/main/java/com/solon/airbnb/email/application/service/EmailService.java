@@ -50,7 +50,7 @@ public interface EmailService {
      * @param id
      * @param status
      */
-    void updateEmailStatus(Integer id, String status);
+    void updateEmailStatus(Integer id, EmailStatus status);
     /**
      * Resends the emails stored in the database.
      *
