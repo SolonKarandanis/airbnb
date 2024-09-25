@@ -9,6 +9,9 @@ import com.solon.airbnb.email.domain.EmailType;
 import com.solon.airbnb.email.repository.EmailAttachmentRepository;
 import com.solon.airbnb.email.repository.EmailRepository;
 import com.solon.airbnb.email.repository.EmailTypeRepository;
+import com.solon.airbnb.fileinfo.application.service.FileService;
+import com.solon.airbnb.fileinfo.constants.FileConstants;
+import com.solon.airbnb.fileinfo.domain.FileInfo;
 import com.solon.airbnb.fileinfo.util.FileUtil;
 import com.solon.airbnb.shared.common.mail.AttachmentDataSource;
 import com.solon.airbnb.shared.exception.AirbnbException;
@@ -28,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -42,16 +46,19 @@ public class EmailServiceBean extends GenericServiceBean implements EmailService
     private final EmailTypeRepository emailTypeRepository;
     private final EmailAttachmentRepository emailAttachmentRepository;
     private final JavaMailSender mailSender;
+    private final FileService fileService;
 
     public EmailServiceBean(
             EmailRepository emailRepository,
             EmailTypeRepository emailTypeRepository,
             EmailAttachmentRepository emailAttachmentRepository,
-            JavaMailSender mailSender) {
+            JavaMailSender mailSender,
+            FileService fileService) {
         this.emailRepository = emailRepository;
         this.emailTypeRepository = emailTypeRepository;
         this.emailAttachmentRepository = emailAttachmentRepository;
         this.mailSender = mailSender;
+        this.fileService = fileService;
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
@@ -169,8 +176,8 @@ public class EmailServiceBean extends GenericServiceBean implements EmailService
         if(emailMaybe.isPresent()){
             List<EmailAttachment> attachments = emailAttachmentRepository.getEmailAttachmentsByEmailId(id);
             for (EmailAttachment emailAttachment : attachments) {
-//                byte[] data = this.fileService.getFileContentById(BigInteger.valueOf(emailAttachment.getFileReferenceId()));
-//                emailAttachment.setData(data);
+                byte[] data = fileService.getFileContentById(BigInteger.valueOf(emailAttachment.getFileReferenceId()));
+                emailAttachment.setData(data);
             }
             return emailMaybe.get();
         }
@@ -209,10 +216,10 @@ public class EmailServiceBean extends GenericServiceBean implements EmailService
         }
         if(!CollectionUtils.isEmpty(email.getEmailAttachments())){
             for(EmailAttachment att : email.getEmailAttachments()){
-//                BigInteger fileId = fileService.createFile(att.getData(), new FileInfo(att.getFileName(), FileUtil.getContentTypeByFileName(att.getFileName()),
-//                        FileConstants.EMAIL_ATTACHMENT, att.getData().length));
-//                att.setFileReferenceId(fileId.longValue());
-//                att.setEmail(email);
+                BigInteger fileId = fileService.createFile(att.getData(), new FileInfo(att.getFileName(), FileUtil.getContentTypeByFileName(att.getFileName()),
+                        FileConstants.EMAIL_ATTACHMENT, att.getData().length));
+                att.setFileReferenceId(fileId.longValue());
+                att.setEmail(email);
             }
         }
         try {
