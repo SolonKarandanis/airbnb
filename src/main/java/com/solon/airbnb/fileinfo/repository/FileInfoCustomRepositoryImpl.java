@@ -7,7 +7,7 @@ import java.math.BigInteger;
 import java.util.List;
 
 public class FileInfoCustomRepositoryImpl implements  FileInfoCustomRepository{
-    
+
     @Override
     public BigInteger generateIdFromSequencer(String sequencerName) {
         return null;
