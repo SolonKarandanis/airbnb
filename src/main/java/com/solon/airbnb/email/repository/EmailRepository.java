@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Date;
 
 @Repository
-public interface EmailRepository extends JpaRepository<Email, Long> {
+public interface EmailRepository extends JpaRepository<Email, Integer> {
 
     @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query("UPDATE Email email set email.status = :status, email.dateSent = :dateSent where email.id = :emailId")

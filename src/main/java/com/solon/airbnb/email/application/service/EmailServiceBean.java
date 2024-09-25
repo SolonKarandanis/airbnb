@@ -30,6 +30,7 @@ import org.springframework.util.CollectionUtils;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 
 @Service("emailService")
@@ -158,12 +159,21 @@ public class EmailServiceBean extends GenericServiceBean implements EmailService
     @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
     @Override
     public List<EmailType> getEmailTypes() {
-        return List.of();
+        return emailTypeRepository.findAll();
     }
 
     @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
     @Override
     public Email getEmailById(Integer id) throws AirbnbException {
+        Optional<Email> emailMaybe = emailRepository.findById(id);
+        if(emailMaybe.isPresent()){
+            List<EmailAttachment> attachments = emailAttachmentRepository.getEmailAttachmentsByEmailId(id);
+            for (EmailAttachment emailAttachment : attachments) {
+//                byte[] data = this.fileService.getFileContentById(BigInteger.valueOf(emailAttachment.getFileReferenceId()));
+//                emailAttachment.setData(data);
+            }
+            return emailMaybe.get();
+        }
         return null;
     }
 
@@ -195,10 +205,18 @@ public class EmailServiceBean extends GenericServiceBean implements EmailService
         }
         if(!CollectionUtils.isEmpty(email.getEmailAttachments())){
             for(EmailAttachment att : email.getEmailAttachments()){
-
+//                BigInteger fileId = fileService.createFile(att.getData(), new FileInfo(att.getFileName(), FileUtil.getContentTypeByFileName(att.getFileName()),
+//                        FileConstants.EMAIL_ATTACHMENT, att.getData().length));
+//                att.setFileReferenceId(fileId.longValue());
+//                att.setEmail(email);
             }
         }
-        return emailRepository.save(email);
+        try {
+            return emailRepository.save(email);
+        } catch (Exception e) {
+            throw new AirbnbException("errors.saving.email", e);
+        }
+
     }
 
     @Override

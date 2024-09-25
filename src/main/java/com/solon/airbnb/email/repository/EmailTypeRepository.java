@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface EmailTypeRepository extends JpaRepository<EmailType, Long> {
+public interface EmailTypeRepository extends JpaRepository<EmailType, Integer> {
 
     @Query("SELECT emailType FROM EmailType emailType "
             + "WHERE emailType.resourceKey= :resourceKey ")

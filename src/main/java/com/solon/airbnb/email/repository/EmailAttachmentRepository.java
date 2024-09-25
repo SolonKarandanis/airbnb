@@ -9,9 +9,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface EmailAttachmentRepository extends JpaRepository<EmailAttachment, Long> {
+public interface EmailAttachmentRepository extends JpaRepository<EmailAttachment, Integer> {
 
     @Query("SELECT ea FROM EmailAttachment ea "
             + "WHERE ea.emailsId= :emailsId ")
-    public List<EmailAttachment> getEmailAttachmentsByEmailId(@Param("emailsId") Long emailsId);
+    public List<EmailAttachment> getEmailAttachmentsByEmailId(@Param("emailsId") Integer emailsId);
 }
