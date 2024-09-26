@@ -259,6 +259,7 @@ public class EmailServiceBean extends GenericServiceBean implements EmailService
         return emailDTO;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public SearchResults<Email> findEmails(EmailSearchRequestDTO searchRequest) {
         return null;
