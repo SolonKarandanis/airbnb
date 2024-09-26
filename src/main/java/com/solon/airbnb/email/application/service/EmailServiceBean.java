@@ -1,12 +1,10 @@
 package com.solon.airbnb.email.application.service;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.solon.airbnb.email.application.dto.EmailSearchRequestDTO;
 import com.solon.airbnb.email.constants.EMailConstants;
 import com.solon.airbnb.email.application.dto.EmailDTO;
-import com.solon.airbnb.email.domain.Email;
-import com.solon.airbnb.email.domain.EmailAttachment;
-import com.solon.airbnb.email.domain.EmailStatus;
-import com.solon.airbnb.email.domain.EmailType;
+import com.solon.airbnb.email.domain.*;
 import com.solon.airbnb.email.repository.EmailAttachmentRepository;
 import com.solon.airbnb.email.repository.EmailRepository;
 import com.solon.airbnb.email.repository.EmailTypeRepository;
@@ -15,6 +13,7 @@ import com.solon.airbnb.fileinfo.constants.FileConstants;
 import com.solon.airbnb.fileinfo.domain.FileInfo;
 import com.solon.airbnb.fileinfo.util.FileUtil;
 import com.solon.airbnb.shared.common.mail.AttachmentDataSource;
+import com.solon.airbnb.shared.dto.Paging;
 import com.solon.airbnb.shared.dto.SearchResults;
 import com.solon.airbnb.shared.exception.AirbnbException;
 import com.solon.airbnb.shared.service.GenericServiceBean;
@@ -262,6 +261,23 @@ public class EmailServiceBean extends GenericServiceBean implements EmailService
     @Transactional(readOnly = true)
     @Override
     public SearchResults<Email> findEmails(EmailSearchRequestDTO searchRequest) {
+        Date dateCreatedFrom = (Date)ConvertUtils.convert(searchRequest.getDateCreatedFrom(),Date.class);
+        Date dateCreatedTo = (Date)ConvertUtils.convert(searchRequest.getDateCreatedTo(),Date.class);
+        Date dateSentFrom = (Date)ConvertUtils.convert(searchRequest.getDateSentFrom(),Date.class);
+        Date dateSentTo = (Date)ConvertUtils.convert(searchRequest.getDateSentTo(),Date.class);
+        List<Integer> emailTypeIds = searchRequest.getEmailTypeIds();
+        String subject = searchRequest.getSubject();
+        String sentTo = searchRequest.getSentTo();
+        String status = searchRequest.getStatus();
+
+        Paging paging = searchRequest.getPaging();
+        Integer pagingSize = paging.getPagingSize();
+        Integer pagingStart = paging.getPagingStart();
+        String sortingColumn = paging.getSortingColumn();
+        String sortingDirection = paging.getSortingDirection();
+
+        QEmail email = QEmail.email;
+        BooleanExpression predicate =email.dateSent.eq(dateSentFrom);
         return null;
     }
 
