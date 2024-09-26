@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import jakarta.annotation.PostConstruct;
 import org.hibernate.Interceptor;
 import org.hibernate.MultiIdentifierLoadAccess;
 import org.hibernate.Session;
@@ -23,6 +24,8 @@ import org.hibernate.engine.spi.EntityEntry;
 import org.hibernate.engine.spi.PersistenceContext;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Component;
 
@@ -43,6 +46,7 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.StringUtils;
 
 
@@ -64,6 +68,15 @@ public abstract class AbstractRepository<T, ID extends Serializable> implements 
       
     @Autowired
     private JdbcClient jdbcClient;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    @Autowired
+    private TransactionTemplate txTemplate;
 
     @SuppressWarnings("unchecked")
 	protected AbstractRepository() {
@@ -87,6 +100,17 @@ public abstract class AbstractRepository<T, ID extends Serializable> implements 
     
     protected JdbcClient getJdbcClient() {
     	return jdbcClient;
+    }
+
+    protected JdbcTemplate getJdbcTemplate(){return jdbcTemplate;}
+
+    protected NamedParameterJdbcTemplate getNamedParameterJdbcTemplate(){return namedParameterJdbcTemplate;}
+
+    protected TransactionTemplate getTransactionTemplate(){return txTemplate;}
+
+    @PostConstruct
+    void init() {
+        jdbcTemplate.setResultsMapCaseInsensitive(true);
     }
 
     public T create(T entity) {
