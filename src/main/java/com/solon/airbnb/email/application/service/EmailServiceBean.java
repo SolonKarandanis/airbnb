@@ -66,7 +66,7 @@ public class EmailServiceBean extends GenericServiceBean implements EmailService
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void saveAndSendEmail(Email eMess) throws AirbnbException {
-        eMess = saveEmail(eMess,EmailStatus.PENDING);
+        eMess = saveEmail(eMess,EmailStatus.SENT);
         try{
             MimeMessage message = toMimeMessage(eMess);
             mailSender.send(message);
