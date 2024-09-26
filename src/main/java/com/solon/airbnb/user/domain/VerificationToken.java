@@ -30,6 +30,14 @@ public class VerificationToken {
 
     private static final int EXPIRATION_TIME = 15;
 
+    public Boolean isTokenExpired(){
+        Date now = new Date();
+        if(this.expirationTime.before(now)){
+            return true;
+        }
+        return false;
+    }
+
     public VerificationToken(){
 
     }
