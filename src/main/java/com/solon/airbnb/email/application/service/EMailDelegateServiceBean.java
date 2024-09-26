@@ -3,11 +3,14 @@ package com.solon.airbnb.email.application.service;
 import com.solon.airbnb.email.constants.EMailConstants;
 import com.solon.airbnb.email.domain.Email;
 import com.solon.airbnb.email.domain.EmailAttachment;
+import com.solon.airbnb.email.domain.EmailStatus;
 import com.solon.airbnb.email.domain.EmailType;
 import com.solon.airbnb.shared.exception.AirbnbException;
 import com.solon.airbnb.shared.exception.RepException;
 import com.solon.airbnb.shared.service.GenericServiceBean;
 import com.solon.airbnb.user.domain.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +23,8 @@ import java.util.Map;
 @Service
 @Transactional(propagation = Propagation.REQUIRED)
 public class EMailDelegateServiceBean extends GenericServiceBean implements EMailDelegateService{
+
+    private static final Logger log = LoggerFactory.getLogger(EMailDelegateServiceBean.class);
 
     private final EmailService emailService;
 
@@ -85,7 +90,10 @@ public class EMailDelegateServiceBean extends GenericServiceBean implements EMai
         mail.setHeaderSubject(subject);
         mail.setMessageBody(mailContent);
         EmailType emailType = emailService.getEmailTypeByKey((String) mailParams.get((EMailConstants.EMAIL_ACTION)));
+        log.info("EMailDelegateServiceBean->initializeEmail->emailType: {}" , emailType.getResourceKey());
         mail.setEmailType(emailType);
+        mail.setEmailTypesId(emailType.getId());
+        mail.setStatus(EmailStatus.SENT);
         mail.setDetails1(details1);
         return mail;
     }

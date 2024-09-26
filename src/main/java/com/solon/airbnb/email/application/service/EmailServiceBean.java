@@ -227,6 +227,8 @@ public class EmailServiceBean extends GenericServiceBean implements EmailService
         try {
             return emailRepository.save(email);
         } catch (Exception e) {
+            email.setStatus(EmailStatus.FAILED);
+            emailRepository.save(email);
             throw new AirbnbException("errors.saving.email", e);
         }
 

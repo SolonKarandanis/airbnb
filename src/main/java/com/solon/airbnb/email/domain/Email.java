@@ -51,7 +51,7 @@ public class Email {
     private String messageBody;
 
     @Column(name = "email_types_id")
-    private Long emailTypesId;
+    private Integer emailTypesId;
 
     //bi-directional many-to-one association to EmailType
     @ManyToOne(fetch = FetchType.LAZY)
@@ -160,11 +160,11 @@ public class Email {
         this.messageBody = messageBody;
     }
 
-    public Long getEmailTypesId() {
+    public Integer getEmailTypesId() {
         return emailTypesId;
     }
 
-    public void setEmailTypesId(Long emailTypesId) {
+    public void setEmailTypesId(Integer emailTypesId) {
         this.emailTypesId = emailTypesId;
     }
 

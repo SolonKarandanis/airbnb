@@ -18,6 +18,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.mail.MailAuthenticationException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -93,14 +95,20 @@ public class UserServiceBean extends BaseUserAccountServiceBean implements UserS
     }
 
 
-    @Transactional
+    @Transactional(noRollbackFor = MailAuthenticationException.class)
     @Override
     public User registerUser(UserInputDTO dto, String applicationUrl) throws NotFoundException {
-        Optional<User> userMaybe  = userRepository.findByUsername(dto.getUsername());
+        Optional<User> userNameMaybe  = userRepository.findByUsername(dto.getUsername());
 
-        if(userMaybe.isPresent()){
-            throw new NotFoundException("error.username.exists");
+        if(userNameMaybe.isPresent()){
+            throw new BadCredentialsException("error.username.exists");
         }
+
+        Optional<User> emailMaybe  = userRepository.findOneByEmail(dto.getEmail());
+        if(emailMaybe.isPresent()){
+            throw new BadCredentialsException("error.email.exists");
+        }
+
         User user = new User();
         user.setUsername(dto.getUsername());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
