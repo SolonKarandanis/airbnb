@@ -76,6 +76,8 @@ public interface EmailService {
 
     public EmailDTO convertToDTO(Email email, Boolean withMsgBody);
 
+    public List<EmailDTO> convertToDTOList(List<Email> emails, Boolean withMsgBody);
+
     SearchResults<Email> findEmails(EmailSearchRequestDTO searchRequest);
 
 }

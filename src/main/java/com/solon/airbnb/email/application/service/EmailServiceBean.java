@@ -1,6 +1,9 @@
 package com.solon.airbnb.email.application.service;
 
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.solon.airbnb.email.application.dto.EmailSearchRequestDTO;
 import com.solon.airbnb.email.constants.EMailConstants;
 import com.solon.airbnb.email.application.dto.EmailDTO;
@@ -30,13 +33,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.Properties;
+import java.util.*;
 
 @Service("emailService")
 public class EmailServiceBean extends GenericServiceBean implements EmailService{
@@ -258,6 +259,18 @@ public class EmailServiceBean extends GenericServiceBean implements EmailService
         return emailDTO;
     }
 
+    @Override
+    public List<EmailDTO> convertToDTOList(List<Email> emails, Boolean withMsgBody) {
+        if(CollectionUtils.isEmpty(emails)){
+            return List.of();
+        }
+        List<EmailDTO> result = new ArrayList<>();
+        for(Email email : emails){
+            result.add(convertToDTO(email,withMsgBody));
+        }
+        return result;
+    }
+
     @Transactional(readOnly = true)
     @Override
     public SearchResults<Email> findEmails(EmailSearchRequestDTO searchRequest) {
@@ -278,7 +291,24 @@ public class EmailServiceBean extends GenericServiceBean implements EmailService
 
         QEmail email = QEmail.email;
         BooleanExpression predicate =email.dateSent.eq(dateSentFrom);
-        return null;
+//        predicate= predicate.and(email.dateSent);
+        if(Objects.nonNull(status)){
+
+        }
+
+        // Count query
+        JPAQuery<Long> countQuery = getJPAQueryFactory().select(email.count()).from(email).where(predicate);
+        Long totalCount = countQuery.fetchFirst();
+        // Paging query (default sorting)
+
+        OrderSpecifier orderSpecifier = new OrderSpecifier<>(Order.ASC, email.dateSent);
+        if(StringUtils.hasLength(sortingColumn)){
+
+        }
+        JPAQuery<Email> pagingQuery = new JPAQuery<>(getEntityManager());
+        pagingQuery.from(email).where(predicate).offset(pagingStart).limit(pagingSize).orderBy(orderSpecifier);
+        List<Email> results = pagingQuery.createQuery().getResultList();
+        return new SearchResults<>(totalCount.intValue(), results);
     }
 
     protected InternetAddress[] parseAddress(String str) throws AddressException {
