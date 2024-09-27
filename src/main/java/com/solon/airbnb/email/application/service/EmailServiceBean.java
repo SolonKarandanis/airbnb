@@ -290,10 +290,27 @@ public class EmailServiceBean extends GenericServiceBean implements EmailService
         String sortingDirection = paging.getSortingDirection();
 
         QEmail email = QEmail.email;
-        BooleanExpression predicate =email.dateSent.eq(dateSentFrom);
-//        predicate= predicate.and(email.dateSent);
-        if(Objects.nonNull(status)){
+        BooleanExpression predicate =email.dateSent.after(dateSentFrom).and(email.dateSent.before(dateSentTo));
+        predicate = predicate.and(email.emailTypesId.in(emailTypeIds));
 
+        if(Objects.nonNull(dateCreatedFrom)){
+            predicate= predicate.and(email.dateCreated.before(dateCreatedFrom));
+        }
+
+        if(Objects.nonNull(dateCreatedTo)){
+            predicate= predicate.and(email.dateCreated.before(dateCreatedTo));
+        }
+
+        if(Objects.nonNull(subject)){
+            predicate= predicate.and(email.headerSubject.eq(subject));
+        }
+
+        if(Objects.nonNull(sentTo)){
+            predicate= predicate.and(email.headerTo.eq(sentTo));
+        }
+
+        if(Objects.nonNull(status)){
+            predicate= predicate.and(email.status.eq(EmailStatus.valueOf(status)));
         }
 
         // Count query
