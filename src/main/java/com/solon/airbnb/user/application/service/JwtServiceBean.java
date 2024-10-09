@@ -1,5 +1,6 @@
 package com.solon.airbnb.user.application.service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,6 +11,11 @@ import java.util.function.Function;
 
 import javax.crypto.SecretKey;
 
+import com.solon.airbnb.shared.exception.AirbnbException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -21,7 +27,6 @@ import com.solon.airbnb.user.domain.Authority;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
 
@@ -32,13 +37,15 @@ public class JwtServiceBean implements JwtService{
 	@Value("${security.jwt.key}")
     private String signKey;
 
+	private static final Logger log = LoggerFactory.getLogger(JwtServiceBean.class);
+
 	@Override
-	public String extractUsername(String token) {
+	public String extractUsername(String token) throws AirbnbException{
 		return extractClaim(token, Claims::getSubject);
 	}
 
 	@Override
-	public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+	public <T> T extractClaim(String token, Function<Claims, T> claimsResolver)throws AirbnbException{
 		final Claims claims = extractAllClaims(token);
 	    return claimsResolver.apply(claims);
 	}
@@ -62,32 +69,38 @@ public class JwtServiceBean implements JwtService{
 		        .claim("authorities", user.getAuthorities().stream().toList())
 		        .subject(user.getUsername())
 		        .issuedAt(new Date(System.currentTimeMillis()))
-		        .expiration(expireDate)	        
-		        .signWith(getSecretKey())
+		        .expiration(expireDate)
+				.signWith(getSigningKey(), SignatureAlgorithm.HS512)
 		        .compact();
 		return new JwtDTO(token, expireDate);
 	}
 	
 	@Override
-	public Claims extractAllClaims(String token) {
-	 	return Jwts.parser()
-	 			.verifyWith(getSecretKey())
-				.build()
-				.parseSignedClaims(token)
-		        .getPayload();
+	public Claims extractAllClaims(String token) throws AirbnbException {
+		try{
+			return Jwts.parser()
+					.verifyWith(getSigningKey())
+					.build()
+					.parseSignedClaims(token)
+					.getPayload();
+		}catch (MalformedJwtException e) {
+			log.error("Invalid refresh token: {}", e.getMessage());
+			throw new AirbnbException("error.invalid.token");
+		}
+
 	}
 
 	@Override
-	public boolean isTokenValid(String token, UserDetails userDetails) {
+	public boolean isTokenValid(String token, UserDetails userDetails) throws AirbnbException{
 		final String username = extractUsername(token);
 	    return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
 	}
 	
-	private boolean isTokenExpired(String token) {
+	private boolean isTokenExpired(String token)throws AirbnbException {
 		return extractExpiration(token).before(new Date());
 	}
 
-	private Date extractExpiration(String token) {
+	private Date extractExpiration(String token) throws AirbnbException{
 	    return extractClaim(token, Claims::getExpiration);
 	}
 	
@@ -95,7 +108,8 @@ public class JwtServiceBean implements JwtService{
         return authorities.stream().map(Authority::getName).filter(Objects::nonNull).toList();
     }
 	
-	private SecretKey getSecretKey() {
-		return Keys.hmacShaKeyFor(signKey.getBytes());
+	private SecretKey getSigningKey() {
+		byte[] keyBytes = signKey.getBytes(StandardCharsets.UTF_16);
+		return Keys.hmacShaKeyFor(keyBytes);
 	}
 }

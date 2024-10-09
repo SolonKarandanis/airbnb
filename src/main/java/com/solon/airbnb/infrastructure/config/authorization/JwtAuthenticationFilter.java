@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+import com.solon.airbnb.shared.exception.AirbnbException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -43,21 +44,28 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 	        return;
 	    }
 	    jwt = authHeader.substring(SecurityConstants.BEARER_TOKEN_PREFIX.length());
-	    username = jwtService.extractUsername(jwt);
-	    
-	    if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-	    	UsernamePasswordAuthenticationToken authToken = getAuthentication(request,jwt);
-			SecurityContextHolder.getContext().setAuthentication(authToken);
-	    	filterChain.doFilter(request, response);
-	    }
-		
+        try {
+            username = jwtService.extractUsername(jwt);
+			if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+				UsernamePasswordAuthenticationToken authToken = getAuthentication(request,jwt);
+				SecurityContextHolder.getContext().setAuthentication(authToken);
+				filterChain.doFilter(request, response);
+			}
+        } catch (AirbnbException e) {
+            throw new RuntimeException(e);
+        }
 	}
 	
-	private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request,String jwt) {
+	private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request,String jwt) throws AirbnbException {
 		 String token = request.getHeader(SecurityConstants.AUTHORIZATION_HEADER);
 		 if (token != null) {
-			 Claims claims = jwtService.extractAllClaims(token);
-			 UserDTO user = new UserDTO();
+             Claims claims = null;
+             try {
+                 claims = jwtService.extractAllClaims(token);
+             } catch (AirbnbException e) {
+                 throw new RuntimeException(e);
+             }
+             UserDTO user = new UserDTO();
 			 user.setUsername(claims.get("sub", String.class));
 			 user.setPassword(claims.get("password", String.class));
 			 user.setFirstName(claims.get("firstName", String.class));
