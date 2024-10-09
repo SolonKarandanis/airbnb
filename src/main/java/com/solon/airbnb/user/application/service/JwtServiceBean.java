@@ -14,6 +14,7 @@ import javax.crypto.SecretKey;
 import com.solon.airbnb.shared.exception.AirbnbException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -70,7 +71,7 @@ public class JwtServiceBean implements JwtService{
 		        .subject(user.getUsername())
 		        .issuedAt(new Date(System.currentTimeMillis()))
 		        .expiration(expireDate)
-				.signWith(getSigningKey(), SignatureAlgorithm.HS512)
+				.signWith(getSigningKey(), SignatureAlgorithm.HS256)
 		        .compact();
 		return new JwtDTO(token, expireDate);
 	}
@@ -84,7 +85,7 @@ public class JwtServiceBean implements JwtService{
 					.parseSignedClaims(token)
 					.getPayload();
 		}catch (MalformedJwtException e) {
-			log.error("Invalid refresh token: {}", e.getMessage());
+			log.error("Invalid  token: {}", e.getMessage());
 			throw new AirbnbException("error.invalid.token");
 		}
 
@@ -109,7 +110,7 @@ public class JwtServiceBean implements JwtService{
     }
 	
 	private SecretKey getSigningKey() {
-		byte[] keyBytes = signKey.getBytes(StandardCharsets.UTF_16);
+		byte[] keyBytes = Decoders.BASE64.decode(signKey);
 		return Keys.hmacShaKeyFor(keyBytes);
 	}
 }
