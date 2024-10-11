@@ -59,31 +59,52 @@ public class JwtServiceBean implements JwtService{
 	@Override
 	public JwtDTO generateToken(Map<String, Object> extraClaims, UserDTO user) {
 		Date expireDate = new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME);
+//		String token = Jwts
+//		        .builder()
+//		        .claim("username", user.getUsername())
+//		        .claim("firstName", user.getFirstName())
+//		        .claim("lastName", user.getLastName())
+//		        .claim("email", user.getEmail())
+//		        .claim("publicId", user.getPublicId())
+//		        .claim("status", user.getStatus())
+//		        .claim("authorities", user.getAuthorities().stream().toList())
+//		        .subject(user.getUsername())
+//		        .issuedAt(new Date(System.currentTimeMillis()))
+//		        .expiration(expireDate)
+//				.signWith(getSigningKey(), SignatureAlgorithm.HS256)
+//		        .compact();
 		String token = Jwts
-		        .builder()
-		        .claim("username", user.getUsername())
-		        .claim("firstName", user.getFirstName())
-		        .claim("lastName", user.getLastName())
-		        .claim("email", user.getEmail())
-		        .claim("publicId", user.getPublicId())
-		        .claim("status", user.getStatus())
-		        .claim("authorities", user.getAuthorities().stream().toList())
-		        .subject(user.getUsername())
-		        .issuedAt(new Date(System.currentTimeMillis()))
-		        .expiration(expireDate)
+				.builder()
+				.claim("username", user.getUsername())
+				.claim("firstName", user.getFirstName())
+				.claim("lastName", user.getLastName())
+				.claim("email", user.getEmail())
+				.claim("publicId", user.getPublicId())
+				.claim("status", user.getStatus())
+				.claim("authorities", user.getAuthorities().stream().toList())
 				.signWith(getSigningKey(), SignatureAlgorithm.HS256)
-		        .compact();
+				.setSubject(user.getUsername())
+				.setIssuedAt(new Date(System.currentTimeMillis()))
+				.setExpiration(expireDate)
+				.signWith(SignatureAlgorithm.HS512,signKey.getBytes())
+				.compact();
 		return new JwtDTO(token, expireDate);
 	}
 	
 	@Override
 	public Claims extractAllClaims(String token) throws AirbnbException {
+//		return Jwts.parser()
+//				.verifyWith(getSigningKey())
+//				.build()
+//				.parseSignedClaims(token)
+//				.getPayload();
 		try{
-			return Jwts.parser()
-					.verifyWith(getSigningKey())
-					.build()
-					.parseSignedClaims(token)
-					.getPayload();
+			return Jwts
+					.parser()
+					.setSigningKey(signKey.getBytes())
+					.parseClaimsJws(token.replace(SecurityConstants.BEARER_TOKEN_PREFIX, ""))
+					.getBody();
+
 		}catch (MalformedJwtException e) {
 			log.error("Invalid  token: {}", e.getMessage());
 			throw new AirbnbException("error.invalid.token");

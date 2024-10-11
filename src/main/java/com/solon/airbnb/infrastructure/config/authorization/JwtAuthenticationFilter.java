@@ -4,7 +4,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.solon.airbnb.shared.exception.AirbnbException;
+import com.solon.airbnb.user.application.dto.AuthorityDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,6 +30,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter{
+
+	private static final Logger log = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
 	@Autowired
 	private JwtService jwtService;
@@ -74,15 +81,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 			 user.setPublicId(UUID.fromString(claims.get("publicId", String.class)));
 			 user.setStatus(AccountStatus.valueOf(claims.get("status", String.class)));
 			 if (user.getUsername() != null && jwtService.isTokenValid(jwt, user)) {
-				 List<String> authorities = claims.get("authorities", List.class);
+				 log.info("JwtAuthenticationFilter -> claims -> authorities : {}",claims.get("authorities"));
+				 ObjectMapper mapper = new ObjectMapper();
+				 List<AuthorityDTO> authorities = mapper.convertValue(claims.get("authorities"), new TypeReference<List<AuthorityDTO>>() { });
 				 List<SimpleGrantedAuthority> simpleGrantedAuthorities= authorities.stream()
-						 .map(SimpleGrantedAuthority::new)
+						 .map(authority-> new SimpleGrantedAuthority(authority.getAuthority()))
 						 .toList();
 				 return new UsernamePasswordAuthenticationToken(user, null, simpleGrantedAuthorities);
 			 }
 		 }
 		 return null;
 	 }
+//List<String> authorities = mapper.convertValue(claims.get("authorities", List.class), new TypeReference<List<String>>() { })
 	
 	private boolean isAuthorizationHeader(String authHeader) {
         if (authHeader == null || authHeader.trim().isEmpty() || !authHeader.startsWith(SecurityConstants.BEARER_TOKEN_PREFIX) ) {
