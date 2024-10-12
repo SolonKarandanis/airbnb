@@ -14,6 +14,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 public class CustomAuthProvider implements AuthenticationProvider {
     private static final Logger log = LoggerFactory.getLogger(CustomAuthProvider.class);
@@ -34,7 +36,7 @@ public class CustomAuthProvider implements AuthenticationProvider {
 
         UserDTO user = (UserDTO) userDetailsService.loadUserByUsername(username);
         log.info("CustomAuthProvider->authenticate->user: {}" , user.getUsername());
-        if (user == null) {
+        if (Objects.isNull(user)) {
             throw new BadCredentialsException("User not found");
         }
 
