@@ -3,6 +3,8 @@ package com.solon.airbnb.email.domain;
 import com.solon.airbnb.shared.domain.DomainConstants;
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "email_attachments")
 public class EmailAttachment {
@@ -83,5 +85,18 @@ public class EmailAttachment {
 
     public void setData(byte[] data) {
         this.data = data;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EmailAttachment that = (EmailAttachment) o;
+        return Objects.equals(fileName, that.fileName) &&
+                Objects.equals(fileReferenceId, that.fileReferenceId);
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(fileName, fileReferenceId);
     }
 }
