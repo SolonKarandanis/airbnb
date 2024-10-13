@@ -1,5 +1,6 @@
 package com.solon.airbnb.fileinfo.domain;
 
+import com.solon.airbnb.shared.domain.DomainConstants;
 import jakarta.persistence.*;
 
 @Entity
@@ -10,8 +11,8 @@ public class FileInfo {
 
     @Id
     @Column(name = "ID", unique = true, nullable = false)
-    @SequenceGenerator(name = "FILIE_INFO_ID_GENERATOR", sequenceName = "file_info_generator", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "FILIE_INFO_ID_GENERATOR")
+    @SequenceGenerator(name = DomainConstants.FILE_INFO_GEN, sequenceName = DomainConstants.FILE_INFO_SQ, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = DomainConstants.FILE_INFO_GEN)
     private Long id = -1L;
 
     @Column(name = "FILE_REF_ID", nullable = false)

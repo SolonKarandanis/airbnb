@@ -1,5 +1,6 @@
 package com.solon.airbnb.email.domain;
 
+import com.solon.airbnb.shared.domain.DomainConstants;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -10,8 +11,8 @@ import java.util.List;
 public class Email {
 
     @Id
-    @SequenceGenerator(name = "EMAILS_ID_GENERATOR", sequenceName = "email_generator", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EMAILS_ID_GENERATOR")
+    @SequenceGenerator(name = DomainConstants.EMAIL_GEN, sequenceName = DomainConstants.EMAIL_SQ, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = DomainConstants.EMAIL_GEN)
     private Integer id;
 
 

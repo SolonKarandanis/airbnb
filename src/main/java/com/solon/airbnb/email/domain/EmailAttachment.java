@@ -1,5 +1,6 @@
 package com.solon.airbnb.email.domain;
 
+import com.solon.airbnb.shared.domain.DomainConstants;
 import jakarta.persistence.*;
 
 @Entity
@@ -7,8 +8,8 @@ import jakarta.persistence.*;
 public class EmailAttachment {
 
     @Id
-    @SequenceGenerator(name = "EMAIL_ATTACHMENTS_ID_GENERATOR", sequenceName = "email_attachments_generator", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EMAIL_ATTACHMENTS_ID_GENERATOR")
+    @SequenceGenerator(name = DomainConstants.EMAIL_ATTACHMENT_GEN, sequenceName = DomainConstants.EMAIL_ATTACHMENT_SQ, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = DomainConstants.EMAIL_ATTACHMENT_GEN)
     private Integer id;
 
 
