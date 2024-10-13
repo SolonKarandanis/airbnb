@@ -15,14 +15,14 @@ public class DomainConstants {
      */
     public static final String USER_GEN = "userSequenceGenerator";
     public static final String TOKEN_GEN = "tokenSequenceGenerator";
-    public static final String ATCDDD_ACTIVES_GEN = "atcdddActivesGen";
-    public static final String ATCDDD_UD_GEN = "atcdddUdGen";
+    public static final String LISTING_GEN = "listingSequenceGenerator";
+    public static final String LISTING_PICTURE_GEN = "listingPictureSequenceGenerator";
 
     /*
      * DATABASE SEQUENCES
      */
     public static final String USER_SQ = "user_generator";
     public static final String TOKEN_SQ = "token_generator";
-    public static final String ATCDDD_ACTIVES_SQ = "atcddd_actives_id";
-    public static final String ATCDDD_UD_SQ = "atcddd_ud_id";
+    public static final String LISTING_SQ = "listing_generator";
+    public static final String LISTING_PICTURE_SQ = "listing_picture_generator";
 }
