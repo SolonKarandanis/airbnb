@@ -73,6 +73,16 @@ public class Listing extends AbstractAuditingEntity<Long> implements UuidEntity{
     @OneToMany(mappedBy = "listing", cascade = CascadeType.REMOVE)
     private Set<ListingPicture> pictures = new HashSet<>();
 
+    public void addPicture(ListingPicture picture){
+        pictures.add(picture);
+        picture.setListing(this);
+    }
+
+    public void removePicture(ListingPicture picture){
+        pictures.remove(picture);
+        picture.setListing(null);
+    }
+
     @Override
     public Long getId() {
         return id;

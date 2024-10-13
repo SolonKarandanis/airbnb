@@ -67,6 +67,16 @@ public class Email {
     @Column(name = "details_1")
     private String details1;
 
+    public void addAttachment(EmailAttachment attachment){
+        emailAttachments.add(attachment);
+        attachment.setEmail(this);
+    }
+
+    public void removeAttachment(EmailAttachment attachment){
+        emailAttachments.remove(attachment);
+        attachment.setEmail(null);
+    }
+
     public Email() {
     }
 
