@@ -11,8 +11,15 @@ import java.util.Date;
 public class VerificationToken {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = DomainConstants.TOKEN_GEN)
-    @SequenceGenerator(name = DomainConstants.TOKEN_GEN, sequenceName = DomainConstants.TOKEN_SQ, allocationSize = 1)
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = DomainConstants.TOKEN_GEN
+    )
+    @SequenceGenerator(
+            name = DomainConstants.TOKEN_GEN,
+            sequenceName = DomainConstants.TOKEN_SQ,
+            allocationSize = 1
+    )
     @Column(name = "id")
     private Long id;
 

@@ -24,8 +24,15 @@ import jakarta.persistence.Table;
 public class Booking extends AbstractAuditingEntity<Long> implements UuidEntity{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = DomainConstants.BOOKING_GEN)
-    @SequenceGenerator(name = DomainConstants.BOOKING_GEN, sequenceName = DomainConstants.BOOKING_SQ, allocationSize = 1)
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = DomainConstants.BOOKING_GEN
+    )
+    @SequenceGenerator(
+            name = DomainConstants.BOOKING_GEN,
+            sequenceName = DomainConstants.BOOKING_SQ,
+            allocationSize = 1
+    )
     @Column(name = "id")
     private Long id;
 

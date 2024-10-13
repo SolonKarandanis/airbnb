@@ -29,8 +29,15 @@ import jakarta.persistence.Table;
 public class Listing extends AbstractAuditingEntity<Long> implements UuidEntity{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = DomainConstants.LISTING_GEN)
-    @SequenceGenerator(name = DomainConstants.LISTING_GEN, sequenceName = DomainConstants.LISTING_SQ, allocationSize = 1)
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = DomainConstants.LISTING_GEN
+    )
+    @SequenceGenerator(
+            name = DomainConstants.LISTING_GEN,
+            sequenceName = DomainConstants.LISTING_SQ,
+            allocationSize = 1
+    )
     @Column(name = "id")
     private Long id;
 

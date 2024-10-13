@@ -11,8 +11,15 @@ public class FileInfo {
 
     @Id
     @Column(name = "ID", unique = true, nullable = false)
-    @SequenceGenerator(name = DomainConstants.FILE_INFO_GEN, sequenceName = DomainConstants.FILE_INFO_SQ, allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = DomainConstants.FILE_INFO_GEN)
+    @SequenceGenerator(
+            name = DomainConstants.FILE_INFO_GEN,
+            sequenceName = DomainConstants.FILE_INFO_SQ,
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = DomainConstants.FILE_INFO_GEN
+    )
     private Long id = -1L;
 
     @Column(name = "FILE_REF_ID", nullable = false)

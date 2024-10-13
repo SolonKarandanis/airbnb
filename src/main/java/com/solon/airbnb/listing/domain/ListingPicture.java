@@ -13,8 +13,15 @@ import jakarta.persistence.*;
 public class ListingPicture extends AbstractAuditingEntity<Long> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = DomainConstants.LISTING_PICTURE_GEN)
-    @SequenceGenerator(name = DomainConstants.LISTING_PICTURE_GEN, sequenceName = DomainConstants.LISTING_PICTURE_SQ, allocationSize = 1)
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = DomainConstants.LISTING_PICTURE_GEN
+    )
+    @SequenceGenerator(
+            name = DomainConstants.LISTING_PICTURE_GEN,
+            sequenceName = DomainConstants.LISTING_PICTURE_SQ,
+            allocationSize = 1
+    )
     @Column(name = "id")
     private Long id;
 

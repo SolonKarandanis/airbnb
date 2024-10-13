@@ -11,8 +11,15 @@ import java.util.List;
 public class Email {
 
     @Id
-    @SequenceGenerator(name = DomainConstants.EMAIL_GEN, sequenceName = DomainConstants.EMAIL_SQ, allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = DomainConstants.EMAIL_GEN)
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = DomainConstants.EMAIL_GEN
+    )
+    @SequenceGenerator(
+            name = DomainConstants.EMAIL_GEN,
+            sequenceName = DomainConstants.EMAIL_SQ,
+            allocationSize = 1
+    )
     private Integer id;
 
 
