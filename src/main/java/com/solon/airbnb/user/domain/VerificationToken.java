@@ -1,5 +1,6 @@
 package com.solon.airbnb.user.domain;
 
+import com.solon.airbnb.shared.domain.DomainConstants;
 import jakarta.persistence.*;
 
 import java.util.Calendar;
@@ -10,8 +11,8 @@ import java.util.Date;
 public class VerificationToken {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tokenSequenceGenerator")
-    @SequenceGenerator(name = "tokenSequenceGenerator", sequenceName = "token_generator", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = DomainConstants.TOKEN_GEN)
+    @SequenceGenerator(name = DomainConstants.TOKEN_GEN, sequenceName = DomainConstants.TOKEN_SQ, allocationSize = 1)
     @Column(name = "id")
     private Long id;
 

@@ -5,6 +5,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+import com.solon.airbnb.shared.domain.DomainConstants;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UuidGenerator;
@@ -44,8 +45,8 @@ public class User extends AbstractAuditingEntity<Long> implements UuidEntity{
 	public static final String GRAPH_USERS_AUTHORITIES="graph.users.authorities";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userSequenceGenerator")
-    @SequenceGenerator(name = "userSequenceGenerator", sequenceName = "user_generator", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = DomainConstants.USER_GEN)
+    @SequenceGenerator(name = DomainConstants.USER_GEN, sequenceName = DomainConstants.USER_SQ, allocationSize = 1)
     @Column(name = "id")
     private Long id;
     
