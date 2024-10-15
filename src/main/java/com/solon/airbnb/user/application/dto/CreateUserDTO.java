@@ -49,11 +49,12 @@ public class CreateUserDTO {
 	@Size(min = 1, max = 150, message = "{user.role.size}")
 	private String role;
 
-	public String getUsername() {
+
+	public @NotNull(message = "{user.username.notNull}") @Size(min = 1, max = 25, message = "{user.username.size}") String getUsername() {
 		return username;
 	}
 
-	public void setUsername(String username) {
+	public void setUsername(@NotNull(message = "{user.username.notNull}") @Size(min = 1, max = 25, message = "{user.username.size}") String username) {
 		this.username = username;
 	}
 
@@ -65,27 +66,27 @@ public class CreateUserDTO {
 		this.password = password;
 	}
 
-	public String getFirstName() {
+	public @NotNull(message = "{user.firstName.notNull}") @Size(min = 1, max = 50, message = "{user.firstName.size}") String getFirstName() {
 		return firstName;
 	}
 
-	public void setFirstName(String firstName) {
+	public void setFirstName(@NotNull(message = "{user.firstName.notNull}") @Size(min = 1, max = 50, message = "{user.firstName.size}") String firstName) {
 		this.firstName = firstName;
 	}
 
-	public String getLastName() {
+	public @NotNull(message = "{user.lastName.notNull}") @Size(min = 1, max = 50, message = "{user.lastName.size}") String getLastName() {
 		return lastName;
 	}
 
-	public void setLastName(String lastName) {
+	public void setLastName(@NotNull(message = "{user.lastName.notNull}") @Size(min = 1, max = 50, message = "{user.lastName.size}") String lastName) {
 		this.lastName = lastName;
 	}
 
-	public String getEmail() {
+	public @NotNull(message = "{user.email.notNull}") @Size(min = 1, max = 150, message = "{user.email.size}") String getEmail() {
 		return email;
 	}
 
-	public void setEmail(String email) {
+	public void setEmail(@NotNull(message = "{user.email.notNull}") @Size(min = 1, max = 150, message = "{user.email.size}") String email) {
 		this.email = email;
 	}
 
