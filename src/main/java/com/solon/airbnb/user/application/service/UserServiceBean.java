@@ -151,4 +151,25 @@ public class UserServiceBean extends BaseUserAccountServiceBean implements UserS
             userRepository.save(user);
         }
     }
+
+    @Override
+    public User activateUser(User user) throws BusinessException {
+        if(AccountStatus.ACTIVE.equals(user.getStatus())){
+            throw new BusinessException("error.user.already.active");
+        }
+        user.setStatus(AccountStatus.ACTIVE);
+        user.setVerified(Boolean.TRUE);
+        userRepository.save(user);
+        return user;
+    }
+
+    @Override
+    public User deactivateUser(User user) throws BusinessException {
+        if(AccountStatus.INACTIVE.equals(user.getStatus())){
+            throw new BusinessException("error.user.already.inactive");
+        }
+        user.setStatus(AccountStatus.INACTIVE);
+        userRepository.save(user);
+        return user;
+    }
 }

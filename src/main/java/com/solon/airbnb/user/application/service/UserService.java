@@ -25,5 +25,7 @@ public interface UserService extends BaseUserAccountService{
     public User registerUser(CreateUserDTO dto, String applicationUrl) throws NotFoundException;
     public User updateUser(UpdateUserDTO dto) throws NotFoundException;
     public void verifyEmail(String token) throws BusinessException;
+    public User activateUser(User user) throws BusinessException;
+    public User deactivateUser(User user) throws BusinessException;
 
 }

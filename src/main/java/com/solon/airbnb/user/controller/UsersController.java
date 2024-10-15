@@ -90,9 +90,32 @@ public class UsersController extends GenericController{
 	 
 	@DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable(name= "id",required=true) @Min(1) String publicId) throws NotFoundException{
+		log.info("UsersController->deleteUser->publicId: {}" , publicId);
         usersService.deleteUser(publicId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+	@PutMapping("/{id}/activate")
+	public ResponseEntity<ReadUserDTO> activateUser(
+			@PathVariable(name= "id", required=true) String publicId )
+			throws NotFoundException, BusinessException {
+		log.info("UsersController->activateUser->publicId: {}" , publicId);
+		User user =getUserDTOByPublicId(publicId);
+		user = usersService.activateUser(user);
+		ReadUserDTO dto = usersService.convertToReadUserDTO(user);
+		return ResponseEntity.ok(dto);
+	}
+
+	@PutMapping("/{id}/deactivate")
+	public ResponseEntity<ReadUserDTO> deactivateUser(
+			@PathVariable(name= "id", required=true) String publicId )
+			throws NotFoundException, BusinessException {
+		log.info("UsersController->activateUser->publicId: {}" , publicId);
+		User user =getUserDTOByPublicId(publicId);
+		user = usersService.deactivateUser(user);
+		ReadUserDTO dto = usersService.convertToReadUserDTO(user);
+		return ResponseEntity.ok(dto);
+	}
 
 	@GetMapping("/verifyEmail")
 	public ResponseEntity<Void> verifyEmail(@RequestParam("token") String token)throws BusinessException {
