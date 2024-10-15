@@ -56,13 +56,16 @@ public class UsersController extends GenericController{
 	 
 	 @GetMapping("/{id}")
 	 public ResponseEntity<ReadUserDTO> viewUser(@PathVariable(name= "id", required=true) String publicId) throws NotFoundException{
-		 return ResponseEntity.ok(getUserDTOByPublicId(publicId));
+		 User user =getUserDTOByPublicId(publicId);
+		 return ResponseEntity.ok(usersService.convertToReadUserDTO(user));
 	 }
-	 
+
+
 	 @GetMapping(value="/account")
 	 public ResponseEntity<ReadUserDTO> getUserByToken(Authentication authentication) throws NotFoundException{
 		 String publicId = getLoggedInUserUUID(authentication);
-		 return ResponseEntity.ok(getUserDTOByPublicId(publicId));
+		 User user =getUserDTOByPublicId(publicId);
+		 return ResponseEntity.ok(usersService.convertToReadUserDTO(user));
 	 }
 
 	 @NoAuthentication
@@ -74,8 +77,10 @@ public class UsersController extends GenericController{
 		 return ResponseEntity.ok(dto);
 	 }
 	 
-	 @PutMapping
-	 public ResponseEntity<ReadUserDTO> updateUser(@RequestBody @Valid UpdateUserDTO user) throws NotFoundException{
+	 @PutMapping("/{id}")
+	 public ResponseEntity<ReadUserDTO> updateUser(
+			 @PathVariable(name= "id", required=true) String publicId,
+			 @RequestBody @Valid UpdateUserDTO user) throws NotFoundException{
 		log.info("RequestBody: {}" , user);
         User userSaved=usersService.updateUser(user);
         log.info("userSaved: {}" , userSaved);

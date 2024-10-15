@@ -20,7 +20,10 @@ public interface UserRepository extends JpaRepository<User, Long> ,JpaSpecificat
 
     Optional<User> findOneByEmail(String email);
 
-    Optional<User> findOneByPublicId(UUID publicId);
+    @Query("SELECT u FROM User u "
+            + "LEFT JOIN FETCH u.authorities a "
+            + "WHERE u.publicId= :publicId ")
+    Optional<User> findOneByPublicId(@Param("publicId")UUID publicId);
     
     @Query("SELECT u FROM User u "
             + "LEFT JOIN FETCH u.authorities a "

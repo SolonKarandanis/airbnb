@@ -59,9 +59,8 @@ public class UserServiceBean extends BaseUserAccountServiceBean implements UserS
     }
 
     @Override
-    public Optional<ReadUserDTO> getByPublicId(String publicId) throws NotFoundException{
-        Optional<User> oneByPublicId = userRepository.findOneByPublicId(UUID.fromString(publicId));
-        return oneByPublicId.map(userMapper::readUserDTOToUser);
+    public Optional<User> getByPublicId(String publicId) throws NotFoundException{
+        return userRepository.findOneByPublicId(UUID.fromString(publicId));
     }
 
     @Override

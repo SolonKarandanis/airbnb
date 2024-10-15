@@ -52,7 +52,7 @@ public class GenericController {
     	return dto.getUsername();
     }
     
-    protected ReadUserDTO getUserDTOByPublicId(String publicId) {
+    protected User getUserDTOByPublicId(String publicId) {
     	return usersService.getByPublicId(publicId)
     			.orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
     }

@@ -19,7 +19,7 @@ public interface UserService extends BaseUserAccountService{
 	public User findById(Long id) throws NotFoundException;
 	public List<User> findAllUsers();
     public Optional<ReadUserDTO> getByEmail(String email)throws NotFoundException;
-    public Optional<ReadUserDTO> getByPublicId(String publicId)throws NotFoundException;
+    public Optional<User> getByPublicId(String publicId)throws NotFoundException;
     public void deleteUser(String uuid) throws NotFoundException;
     public Page<User> findAllUsers(UsersSearchRequestDTO searchObj);
     public User registerUser(CreateUserDTO dto, String applicationUrl) throws NotFoundException;

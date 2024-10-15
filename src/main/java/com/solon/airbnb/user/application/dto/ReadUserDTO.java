@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.solon.airbnb.user.domain.AccountStatus;
 
-public record ReadUserDTO(UUID publicId,
+public record ReadUserDTO(String publicId,
                           String firstName,
                           String lastName,
                           String email,
