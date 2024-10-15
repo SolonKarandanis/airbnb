@@ -3,7 +3,7 @@ package com.solon.airbnb.user.application.service;
 import com.solon.airbnb.shared.exception.BusinessException;
 import com.solon.airbnb.shared.exception.NotFoundException;
 import com.solon.airbnb.user.application.dto.ReadUserDTO;
-import com.solon.airbnb.user.application.dto.UserInputDTO;
+import com.solon.airbnb.user.application.dto.CreateUserDTO;
 import com.solon.airbnb.user.application.dto.UsersSearchRequestDTO;
 import com.solon.airbnb.user.application.event.UserRegistrationCompleteEvent;
 import com.solon.airbnb.user.domain.AccountStatus;
@@ -97,7 +97,7 @@ public class UserServiceBean extends BaseUserAccountServiceBean implements UserS
 
     @Transactional(noRollbackFor = MailAuthenticationException.class)
     @Override
-    public User registerUser(UserInputDTO dto, String applicationUrl) throws NotFoundException {
+    public User registerUser(CreateUserDTO dto, String applicationUrl) throws NotFoundException {
         Optional<User> userNameMaybe  = userRepository.findByUsername(dto.getUsername());
 
         if(userNameMaybe.isPresent()){
@@ -129,7 +129,7 @@ public class UserServiceBean extends BaseUserAccountServiceBean implements UserS
 
     @Transactional
     @Override
-    public User updateUser(UserInputDTO dto) throws NotFoundException {
+    public User updateUser(CreateUserDTO dto) throws NotFoundException {
         User user  = userRepository
                 .findByUsername(dto.getUsername())
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));

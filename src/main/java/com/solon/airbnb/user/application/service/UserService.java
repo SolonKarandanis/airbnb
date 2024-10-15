@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 
 import com.solon.airbnb.shared.exception.NotFoundException;
 import com.solon.airbnb.user.application.dto.ReadUserDTO;
-import com.solon.airbnb.user.application.dto.UserInputDTO;
+import com.solon.airbnb.user.application.dto.CreateUserDTO;
 import com.solon.airbnb.user.application.dto.UsersSearchRequestDTO;
 import com.solon.airbnb.user.domain.User;
 
@@ -21,8 +21,8 @@ public interface UserService extends BaseUserAccountService{
     public Optional<ReadUserDTO> getByPublicId(String publicId)throws NotFoundException;
     public void deleteUser(String uuid) throws NotFoundException;
     public Page<User> findAllUsers(UsersSearchRequestDTO searchObj);
-    public User registerUser(UserInputDTO dto,String applicationUrl) throws NotFoundException;
-    public User updateUser(UserInputDTO dto) throws NotFoundException;
+    public User registerUser(CreateUserDTO dto, String applicationUrl) throws NotFoundException;
+    public User updateUser(CreateUserDTO dto) throws NotFoundException;
     public void verifyEmail(String token) throws BusinessException;
 
 }

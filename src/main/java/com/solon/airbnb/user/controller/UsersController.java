@@ -19,7 +19,7 @@ import com.solon.airbnb.shared.controller.GenericController;
 import com.solon.airbnb.shared.dto.SearchResults;
 import com.solon.airbnb.shared.exception.NotFoundException;
 import com.solon.airbnb.user.application.dto.ReadUserDTO;
-import com.solon.airbnb.user.application.dto.UserInputDTO;
+import com.solon.airbnb.user.application.dto.CreateUserDTO;
 import com.solon.airbnb.user.application.dto.UsersSearchRequestDTO;
 import com.solon.airbnb.user.application.utils.UserExcelExportUtils;
 import com.solon.airbnb.user.domain.User;
@@ -66,7 +66,7 @@ public class UsersController extends GenericController{
 
 	 @NoAuthentication
 	 @PostMapping
-	 public ResponseEntity<ReadUserDTO> registerUser(@RequestBody @Valid UserInputDTO user,final HttpServletRequest request) throws NotFoundException{
+	 public ResponseEntity<ReadUserDTO> registerUser(@RequestBody @Valid CreateUserDTO user, final HttpServletRequest request) throws NotFoundException{
 		 log.info("UsersController->registerUser->RequestBody: {}" , user);
 		 User userSaved=usersService.registerUser(user, applicationUrl(request));
 		 ReadUserDTO dto = usersService.convertToReadUserDTO(userSaved);
@@ -74,7 +74,7 @@ public class UsersController extends GenericController{
 	 }
 	 
 	 @PutMapping
-	 public ResponseEntity<ReadUserDTO> updateUser(@RequestBody @Valid UserInputDTO user) throws NotFoundException{
+	 public ResponseEntity<ReadUserDTO> updateUser(@RequestBody @Valid CreateUserDTO user) throws NotFoundException{
 		log.info("RequestBody: {}" , user);
         User userSaved=usersService.updateUser(user);
         log.info("userSaved: {}" , userSaved);

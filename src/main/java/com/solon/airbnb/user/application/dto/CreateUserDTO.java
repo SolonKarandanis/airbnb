@@ -24,7 +24,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class UserInputDTO {
+public class CreateUserDTO {
     
     @NotNull(message = "{user.username.notNull}")
     @Size(min = 1, max = 25, message = "{user.username.size}")
