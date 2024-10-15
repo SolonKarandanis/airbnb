@@ -4,6 +4,7 @@ import com.solon.airbnb.shared.exception.BusinessException;
 import com.solon.airbnb.shared.exception.NotFoundException;
 import com.solon.airbnb.user.application.dto.ReadUserDTO;
 import com.solon.airbnb.user.application.dto.CreateUserDTO;
+import com.solon.airbnb.user.application.dto.UpdateUserDTO;
 import com.solon.airbnb.user.application.dto.UsersSearchRequestDTO;
 import com.solon.airbnb.user.application.event.UserRegistrationCompleteEvent;
 import com.solon.airbnb.user.domain.AccountStatus;
@@ -129,7 +130,7 @@ public class UserServiceBean extends BaseUserAccountServiceBean implements UserS
 
     @Transactional
     @Override
-    public User updateUser(CreateUserDTO dto) throws NotFoundException {
+    public User updateUser(UpdateUserDTO dto) throws NotFoundException {
         User user  = userRepository
                 .findByUsername(dto.getUsername())
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));

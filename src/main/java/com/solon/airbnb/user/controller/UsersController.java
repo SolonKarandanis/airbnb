@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.solon.airbnb.infrastructure.security.NoAuthentication;
 import com.solon.airbnb.shared.exception.BusinessException;
+import com.solon.airbnb.user.application.dto.UpdateUserDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,7 +75,7 @@ public class UsersController extends GenericController{
 	 }
 	 
 	 @PutMapping
-	 public ResponseEntity<ReadUserDTO> updateUser(@RequestBody @Valid CreateUserDTO user) throws NotFoundException{
+	 public ResponseEntity<ReadUserDTO> updateUser(@RequestBody @Valid UpdateUserDTO user) throws NotFoundException{
 		log.info("RequestBody: {}" , user);
         User userSaved=usersService.updateUser(user);
         log.info("userSaved: {}" , userSaved);
