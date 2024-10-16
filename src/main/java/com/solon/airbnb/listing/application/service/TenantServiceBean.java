@@ -16,11 +16,13 @@ import com.solon.airbnb.user.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -72,6 +74,22 @@ public class TenantServiceBean extends GenericServiceBean implements TenantServi
     @Override
     public Page<DisplayCardListingDTO> search(TenantSearchRequestDTO searchObj) {
         PageRequest pageRequest = toPageRequest(searchObj.getPaging());
-        return null;
+        String location = searchObj.getLocation();
+        Integer baths  = searchObj.getBaths().value();
+        Integer bedrooms = searchObj.getBedrooms().value();
+        Integer guests = searchObj.getGuests().value();
+        Integer beds = searchObj.getBeds().value();
+        String startDate = searchObj.getStartDate();
+        String endDate = searchObj.getEndDate();
+        Page<Listing> allMatchedListings = listingRepository
+                .findAllByLocationAndBathroomsAndBedroomsAndGuestsAndBeds(pageRequest,location,baths,bedrooms,guests,beds);
+        List<UUID> listingUUIDs = allMatchedListings.stream()
+                .map(Listing::getPublicId)
+                .toList();
+        List<UUID> bookingUUIDs = bookingService.getBookingMatchByListingIdsAndBookedDate(listingUUIDs, startDate, endDate);
+        List<DisplayCardListingDTO> listingsNotBooked = allMatchedListings.stream().filter(listing -> !bookingUUIDs.contains(listing.getPublicId()))
+                .map(listingMapper::listingToDisplayCardListingDTO)
+                .toList();
+        return new PageImpl<>(listingsNotBooked, pageRequest, listingsNotBooked.size());
     }
 }

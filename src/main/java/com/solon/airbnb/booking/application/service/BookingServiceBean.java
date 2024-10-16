@@ -41,7 +41,7 @@ public class BookingServiceBean implements BookingService{
     }
 
     @Override
-    public List<UUID> getBookingMatchByListingIdsAndBookedDate(List<UUID> listingsId, BookedDateDTO bookedDateDTO) {
+    public List<UUID> getBookingMatchByListingIdsAndBookedDate(List<UUID> listingsId, String startDate,String endDate) {
         return List.of();
     }
 }

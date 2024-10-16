@@ -20,5 +20,5 @@ public interface BookingService {
 
     public List<BookedListingDTO> getBookedListingForLandlord();
 
-    public List<UUID> getBookingMatchByListingIdsAndBookedDate(List<UUID> listingsId, BookedDateDTO bookedDateDTO);
+    public List<UUID> getBookingMatchByListingIdsAndBookedDate(List<UUID> listingsId, String startDate,String endDate);
 }
