@@ -8,9 +8,7 @@ import com.solon.airbnb.listing.domain.Listing;
 import com.solon.airbnb.listing.mapper.ListingMapper;
 import com.solon.airbnb.listing.repository.ListingRepository;
 import com.solon.airbnb.shared.exception.NotFoundException;
-import com.solon.airbnb.shared.service.State;
 import com.solon.airbnb.user.application.dto.ReadUserDTO;
-import com.solon.airbnb.user.application.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -50,8 +48,8 @@ public class LandlordServiceBean implements LandlordService{
     }
 
     @Override
-    public List<DisplayCardListingDTO> getAllProperties(ReadUserDTO landlord) {
-        List<Listing> properties = listingRepository.findAllByLandlordPublicIdFetchCoverPicture(UUID.fromString(landlord.publicId()));
+    public List<DisplayCardListingDTO> getAllProperties(String landlordId) {
+        List<Listing> properties = listingRepository.findAllByLandlordPublicIdFetchCoverPicture(UUID.fromString(landlordId));
         return listingMapper.listingToDisplayCardListingDTOs(properties);
     }
 

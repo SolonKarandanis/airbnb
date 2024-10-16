@@ -10,15 +10,15 @@ import java.util.UUID;
 
 public interface BookingService {
 
-    public State<Void, String> create(NewBookingDTO newBookingDTO);
+    public State<Void, String> create(NewBookingDTO newBookingDTO, String loggedInUserId);
 
-    public List<BookedDateDTO> checkAvailability(UUID publicId);
+    public List<BookedDateDTO> checkAvailability(String publicId);
 
-    public List<BookedListingDTO> getBookedListing();
+    public List<BookedListingDTO> getBookedListing(String loggedInUserId);
 
-    public State<UUID, String> cancel(UUID bookingPublicId, UUID listingPublicId, boolean byLandlord);
+    public State<UUID, String> cancel(String bookingPublicId, String listingPublicId, boolean byLandlord,String loggedInUserId);
 
-    public List<BookedListingDTO> getBookedListingForLandlord();
+    public List<BookedListingDTO> getBookedListingForLandlord(String loggedInUserId);
 
     public List<UUID> getBookingMatchByListingIdsAndBookedDate(List<UUID> listingsId, String startDate,String endDate);
 }
