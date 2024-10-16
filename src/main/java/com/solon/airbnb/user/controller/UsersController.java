@@ -123,7 +123,7 @@ public class UsersController extends GenericController{
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
-	public String applicationUrl(HttpServletRequest request) {
+	protected String applicationUrl(HttpServletRequest request) {
 		return "http://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath();
 	}
 

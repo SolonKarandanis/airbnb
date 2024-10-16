@@ -20,6 +20,8 @@ public interface ListingRepository extends JpaRepository<Listing, Long>{
 	        " WHERE listing.landlordPublicId = :landlordPublicId AND picture.isCover = true")
 	List<Listing> findAllByLandlordPublicIdFetchCoverPicture(UUID landlordPublicId);
 
+	Boolean existsByPublicIdAndLandlordPublicId(UUID publicId, UUID landlordPublicId);
+
 	long deleteByPublicIdAndLandlordPublicId(UUID publicId, UUID landlordPublicId);
 
 	@Query("SELECT listing from Listing listing LEFT JOIN FETCH listing.pictures picture" +
@@ -33,6 +35,7 @@ public interface ListingRepository extends JpaRepository<Listing, Long>{
 	Optional<Listing> findByPublicId(UUID publicId);
 
 	List<Listing> findAllByPublicIdIn(List<UUID> allListingPublicIDs);
+
 
 	Optional<Listing> findOneByPublicIdAndLandlordPublicId(UUID listingPublicId, UUID landlordPublicId);
 
