@@ -90,7 +90,7 @@ public class UserServiceBean extends BaseUserAccountServiceBean implements UserS
         User user = new User();
         BeanUtils.copyProperties(searchObj, user);
         user.setStatus(AccountStatus.valueOf(searchObj.getStatus()));
-        PageRequest pageRequest = toPageRequest(searchObj.getPaging())	;
+        PageRequest pageRequest = toPageRequest(searchObj.getPaging());
         return  userRepository.findAll( new UsersSpecification(user),pageRequest);
     }
 

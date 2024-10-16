@@ -11,16 +11,15 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.OffsetDateTime;
 
 @Getter
 @Setter
 public class TenantSearchRequestDTO extends SearchRequestDTO {
     @NotNull
-    private OffsetDateTime startDate;
+    private String startDate;
 
     @NotNull
-    private OffsetDateTime endDate;
+    private String endDate;
 
     @NotEmpty
     private String location;
