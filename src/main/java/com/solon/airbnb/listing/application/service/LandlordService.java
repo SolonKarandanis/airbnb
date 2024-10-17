@@ -17,7 +17,7 @@ public interface LandlordService {
 
     public List<DisplayCardListingDTO> getAllProperties(String landlordId);
 
-    public void delete(String publicId, ReadUserDTO landlord) throws NotFoundException;
+    public void delete(String publicId, String landlordPublicId) throws NotFoundException;
 
     public Optional<ListingCreateBookingDTO> getByListingPublicId(String publicId);
 

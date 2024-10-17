@@ -55,12 +55,12 @@ public class LandlordServiceBean implements LandlordService{
 
     @Transactional
     @Override
-    public void delete(String publicId, ReadUserDTO landlord) throws NotFoundException {
-        Boolean exists = listingRepository.existsByPublicIdAndLandlordPublicId(UUID.fromString(publicId),UUID.fromString(landlord.publicId()));
+    public void delete(String publicId,String landlordPublicId) throws NotFoundException {
+        Boolean exists = listingRepository.existsByPublicIdAndLandlordPublicId(UUID.fromString(publicId),UUID.fromString(landlordPublicId));
         if(!exists){
             throw new NotFoundException("error.listing.not.found");
         }
-        listingRepository.deleteByPublicIdAndLandlordPublicId(UUID.fromString(publicId),UUID.fromString(landlord.publicId()));
+        listingRepository.deleteByPublicIdAndLandlordPublicId(UUID.fromString(publicId),UUID.fromString(landlordPublicId));
     }
 
     @Override
