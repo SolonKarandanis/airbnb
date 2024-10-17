@@ -1,6 +1,7 @@
 package com.solon.airbnb.booking.mapper;
 
 import com.solon.airbnb.booking.application.dto.BookedDateDTO;
+import com.solon.airbnb.booking.application.dto.BookingDTO;
 import com.solon.airbnb.booking.application.dto.NewBookingDTO;
 import com.solon.airbnb.booking.domain.Booking;
 import org.mapstruct.Context;
@@ -42,4 +43,8 @@ public interface BookingMapper {
     default String mapStringEndDate(Booking booking){
         return booking.getEndDate().toString();
     }
+
+    @Mapping(target = "startDate", source = "booking", qualifiedByName = "startStringDate")
+    @Mapping(target = "endDate", source = "booking", qualifiedByName = "endStringDate")
+    BookingDTO bookingToBookingDTO(Booking booking);
 }
