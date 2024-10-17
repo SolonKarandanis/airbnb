@@ -69,9 +69,8 @@ public class LandlordServiceBean implements LandlordService{
     }
 
     @Override
-    public List<DisplayCardListingDTO> getCardDisplayByListingPublicId(List<String> allListingPublicIDs) {
-       List<UUID> uuids = allListingPublicIDs.stream().map(UUID::fromString).toList();
-        return listingRepository.findAllByPublicIdIn(uuids)
+    public List<DisplayCardListingDTO> getCardDisplayByListingPublicId(List<UUID> allListingPublicIDs) {
+        return listingRepository.findAllByPublicIdIn(allListingPublicIDs)
                 .stream()
                 .map(listingMapper::listingToDisplayCardListingDTO)
                 .toList();

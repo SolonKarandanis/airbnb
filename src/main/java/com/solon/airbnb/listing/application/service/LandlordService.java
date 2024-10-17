@@ -9,6 +9,7 @@ import com.solon.airbnb.user.application.dto.ReadUserDTO;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface LandlordService {
 
@@ -20,7 +21,7 @@ public interface LandlordService {
 
     public Optional<ListingCreateBookingDTO> getByListingPublicId(String publicId);
 
-    public List<DisplayCardListingDTO> getCardDisplayByListingPublicId(List<String> allListingPublicIDs);
+    public List<DisplayCardListingDTO> getCardDisplayByListingPublicId(List<UUID> allListingPublicIDs);
 
     public Optional<DisplayCardListingDTO> getByPublicIdAndLandlordPublicId(String listingPublicId, String landlordPublicId);
 }
