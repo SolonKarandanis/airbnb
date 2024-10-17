@@ -96,7 +96,7 @@ public class BookingServiceBean implements BookingService{
             return new BookedListingDTO(displayCardListingDTO.cover(),
                     displayCardListingDTO.location(),
                     dates, new PriceVO(booking.getTotalPrice()),
-                    booking.getPublicId(), displayCardListingDTO.publicId());
+                    booking.getPublicId(), UUID.fromString(displayCardListingDTO.publicId()));
         }).toList();
     }
 
@@ -109,7 +109,7 @@ public class BookingServiceBean implements BookingService{
             Optional<DisplayCardListingDTO> listingVerificationOpt = landlordService
                     .getByPublicIdAndLandlordPublicId(listingPublicId, loggedInUser.getPublicId().toString());
             if (listingVerificationOpt.isPresent()){
-                deleteSuccess = bookingRepository.deleteBookingByPublicIdAndFkListing(UUID.fromString(bookingPublicId), listingVerificationOpt.get().publicId());
+                deleteSuccess = bookingRepository.deleteBookingByPublicIdAndFkListing(UUID.fromString(bookingPublicId), UUID.fromString(listingVerificationOpt.get().publicId()));
             }
         }
         else{
@@ -123,7 +123,7 @@ public class BookingServiceBean implements BookingService{
     @Override
     public List<BookedListingDTO> getBookedListingForLandlord(String loggedInUserId) {
         List<DisplayCardListingDTO> allProperties = landlordService.getAllProperties(loggedInUserId);
-        List<UUID> allPropertyPublicIds = allProperties.stream().map(DisplayCardListingDTO::publicId).toList();
+        List<UUID> allPropertyPublicIds = allProperties.stream().map(DisplayCardListingDTO::publicId).map(UUID::fromString).toList();
         List<Booking> allBookings = bookingRepository.findAllByFkListingIn(allPropertyPublicIds);
         return mapBookingToBookedListing(allBookings, allProperties);
     }

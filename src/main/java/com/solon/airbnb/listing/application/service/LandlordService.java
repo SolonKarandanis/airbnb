@@ -5,7 +5,6 @@ import com.solon.airbnb.listing.application.dto.DisplayCardListingDTO;
 import com.solon.airbnb.listing.application.dto.ListingCreateBookingDTO;
 import com.solon.airbnb.listing.application.dto.SaveListingDTO;
 import com.solon.airbnb.shared.exception.NotFoundException;
-import com.solon.airbnb.user.application.dto.ReadUserDTO;
 
 import java.util.List;
 import java.util.Optional;

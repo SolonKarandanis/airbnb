@@ -8,7 +8,6 @@ import com.solon.airbnb.listing.domain.Listing;
 import com.solon.airbnb.listing.mapper.ListingMapper;
 import com.solon.airbnb.listing.repository.ListingRepository;
 import com.solon.airbnb.shared.exception.NotFoundException;
-import com.solon.airbnb.user.application.dto.ReadUserDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

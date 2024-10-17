@@ -38,7 +38,7 @@ public class LandlordController extends GenericController {
         return ResponseEntity.ok(allProperties);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/listings/{id}")
     public ResponseEntity<Void> deleteListing(
             @PathVariable(name= "id",required=true) @Min(1) String listingPublicId,
             Authentication authentication){
