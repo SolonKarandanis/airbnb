@@ -121,7 +121,10 @@ public class BookingServiceBean implements BookingService{
 
     @Override
     public List<BookedListingDTO> getBookedListingForLandlord(String loggedInUserId) {
-        return List.of();
+        List<DisplayCardListingDTO> allProperties = landlordService.getAllProperties(loggedInUserId);
+        List<UUID> allPropertyPublicIds = allProperties.stream().map(DisplayCardListingDTO::publicId).toList();
+        List<Booking> allBookings = bookingRepository.findAllByFkListingIn(allPropertyPublicIds);
+        return mapBookingToBookedListing(allBookings, allProperties);
     }
 
     @Override
