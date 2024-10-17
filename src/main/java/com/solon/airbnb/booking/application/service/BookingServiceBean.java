@@ -2,6 +2,7 @@ package com.solon.airbnb.booking.application.service;
 
 import com.solon.airbnb.booking.application.dto.BookedDateDTO;
 import com.solon.airbnb.booking.application.dto.BookedListingDTO;
+import com.solon.airbnb.booking.application.dto.BookingDTO;
 import com.solon.airbnb.booking.application.dto.NewBookingDTO;
 import com.solon.airbnb.booking.domain.Booking;
 import com.solon.airbnb.booking.mapper.BookingMapper;
@@ -132,5 +133,10 @@ public class BookingServiceBean implements BookingService{
         return bookingRepository.findAllMatchWithDate(
                 listingsId, DateUitl.convertFromStringToOffsetDateTime(startDate), DateUitl.convertFromStringToOffsetDateTime(endDate))
                 .stream().map(Booking::getFkListing).toList();
+    }
+
+    @Override
+    public BookingDTO convertToDTO(Booking booking) {
+        return bookingMapper.bookingToBookingDTO(booking);
     }
 }

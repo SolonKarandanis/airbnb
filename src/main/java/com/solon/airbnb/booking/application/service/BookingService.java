@@ -2,6 +2,7 @@ package com.solon.airbnb.booking.application.service;
 
 import com.solon.airbnb.booking.application.dto.BookedDateDTO;
 import com.solon.airbnb.booking.application.dto.BookedListingDTO;
+import com.solon.airbnb.booking.application.dto.BookingDTO;
 import com.solon.airbnb.booking.application.dto.NewBookingDTO;
 import com.solon.airbnb.booking.domain.Booking;
 import com.solon.airbnb.shared.exception.NotFoundException;
@@ -24,4 +25,6 @@ public interface BookingService {
     public List<BookedListingDTO> getBookedListingForLandlord(String loggedInUserId);
 
     public List<UUID> getBookingMatchByListingIdsAndBookedDate(List<UUID> listingsId, String startDate,String endDate);
+
+    public BookingDTO convertToDTO(Booking booking);
 }
