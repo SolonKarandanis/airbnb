@@ -4,6 +4,7 @@ import com.solon.airbnb.booking.application.dto.BookedDateDTO;
 import com.solon.airbnb.booking.application.dto.BookingDTO;
 import com.solon.airbnb.booking.application.dto.NewBookingDTO;
 import com.solon.airbnb.booking.domain.Booking;
+import com.solon.airbnb.shared.utils.DateUitl;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -18,16 +19,16 @@ public interface BookingMapper {
 
     @Mapping(target = "startDate", source = "newBookingDTO", qualifiedByName = "startDate")
     @Mapping(target = "endDate", source = "newBookingDTO", qualifiedByName = "endDate")
-    Booking newBookingToBooking(NewBookingDTO newBookingDTO,@Context DateTimeFormatter dateTimeFormatter);
+    Booking newBookingToBooking(NewBookingDTO newBookingDTO);
 
     @Named("startDate")
-    default OffsetDateTime mapStartDate(NewBookingDTO newBookingDTO,@Context DateTimeFormatter dateTimeFormatter){
-        return OffsetDateTime.parse(newBookingDTO.startDate(), dateTimeFormatter);
+    default OffsetDateTime mapStartDate(NewBookingDTO newBookingDTO){
+        return  DateUitl.convertFromStringToOffsetDateTime(newBookingDTO.startDate());
     }
 
     @Named("endDate")
-    default OffsetDateTime mapEndDate(NewBookingDTO newBookingDTO,@Context DateTimeFormatter dateTimeFormatter){
-        return OffsetDateTime.parse(newBookingDTO.endDate(), dateTimeFormatter);
+    default OffsetDateTime mapEndDate(NewBookingDTO newBookingDTO){
+        return  DateUitl.convertFromStringToOffsetDateTime(newBookingDTO.endDate());
     }
 
     @Mapping(target = "startDate", source = "booking", qualifiedByName = "startStringDate")

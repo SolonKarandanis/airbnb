@@ -10,15 +10,17 @@ import com.solon.airbnb.listing.application.dto.DisplayCardListingDTO;
 import com.solon.airbnb.listing.application.dto.ListingCreateBookingDTO;
 import com.solon.airbnb.listing.application.dto.vo.PriceVO;
 import com.solon.airbnb.listing.application.service.LandlordService;
+import com.solon.airbnb.shared.common.AuthorityConstants;
 import com.solon.airbnb.shared.exception.NotFoundException;
-import com.solon.airbnb.shared.service.State;
+import com.solon.airbnb.shared.utils.DateUitl;
+import com.solon.airbnb.user.application.utils.UserUtil;
+import com.solon.airbnb.user.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
@@ -42,16 +44,15 @@ public class BookingServiceBean implements BookingService{
     @Transactional
     @Override
     public Booking create(NewBookingDTO newBookingDTO, String loggedInUserId) throws NotFoundException {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss Z");
-        Booking booking = bookingMapper.newBookingToBooking(newBookingDTO,formatter);
+        Booking booking = bookingMapper.newBookingToBooking(newBookingDTO);
 
         Optional<ListingCreateBookingDTO> listingOpt = landlordService.getByListingPublicId(newBookingDTO.listingPublicId());
         if (listingOpt.isEmpty()){
             throw new NotFoundException("error.landlord.not.found");
         }
         boolean alreadyBooked = bookingRepository.bookingExistsAtInterval(
-                OffsetDateTime.parse(newBookingDTO.startDate(),formatter),
-                OffsetDateTime.parse(newBookingDTO.endDate(),formatter),
+                DateUitl.convertFromStringToOffsetDateTime(newBookingDTO.startDate()),
+                DateUitl.convertFromStringToOffsetDateTime(newBookingDTO.endDate()),
                 UUID.fromString(newBookingDTO.listingPublicId()));
 
         if (alreadyBooked){
@@ -100,8 +101,22 @@ public class BookingServiceBean implements BookingService{
 
     @Transactional
     @Override
-    public void cancel(String bookingPublicId, String listingPublicId, boolean byLandlord,String loggedInUserId) {
-
+    public void cancel(String bookingPublicId, String listingPublicId, boolean byLandlord, User loggedInUser)
+            throws NotFoundException{
+        int deleteSuccess = 0;
+        if(UserUtil.hasAuthority(loggedInUser,AuthorityConstants.ROLE_LANDLORD)){
+            Optional<DisplayCardListingDTO> listingVerificationOpt = landlordService
+                    .getByPublicIdAndLandlordPublicId(listingPublicId, loggedInUser.getPublicId().toString());
+            if (listingVerificationOpt.isPresent()){
+                deleteSuccess = bookingRepository.deleteBookingByPublicIdAndFkListing(UUID.fromString(bookingPublicId), listingVerificationOpt.get().publicId());
+            }
+        }
+        else{
+            deleteSuccess = bookingRepository.deleteBookingByFkTenantAndPublicId(loggedInUser.getPublicId(), UUID.fromString(bookingPublicId));
+        }
+        if(deleteSuccess ==0){
+            throw new NotFoundException("error.booking.not.found");
+        }
     }
 
     @Override
@@ -111,6 +126,8 @@ public class BookingServiceBean implements BookingService{
 
     @Override
     public List<UUID> getBookingMatchByListingIdsAndBookedDate(List<UUID> listingsId, String startDate,String endDate) {
-        return List.of();
+        return bookingRepository.findAllMatchWithDate(
+                listingsId, DateUitl.convertFromStringToOffsetDateTime(startDate), DateUitl.convertFromStringToOffsetDateTime(endDate))
+                .stream().map(Booking::getFkListing).toList();
     }
 }

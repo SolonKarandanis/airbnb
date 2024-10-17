@@ -28,20 +28,7 @@ public class AirbnbConstants {
 
 	public static final String ACTIVE_LOCALE = "activeLocale";
 
-	/*
-	 * ROLES
-	 */
-	public static final String ROLE_SA = "prompt.user.role.sa";
-	public static final String ROLE_CA_ADMIN = "prompt.user.role.ca.admin";
-	public static final String ROLE_CA_REQUISITIONER = "prompt.user.role.ca.requisitioner";
-	public static final String ROLE_CA_BUYER = "prompt.user.role.ca.buyer";
-	public static final String ROLE_EO = "prompt.user.role.eo";
-	public static final String ROLE_NO_ROLE = "prompt.user.no.role";
-	public static final String ROLE_CA_APPROVER = "prompt.user.role.ca.approver";
 
-	public static final String ROLE_PO_MANAGER = "prompt.user.role.po.manager";
-	public static final String ROLE_PO_ASISSTANT = "prompt.user.role.po.assistant";
-	public static final String ROLE_PO_APPROVER = "prompt.user.role.po.approver";
 	
 	/**
 	 * User statuses
