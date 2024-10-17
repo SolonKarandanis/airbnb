@@ -5,7 +5,6 @@ import com.solon.airbnb.booking.application.dto.BookedListingDTO;
 import com.solon.airbnb.booking.application.dto.NewBookingDTO;
 import com.solon.airbnb.booking.domain.Booking;
 import com.solon.airbnb.shared.exception.NotFoundException;
-import com.solon.airbnb.shared.service.State;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,7 +17,7 @@ public interface BookingService {
 
     public List<BookedListingDTO> getBookedListing(String loggedInUserId);
 
-    public State<UUID, String> cancel(String bookingPublicId, String listingPublicId, boolean byLandlord,String loggedInUserId);
+    public void cancel(String bookingPublicId, String listingPublicId, boolean byLandlord,String loggedInUserId);
 
     public List<BookedListingDTO> getBookedListingForLandlord(String loggedInUserId);
 

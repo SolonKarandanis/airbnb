@@ -100,8 +100,8 @@ public class BookingServiceBean implements BookingService{
 
     @Transactional
     @Override
-    public State<UUID, String> cancel(String bookingPublicId, String listingPublicId, boolean byLandlord,String loggedInUserId) {
-        return null;
+    public void cancel(String bookingPublicId, String listingPublicId, boolean byLandlord,String loggedInUserId) {
+
     }
 
     @Override
