@@ -47,8 +47,8 @@ public class BookingController extends GenericController {
         return ResponseEntity.ok(bookingService.checkAvailability(listingPublicId));
     }
 
-    @GetMapping("booked-listing")
-    public ResponseEntity<List<BookedListingDTO>> getBookedListings(Authentication authentication) {
+    @GetMapping("/tenant/booked-listings")
+    public ResponseEntity<List<BookedListingDTO>> getTenantBookedListings(Authentication authentication) {
         String loggedInUserId = getLoggedInUserUUID(authentication);
         log.info("BookingController->getBookedListing->user: {}" , loggedInUserId);
         return ResponseEntity.ok(bookingService.getBookedListings(loggedInUserId));
@@ -66,9 +66,9 @@ public class BookingController extends GenericController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @GetMapping("listing-for-landlord")
+    @GetMapping("/landlord/booked-listings")
 //    @PreAuthorize("hasAnyRole('" + SecurityUtils.ROLE_LANDLORD + "')")
-    public ResponseEntity<List<BookedListingDTO>> getBookedListingForLandlord(Authentication authentication) {
+    public ResponseEntity<List<BookedListingDTO>> getLandlordBookedListings(Authentication authentication) {
         String loggedInUserId = getLoggedInUserUUID(authentication);
         log.info("BookingController->getBookedListingForLandlord->user: {}" , loggedInUserId);
         return ResponseEntity.ok(bookingService.getBookedListingsForLandlord(loggedInUserId));
