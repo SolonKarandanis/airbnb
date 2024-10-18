@@ -38,7 +38,7 @@ public class TenantController extends GenericController {
     }
 
     @PostMapping("/search")
-    public ResponseEntity<SearchResults<DisplayCardListingDTO>> searchTenants(@RequestBody @Valid TenantSearchRequestDTO searchObj){
+    public ResponseEntity<SearchResults<DisplayCardListingDTO>> searchListings(@RequestBody @Valid TenantSearchRequestDTO searchObj){
         Page<DisplayCardListingDTO> results = tenantService.search(searchObj);
         return ResponseEntity.ok().body(new SearchResults<DisplayCardListingDTO>(Math.toIntExact(results.getTotalElements()), results.getContent()));
     }
