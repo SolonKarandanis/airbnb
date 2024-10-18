@@ -12,6 +12,6 @@ public record BookedListingDTO(@Valid PictureDTO cover,
                                @NotEmpty String location,
                                @Valid BookedDateDTO dates,
                                @Valid PriceVO totalPrice,
-                               @NotNull UUID bookingPublicId,
-                               @NotNull UUID listingPublicId) {
+                               @NotNull String bookingPublicId,
+                               @NotNull String listingPublicId) {
 }

@@ -34,7 +34,7 @@ public class BookingController extends GenericController {
     }
 
     @PostMapping
-    public ResponseEntity<BookingDTO> create(@Valid @RequestBody NewBookingDTO newBookingDTO, Authentication authentication)
+    public ResponseEntity<BookingDTO> createBooking(@Valid @RequestBody NewBookingDTO newBookingDTO, Authentication authentication)
             throws AirbnbException {
         User user = getLoggedInUser(authentication);
         log.info("BookingController->create->user: {}" , user.getUsername());
@@ -47,7 +47,7 @@ public class BookingController extends GenericController {
         return ResponseEntity.ok(bookingService.checkAvailability(listingPublicId));
     }
 
-    @GetMapping("get-booked-listing")
+    @GetMapping("booked-listing")
     public ResponseEntity<List<BookedListingDTO>> getBookedListing(Authentication authentication) {
         String loggedInUserId = getLoggedInUserUUID(authentication);
         log.info("BookingController->getBookedListing->user: {}" , loggedInUserId);

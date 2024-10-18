@@ -96,7 +96,7 @@ public class BookingServiceBean implements BookingService{
             return new BookedListingDTO(displayCardListingDTO.cover(),
                     displayCardListingDTO.location(),
                     dates, new PriceVO(booking.getTotalPrice()),
-                    booking.getPublicId(), UUID.fromString(displayCardListingDTO.publicId()));
+                    booking.getPublicId().toString(),displayCardListingDTO.publicId());
         }).toList();
     }
 
