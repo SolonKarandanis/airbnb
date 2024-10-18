@@ -48,10 +48,10 @@ public class BookingController extends GenericController {
     }
 
     @GetMapping("booked-listing")
-    public ResponseEntity<List<BookedListingDTO>> getBookedListing(Authentication authentication) {
+    public ResponseEntity<List<BookedListingDTO>> getBookedListings(Authentication authentication) {
         String loggedInUserId = getLoggedInUserUUID(authentication);
         log.info("BookingController->getBookedListing->user: {}" , loggedInUserId);
-        return ResponseEntity.ok(bookingService.getBookedListing(loggedInUserId));
+        return ResponseEntity.ok(bookingService.getBookedListings(loggedInUserId));
     }
 
     @DeleteMapping
@@ -71,6 +71,6 @@ public class BookingController extends GenericController {
     public ResponseEntity<List<BookedListingDTO>> getBookedListingForLandlord(Authentication authentication) {
         String loggedInUserId = getLoggedInUserUUID(authentication);
         log.info("BookingController->getBookedListingForLandlord->user: {}" , loggedInUserId);
-        return ResponseEntity.ok(bookingService.getBookedListingForLandlord(loggedInUserId));
+        return ResponseEntity.ok(bookingService.getBookedListingsForLandlord(loggedInUserId));
     }
 }

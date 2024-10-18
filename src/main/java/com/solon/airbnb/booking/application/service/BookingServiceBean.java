@@ -78,7 +78,7 @@ public class BookingServiceBean implements BookingService{
     }
 
     @Override
-    public List<BookedListingDTO> getBookedListing(String loggedInUserId) {
+    public List<BookedListingDTO> getBookedListings(String loggedInUserId) {
         List<Booking> allBookings = bookingRepository.findAllByFkTenant(UUID.fromString(loggedInUserId));
         List<UUID> allListingPublicIDs = allBookings.stream().map(Booking::getFkListing).toList();
         List<DisplayCardListingDTO> allListings = landlordService.getCardDisplayByListingPublicId(allListingPublicIDs);
@@ -121,7 +121,7 @@ public class BookingServiceBean implements BookingService{
     }
 
     @Override
-    public List<BookedListingDTO> getBookedListingForLandlord(String loggedInUserId) {
+    public List<BookedListingDTO> getBookedListingsForLandlord(String loggedInUserId) {
         List<DisplayCardListingDTO> allProperties = landlordService.getAllProperties(loggedInUserId);
         List<UUID> allPropertyPublicIds = allProperties.stream().map(DisplayCardListingDTO::publicId).map(UUID::fromString).toList();
         List<Booking> allBookings = bookingRepository.findAllByFkListingIn(allPropertyPublicIds);

@@ -17,12 +17,12 @@ public interface BookingService {
 
     public List<BookedDateDTO> checkAvailability(String publicId);
 
-    public List<BookedListingDTO> getBookedListing(String loggedInUserId);
+    public List<BookedListingDTO> getBookedListings(String loggedInUserId);
 
     public void cancel(String bookingPublicId, String listingPublicId, boolean byLandlord, User loggedInUser)
             throws NotFoundException;
 
-    public List<BookedListingDTO> getBookedListingForLandlord(String loggedInUserId);
+    public List<BookedListingDTO> getBookedListingsForLandlord(String loggedInUserId);
 
     public List<UUID> getBookingMatchByListingIdsAndBookedDate(List<UUID> listingsId, String startDate,String endDate);
 
