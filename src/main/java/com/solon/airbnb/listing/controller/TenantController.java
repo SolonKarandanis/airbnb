@@ -29,7 +29,7 @@ public class TenantController extends GenericController {
         this.tenantService = tenantService;
     }
 
-    @GetMapping("/by-category")
+    @GetMapping("/listing/by-category")
     public ResponseEntity<SearchResults<DisplayCardListingDTO>> findAllByBookingCategory(
             Pageable pageable,
             @RequestParam BookingCategory category){
@@ -37,13 +37,13 @@ public class TenantController extends GenericController {
         return ResponseEntity.ok().body(new SearchResults<DisplayCardListingDTO>(Math.toIntExact(results.getTotalElements()), results.getContent()));
     }
 
-    @PostMapping("/search")
+    @PostMapping("/listing/search")
     public ResponseEntity<SearchResults<DisplayCardListingDTO>> searchListings(@RequestBody @Valid ListingSearchRequestDTO searchObj){
         Page<DisplayCardListingDTO> results = tenantService.search(searchObj);
         return ResponseEntity.ok().body(new SearchResults<DisplayCardListingDTO>(Math.toIntExact(results.getTotalElements()), results.getContent()));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/listing/{id}")
     public ResponseEntity<DisplayListingDTO> getDisplayListing(@PathVariable(name= "id", required=true) String publicId){
         return ResponseEntity.ok().body(tenantService.getOne(publicId));
     }

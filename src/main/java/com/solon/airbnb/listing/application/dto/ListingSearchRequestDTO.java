@@ -24,19 +24,15 @@ public class ListingSearchRequestDTO extends SearchRequestDTO {
     @NotEmpty
     private String location;
 
-    @NotNull
     @Valid
     private GuestsVO guests;
 
-    @NotNull
     @Valid
     private BedroomsVO bedrooms;
 
-    @NotNull
     @Valid
     private BedsVO beds;
 
-    @NotNull
     @Valid
     private BathsVO baths;
 
