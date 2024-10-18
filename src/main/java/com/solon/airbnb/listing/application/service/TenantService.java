@@ -2,7 +2,7 @@ package com.solon.airbnb.listing.application.service;
 
 import com.solon.airbnb.listing.application.dto.DisplayCardListingDTO;
 import com.solon.airbnb.listing.application.dto.DisplayListingDTO;
-import com.solon.airbnb.listing.application.dto.TenantSearchRequestDTO;
+import com.solon.airbnb.listing.application.dto.ListingSearchRequestDTO;
 import com.solon.airbnb.listing.domain.BookingCategory;
 import com.solon.airbnb.shared.exception.NotFoundException;
 import org.springframework.data.domain.Page;
@@ -15,5 +15,5 @@ public interface TenantService {
 
     public DisplayListingDTO getOne(String publicId)throws NotFoundException;
 
-    public Page<DisplayCardListingDTO> search(TenantSearchRequestDTO searchObj);
+    public Page<DisplayCardListingDTO> search(ListingSearchRequestDTO searchObj);
 }

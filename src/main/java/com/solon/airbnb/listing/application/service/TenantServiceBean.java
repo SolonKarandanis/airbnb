@@ -3,7 +3,7 @@ package com.solon.airbnb.listing.application.service;
 import com.solon.airbnb.booking.application.service.BookingService;
 import com.solon.airbnb.listing.application.dto.DisplayCardListingDTO;
 import com.solon.airbnb.listing.application.dto.DisplayListingDTO;
-import com.solon.airbnb.listing.application.dto.TenantSearchRequestDTO;
+import com.solon.airbnb.listing.application.dto.ListingSearchRequestDTO;
 import com.solon.airbnb.listing.application.dto.sub.LandlordListingDTO;
 import com.solon.airbnb.listing.domain.BookingCategory;
 import com.solon.airbnb.listing.domain.Listing;
@@ -72,7 +72,7 @@ public class TenantServiceBean extends GenericServiceBean implements TenantServi
     }
 
     @Override
-    public Page<DisplayCardListingDTO> search(TenantSearchRequestDTO searchObj) {
+    public Page<DisplayCardListingDTO> search(ListingSearchRequestDTO searchObj) {
         PageRequest pageRequest = toPageRequest(searchObj.getPaging());
         String location = searchObj.getLocation();
         Integer baths  = searchObj.getBaths().value();

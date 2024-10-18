@@ -2,7 +2,7 @@ package com.solon.airbnb.listing.controller;
 
 import com.solon.airbnb.listing.application.dto.DisplayCardListingDTO;
 import com.solon.airbnb.listing.application.dto.DisplayListingDTO;
-import com.solon.airbnb.listing.application.dto.TenantSearchRequestDTO;
+import com.solon.airbnb.listing.application.dto.ListingSearchRequestDTO;
 import com.solon.airbnb.listing.application.service.TenantService;
 import com.solon.airbnb.listing.domain.BookingCategory;
 import com.solon.airbnb.shared.controller.GenericController;
@@ -38,7 +38,7 @@ public class TenantController extends GenericController {
     }
 
     @PostMapping("/search")
-    public ResponseEntity<SearchResults<DisplayCardListingDTO>> searchListings(@RequestBody @Valid TenantSearchRequestDTO searchObj){
+    public ResponseEntity<SearchResults<DisplayCardListingDTO>> searchListings(@RequestBody @Valid ListingSearchRequestDTO searchObj){
         Page<DisplayCardListingDTO> results = tenantService.search(searchObj);
         return ResponseEntity.ok().body(new SearchResults<DisplayCardListingDTO>(Math.toIntExact(results.getTotalElements()), results.getContent()));
     }

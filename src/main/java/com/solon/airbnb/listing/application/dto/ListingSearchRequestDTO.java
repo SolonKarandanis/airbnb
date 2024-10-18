@@ -14,7 +14,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class TenantSearchRequestDTO extends SearchRequestDTO {
+public class ListingSearchRequestDTO extends SearchRequestDTO {
     @NotNull
     private String startDate;
 
