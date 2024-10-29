@@ -4,6 +4,7 @@ import com.solon.airbnb.listing.application.dto.CreatedListingDTO;
 import com.solon.airbnb.listing.application.dto.DisplayCardListingDTO;
 import com.solon.airbnb.listing.application.dto.ListingCreateBookingDTO;
 import com.solon.airbnb.listing.application.dto.SaveListingDTO;
+import com.solon.airbnb.listing.application.dto.sub.PictureDTO;
 import com.solon.airbnb.listing.domain.Listing;
 import com.solon.airbnb.listing.mapper.ListingMapper;
 import com.solon.airbnb.listing.repository.ListingRepository;
@@ -38,11 +39,11 @@ public class LandlordServiceBean implements LandlordService{
 
     @Transactional
     @Override
-    public CreatedListingDTO create(String userPublicId,SaveListingDTO saveListingDTO) {
+    public CreatedListingDTO create(String userPublicId,SaveListingDTO saveListingDTO, List<PictureDTO> pictures) {
         Listing newListing = listingMapper.saveListingDTOToListing(saveListingDTO);
         newListing.setLandlordPublicId(UUID.fromString(userPublicId));
         Listing savedListing = listingRepository.saveAndFlush(newListing);
-        pictureService.saveAll(saveListingDTO.getPictures(), savedListing);
+        pictureService.saveAll(pictures, savedListing);
         return listingMapper.listingToCreatedListingDTO(savedListing);
     }
 

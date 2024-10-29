@@ -28,8 +28,6 @@ public class SaveListingDTO {
     @NotNull @Valid
     PriceVO price;
 
-    @NotNull
-    List<PictureDTO> pictures;
 
     public BookingCategory getCategory() {
         return category;
@@ -69,13 +67,5 @@ public class SaveListingDTO {
 
     public void setPrice(PriceVO price) {
         this.price = price;
-    }
-
-    public List<PictureDTO> getPictures() {
-        return pictures;
-    }
-
-    public void setPictures(List<PictureDTO> pictures) {
-        this.pictures = pictures;
     }
 }

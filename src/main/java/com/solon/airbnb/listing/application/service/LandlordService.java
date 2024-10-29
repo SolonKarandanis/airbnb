@@ -4,6 +4,7 @@ import com.solon.airbnb.listing.application.dto.CreatedListingDTO;
 import com.solon.airbnb.listing.application.dto.DisplayCardListingDTO;
 import com.solon.airbnb.listing.application.dto.ListingCreateBookingDTO;
 import com.solon.airbnb.listing.application.dto.SaveListingDTO;
+import com.solon.airbnb.listing.application.dto.sub.PictureDTO;
 import com.solon.airbnb.shared.exception.NotFoundException;
 
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.UUID;
 
 public interface LandlordService {
 
-    public CreatedListingDTO create(String userPublicId,SaveListingDTO saveListingDTO);
+    public CreatedListingDTO create(String userPublicId,SaveListingDTO saveListingDTO,  List<PictureDTO> pictures);
 
     public List<DisplayCardListingDTO> getAllProperties(String landlordId);
 
