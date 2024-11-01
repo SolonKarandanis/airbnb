@@ -23,7 +23,7 @@ public class WebConfig {
     public MessageSource messageSource() {
         log.debug("messageSource");
         ResourceBundleMessageSource source = new ResourceBundleMessageSource();
-        source.setBasenames("application_messages", "application_errors", "messages");
+        source.setBasenames("application_messages", "application_errors");
         source.setUseCodeAsDefaultMessage(true);
         source.setDefaultEncoding(AirbnbConstants.UTF_8);
         source.setDefaultLocale(Locale.ENGLISH);
@@ -43,7 +43,7 @@ public class WebConfig {
          * cause message interpolation to fail.
          */
         ReloadableResourceBundleMessageSource msgSource = new ReloadableResourceBundleMessageSource();
-        msgSource.setBasenames("classpath:application_messages", "classpath:application_errors", "classpath:messages");
+        msgSource.setBasenames("classpath:application_messages", "classpath:application_errors");
         msgSource.setDefaultEncoding(AirbnbConstants.UTF_8);
         msgSource.setDefaultLocale(Locale.ENGLISH);
         msgSource.setUseCodeAsDefaultMessage(true);

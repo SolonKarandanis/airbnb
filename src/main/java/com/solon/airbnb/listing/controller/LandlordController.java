@@ -11,7 +11,6 @@ import jakarta.validation.constraints.Min;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -55,12 +54,12 @@ public class LandlordController extends GenericController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping()
     public ResponseEntity<CreatedListingDTO> createListing(
             @RequestPart(name = "images") MultipartFile[] images,
             @RequestPart(name = "dto") SaveListingDTO saveListingDTO,
             Authentication authentication
-            ){
+    ){
         String loggedInUserId = getLoggedInUserUUID(authentication);
         log.info("LandlordController->createListing->user: {}" , loggedInUserId);
         List<MultipartFile> imageList  = Arrays.asList(images);
@@ -70,6 +69,7 @@ public class LandlordController extends GenericController {
         CreatedListingDTO newListing = landlordService.create(loggedInUserId,saveListingDTO,pictures);
         return ResponseEntity.ok(newListing);
     }
+
 
     private static Function<MultipartFile, PictureDTO> mapMultipartFileToPictureDTO() {
         return multipartFile -> {
