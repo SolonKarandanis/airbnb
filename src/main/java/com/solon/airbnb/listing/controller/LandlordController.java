@@ -11,14 +11,15 @@ import jakarta.validation.constraints.Min;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
@@ -54,20 +55,19 @@ public class LandlordController extends GenericController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CreatedListingDTO> createListing(
-            MultipartHttpServletRequest request,
-            @RequestPart(name = "dto") SaveListingDTO dto,
+            @RequestPart(name = "images") MultipartFile[] images,
+            @RequestPart(name = "dto") SaveListingDTO saveListingDTO,
             Authentication authentication
             ){
         String loggedInUserId = getLoggedInUserUUID(authentication);
         log.info("LandlordController->createListing->user: {}" , loggedInUserId);
-        List<PictureDTO> pictures = request.getFileMap()
-                .values()
-                .stream()
+        List<MultipartFile> imageList  = Arrays.asList(images);
+        List<PictureDTO> pictures = imageList.stream()
                 .map(mapMultipartFileToPictureDTO())
                 .toList();
-        CreatedListingDTO newListing = landlordService.create(loggedInUserId,dto,pictures);
+        CreatedListingDTO newListing = landlordService.create(loggedInUserId,saveListingDTO,pictures);
         return ResponseEntity.ok(newListing);
     }
 
