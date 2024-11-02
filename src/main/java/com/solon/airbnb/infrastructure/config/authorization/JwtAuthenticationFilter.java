@@ -1,11 +1,10 @@
 package com.solon.airbnb.infrastructure.config.authorization;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.solon.airbnb.shared.exception.AirbnbException;
 import com.solon.airbnb.user.application.dto.AuthorityDTO;
 import org.slf4j.Logger;
@@ -81,9 +80,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 			 user.setPublicId(UUID.fromString(claims.get("publicId", String.class)));
 			 user.setStatus(AccountStatus.valueOf(claims.get("status", String.class)));
 			 if (user.getUsername() != null && jwtService.isTokenValid(jwt, user)) {
+				 List<String> authorityClaims= (List<String>)claims.get("authorities");
 				 log.info("JwtAuthenticationFilter -> claims -> authorities : {}",claims.get("authorities"));
-				 ObjectMapper mapper = new ObjectMapper();
-				 List<AuthorityDTO> authorities = mapper.convertValue(claims.get("authorities"), new TypeReference<List<AuthorityDTO>>() { });
+				 List<AuthorityDTO> authorities = new ArrayList<>();
+				 for(String authClaim : authorityClaims){
+					 authorities.add(new AuthorityDTO(authClaim));
+				 }
 				 List<SimpleGrantedAuthority> simpleGrantedAuthorities= authorities.stream()
 						 .map(authority-> new SimpleGrantedAuthority(authority.getAuthority()))
 						 .toList();

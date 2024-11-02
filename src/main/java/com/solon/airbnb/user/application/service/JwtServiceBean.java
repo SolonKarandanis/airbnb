@@ -18,6 +18,7 @@ import io.jsonwebtoken.io.Decoders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -81,7 +82,7 @@ public class JwtServiceBean implements JwtService{
 				.claim("email", user.getEmail())
 				.claim("publicId", user.getPublicId())
 				.claim("status", user.getStatus())
-				.claim("authorities", user.getAuthorities().stream().toList())
+				.claim("authorities", user.getAuthorityEntities().stream().map(Authority::getName).toList())
 				.signWith(getSigningKey(), SignatureAlgorithm.HS256)
 				.setSubject(user.getUsername())
 				.setIssuedAt(new Date(System.currentTimeMillis()))
