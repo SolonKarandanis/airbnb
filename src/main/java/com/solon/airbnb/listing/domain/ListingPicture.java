@@ -31,7 +31,7 @@ public class ListingPicture extends AbstractAuditingEntity<Long> {
 
     @Lob
     @Column(name = "file", nullable = false)
-    @Basic(fetch = FetchType.LAZY)
+    @Basic(fetch = FetchType.EAGER)
     private byte[] file;
 
     @Column(name = "file_content_type")
