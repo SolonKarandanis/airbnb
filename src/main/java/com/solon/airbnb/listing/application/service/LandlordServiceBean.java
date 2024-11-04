@@ -7,6 +7,7 @@ import com.solon.airbnb.listing.application.dto.SaveListingDTO;
 import com.solon.airbnb.listing.application.dto.sub.PictureDTO;
 import com.solon.airbnb.listing.domain.Listing;
 import com.solon.airbnb.listing.mapper.ListingMapper;
+import com.solon.airbnb.listing.repository.ListingPictureRepository;
 import com.solon.airbnb.listing.repository.ListingRepository;
 import com.solon.airbnb.shared.exception.NotFoundException;
 import org.slf4j.Logger;
@@ -25,14 +26,17 @@ public class LandlordServiceBean implements LandlordService{
     private static final Logger log = LoggerFactory.getLogger(LandlordServiceBean.class);
 
     private final ListingRepository listingRepository;
+    private final ListingPictureRepository listingPictureRepository;
     private final PictureService pictureService;
     private final ListingMapper listingMapper;
 
     public LandlordServiceBean(
             ListingRepository listingRepository,
+            ListingPictureRepository listingPictureRepository,
             PictureService pictureService,
             ListingMapper listingMapper) {
         this.listingRepository = listingRepository;
+        this.listingPictureRepository = listingPictureRepository;
         this.pictureService = pictureService;
         this.listingMapper = listingMapper;
     }
@@ -55,12 +59,14 @@ public class LandlordServiceBean implements LandlordService{
 
     @Transactional
     @Override
-    public void delete(String publicId,String landlordPublicId) throws NotFoundException {
+    public List<DisplayCardListingDTO> delete(String publicId,String landlordPublicId) throws NotFoundException {
         Boolean exists = listingRepository.existsByPublicIdAndLandlordPublicId(UUID.fromString(publicId),UUID.fromString(landlordPublicId));
         if(!exists){
             throw new NotFoundException("error.listing.not.found");
         }
+        listingPictureRepository.deleteByListingPublicIdAndLandlordPublicId(UUID.fromString(publicId),UUID.fromString(landlordPublicId));
         listingRepository.deleteByPublicIdAndLandlordPublicId(UUID.fromString(publicId),UUID.fromString(landlordPublicId));
+        return getAllProperties(landlordPublicId);
     }
 
     @Override

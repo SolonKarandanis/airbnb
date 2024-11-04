@@ -47,13 +47,13 @@ public class LandlordController extends GenericController {
 
     @DeleteMapping("/listings/{id}")
     @PreAuthorize("hasAnyRole('" + AuthorityConstants.ROLE_LANDLORD + "')")
-    public ResponseEntity<Void> deleteListing(
-            @PathVariable(name= "id",required=true) @Min(1) String listingPublicId,
+    public ResponseEntity<List<DisplayCardListingDTO>> deleteListing(
+            @PathVariable(name= "id",required=true)  String listingPublicId,
             Authentication authentication){
         String loggedInUserId = getLoggedInUserUUID(authentication);
         log.info("LandlordController->deleteListing->user: {}" , loggedInUserId);
-        landlordService.delete(listingPublicId,loggedInUserId);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        List<DisplayCardListingDTO> allProperties = landlordService.delete(listingPublicId,loggedInUserId);
+        return ResponseEntity.ok(allProperties);
     }
 
     @PostMapping

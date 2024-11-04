@@ -25,7 +25,7 @@ public class ListingPicture extends AbstractAuditingEntity<Long> {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "listing_fk", referencedColumnName = "id")
     private Listing listing;
 

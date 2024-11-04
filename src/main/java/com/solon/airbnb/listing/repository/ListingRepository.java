@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -22,7 +23,13 @@ public interface ListingRepository extends JpaRepository<Listing, Long>{
 
 	Boolean existsByPublicIdAndLandlordPublicId(UUID publicId, UUID landlordPublicId);
 
-	long deleteByPublicIdAndLandlordPublicId(UUID publicId, UUID landlordPublicId);
+	Listing findByPublicIdAndLandlordPublicId(UUID publicId, UUID landlordPublicId);
+
+	@Modifying
+	@Query("DELETE FROM Listing l " +
+			"WHERE l.publicId = :publicId " +
+			"AND l.landlordPublicId = :landlordPublicId")
+	void deleteByPublicIdAndLandlordPublicId(UUID publicId, UUID landlordPublicId);
 
 	@Query("SELECT listing from Listing listing LEFT JOIN FETCH listing.pictures picture" +
 	        " WHERE picture.isCover = true AND listing.bookingCategory = :bookingCategory")
