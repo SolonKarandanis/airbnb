@@ -20,9 +20,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -86,6 +88,9 @@ public class BookingServiceBean implements BookingService{
     }
 
     private List<BookedListingDTO> mapBookingToBookedListing(List<Booking> allBookings, List<DisplayCardListingDTO> allListings) {
+        if(CollectionUtils.isEmpty(allBookings) && CollectionUtils.isEmpty(allListings)){
+            return new ArrayList<>();
+        }
         return allBookings.stream().map(booking -> {
             DisplayCardListingDTO displayCardListingDTO = allListings
                     .stream()

@@ -6,6 +6,7 @@ import com.solon.airbnb.booking.application.dto.BookingDTO;
 import com.solon.airbnb.booking.application.dto.NewBookingDTO;
 import com.solon.airbnb.booking.application.service.BookingService;
 import com.solon.airbnb.booking.domain.Booking;
+import com.solon.airbnb.shared.common.AuthorityConstants;
 import com.solon.airbnb.shared.controller.GenericController;
 import com.solon.airbnb.shared.exception.AirbnbException;
 import com.solon.airbnb.user.domain.User;
@@ -48,6 +49,7 @@ public class BookingController extends GenericController {
     }
 
     @GetMapping("/tenant/booked-listings")
+    @PreAuthorize("hasAnyRole('" + AuthorityConstants.ROLE_TENANT + "')")
     public ResponseEntity<List<BookedListingDTO>> getTenantBookedListings(Authentication authentication) {
         String loggedInUserId = getLoggedInUserUUID(authentication);
         log.info("BookingController->getBookedListing->user: {}" , loggedInUserId);
@@ -67,7 +69,7 @@ public class BookingController extends GenericController {
     }
 
     @GetMapping("/landlord/booked-listings")
-//    @PreAuthorize("hasAnyRole('" + SecurityUtils.ROLE_LANDLORD + "')")
+    @PreAuthorize("hasAnyRole('" + AuthorityConstants.ROLE_LANDLORD + "')")
     public ResponseEntity<List<BookedListingDTO>> getLandlordBookedListings(Authentication authentication) {
         String loggedInUserId = getLoggedInUserUUID(authentication);
         log.info("BookingController->getBookedListingForLandlord->user: {}" , loggedInUserId);
