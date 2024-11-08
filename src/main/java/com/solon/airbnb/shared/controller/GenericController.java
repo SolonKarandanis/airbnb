@@ -33,8 +33,8 @@ public class GenericController {
 	protected UserService usersService;
 	
 	protected User getLoggedInUser(Authentication authentication) throws NotFoundException, AirbnbException {
-    	Long id = getLoggedInUserId(authentication);
-    	return usersService.findById(id);
+    	String uuid = getLoggedInUserUUID(authentication);
+    	return usersService.getByPublicId(uuid).get();
     }
 	 
 	protected String getLoggedInUserUUID(Authentication authentication) {
