@@ -1,18 +1,22 @@
 package com.solon.airbnb.user.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;
 import java.util.Objects;
 
+@NamedQueries({
+        @NamedQuery(name = Authority.FIND_BY_NAME,
+                query = "SELECT a FROM Authority a "
+                        + "WHERE a.name = :name ")
+})
 @Entity
 @Table(name = "authority")
 public class Authority implements Serializable {
+
+    public static final String FIND_BY_NAME= "User.findByNAME";
 
     @NotNull
     @Size(max=50)
