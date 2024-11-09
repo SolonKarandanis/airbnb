@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.solon.airbnb.shared.domain.DomainConstants;
+import jakarta.persistence.*;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UuidGenerator;
@@ -14,23 +15,20 @@ import org.hibernate.jdbc.Expectation.RowCount;
 import com.solon.airbnb.shared.domain.AbstractAuditingEntity;
 import com.solon.airbnb.shared.domain.UuidEntity;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.NamedAttributeNode;
-import jakarta.persistence.NamedEntityGraph;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
 
-
-
+@NamedQueries({
+        @NamedQuery(name = User.FIND_BY_EMAIL,
+                query = "SELECT u FROM User u "
+                        + "WHERE u.email = :email "),
+        @NamedQuery(name = User.FIND_BY_PUBLIC_ID,
+                query = "SELECT u FROM User u "
+                        + "LEFT JOIN FETCH u.authorities a " +
+                        "WHERE u.publicId= :publicId "),
+        @NamedQuery(name = User.FIND_BY_USERNAME,
+                query = "SELECT u FROM User u "
+                        + "LEFT JOIN FETCH u.authorities a " +
+                        " WHERE u.username= :username "),
+})
 @SQLDelete(
         sql = "UPDATE Users SET status='0' WHERE username=?",
         verify = RowCount.class
@@ -43,6 +41,10 @@ import jakarta.persistence.Table;
 public class User extends AbstractAuditingEntity<Long> implements UuidEntity{
 	
 	public static final String GRAPH_USERS_AUTHORITIES="graph.users.authorities";
+
+    public static final String FIND_BY_EMAIL= "User.findByEmail";
+    public static final String FIND_BY_PUBLIC_ID= "User.findByPublicId";
+    public static final String FIND_BY_USERNAME= "User.findByUsername";
 
     @Id
     @GeneratedValue(
