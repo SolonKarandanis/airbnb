@@ -13,7 +13,6 @@ import java.util.UUID;
 public interface ListingPictureRepository extends JpaRepository<ListingPicture, Long> {
 
     @Modifying
-    @Query("DELETE FROM ListingPicture lp " +
-            "WHERE lp.id = (SELECT l.id FROM Listing l WHERE l.publicId = :publicId AND l.landlordPublicId = :landlordPublicId)")
+    @Query(name = ListingPicture.DELETE_BY_LISTING_PUBLIC_ID_AND_LANDLORD_PUBLIC_ID)
     void deleteByListingPublicIdAndLandlordPublicId(UUID publicId, UUID landlordPublicId);
 }

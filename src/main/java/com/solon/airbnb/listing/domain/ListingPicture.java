@@ -8,9 +8,16 @@ import com.solon.airbnb.shared.domain.AbstractAuditingEntity;
 import com.solon.airbnb.shared.domain.DomainConstants;
 import jakarta.persistence.*;
 
+@NamedQueries({
+        @NamedQuery(name = ListingPicture.DELETE_BY_LISTING_PUBLIC_ID_AND_LANDLORD_PUBLIC_ID,
+                query = "DELETE FROM ListingPicture lp "
+                        + "WHERE lp.id = (SELECT l.id FROM Listing l WHERE l.publicId = :publicId AND l.landlordPublicId = :landlordPublicId) "),
+})
 @Entity
 @Table(name = "listing_picture")
 public class ListingPicture extends AbstractAuditingEntity<Long> {
+
+    public static final String DELETE_BY_LISTING_PUBLIC_ID_AND_LANDLORD_PUBLIC_ID= "ListingPicture.deleteByListingPublicIdAndLandlordPublicId";
 
     @Id
     @GeneratedValue(

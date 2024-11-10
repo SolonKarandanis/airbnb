@@ -16,7 +16,7 @@ import java.util.Objects;
 @Table(name = "authority")
 public class Authority implements Serializable {
 
-    public static final String FIND_BY_NAME= "User.findByNAME";
+    public static final String FIND_BY_NAME= "Authority.findByName";
 
     @NotNull
     @Size(max=50)

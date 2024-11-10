@@ -9,6 +9,6 @@ import com.solon.airbnb.user.domain.Authority;
 @Repository
 public interface AuthorityRepository extends JpaRepository<Authority,String>{
 
-    @Query(Authority.FIND_BY_NAME)
+    @Query(name=Authority.FIND_BY_NAME)
     Authority findByName(String name);
 }

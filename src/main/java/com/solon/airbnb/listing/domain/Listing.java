@@ -6,27 +6,44 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.solon.airbnb.shared.domain.DomainConstants;
+import jakarta.persistence.*;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.UuidGenerator;
 
 import com.solon.airbnb.shared.domain.AbstractAuditingEntity;
 import com.solon.airbnb.shared.domain.UuidEntity;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
-
+@NamedQueries({
+        @NamedQuery(name = Listing.FIND_ALL_BY_LANDLORD_PUBLIC_ID_FETCH_COVER_PICTURE,
+                query = "SELECT listing " +
+                        "FROM Listing listing "+
+                        "LEFT JOIN FETCH listing.pictures picture " +
+                        "WHERE listing.landlordPublicId = :landlordPublicId " +
+                        "AND picture.isCover = true"),
+        @NamedQuery(name = Listing.DELETE_BY_PUBLIC_ID_AND_LANDLORD_PUBLIC_ID,
+                query = "DELETE FROM Listing l "+
+                        "WHERE l.publicId = :publicId " +
+                        "AND l.landlordPublicId = :landlordPublicId "),
+        @NamedQuery(name = Listing.FIND_ALL_BY_BOOKING_CATEGORY_WITH_COVER_ONLY,
+                query = "SELECT listing "+
+                        "FROM Listing listing " +
+                        "LEFT JOIN FETCH listing.pictures picture " +
+                        "WHERE picture.isCover = true " +
+                        "AND listing.bookingCategory = :bookingCategory"),
+        @NamedQuery(name = Listing.FIND_ALL_WITH_COVER_ONLY,
+                query = "SELECT listing "+
+                        "FROM Listing listing " +
+                        "LEFT JOIN FETCH listing.pictures picture " +
+                        "WHERE picture.isCover = true "),
+})
 @Entity
 @Table(name = "listing")
 public class Listing extends AbstractAuditingEntity<Long> implements UuidEntity{
+
+    public static final String FIND_ALL_BY_LANDLORD_PUBLIC_ID_FETCH_COVER_PICTURE= "Listing.findAllByLandlordPublicIdFetchCoverPicture";
+    public static final String DELETE_BY_PUBLIC_ID_AND_LANDLORD_PUBLIC_ID= "Listing.deleteByPublicIdAndLandlordPublicId";
+    public static final String FIND_ALL_BY_BOOKING_CATEGORY_WITH_COVER_ONLY= "Listing.findAllByBookingCategoryWithCoverOnly";
+    public static final String FIND_ALL_WITH_COVER_ONLY= "Listing.findAllWithCoverOnly";
 
     @Id
     @GeneratedValue(

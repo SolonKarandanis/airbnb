@@ -17,8 +17,7 @@ import com.solon.airbnb.listing.domain.Listing;
 @Repository
 public interface ListingRepository extends JpaRepository<Listing, Long>{
 	
-	@Query("SELECT listing FROM Listing listing LEFT JOIN FETCH listing.pictures picture" +
-	        " WHERE listing.landlordPublicId = :landlordPublicId AND picture.isCover = true")
+	@Query(name = Listing.FIND_ALL_BY_LANDLORD_PUBLIC_ID_FETCH_COVER_PICTURE)
 	List<Listing> findAllByLandlordPublicIdFetchCoverPicture(UUID landlordPublicId);
 
 	Boolean existsByPublicIdAndLandlordPublicId(UUID publicId, UUID landlordPublicId);
@@ -26,17 +25,13 @@ public interface ListingRepository extends JpaRepository<Listing, Long>{
 	Listing findByPublicIdAndLandlordPublicId(UUID publicId, UUID landlordPublicId);
 
 	@Modifying
-	@Query("DELETE FROM Listing l " +
-			"WHERE l.publicId = :publicId " +
-			"AND l.landlordPublicId = :landlordPublicId")
+	@Query(name = Listing.DELETE_BY_PUBLIC_ID_AND_LANDLORD_PUBLIC_ID)
 	void deleteByPublicIdAndLandlordPublicId(UUID publicId, UUID landlordPublicId);
 
-	@Query("SELECT listing from Listing listing LEFT JOIN FETCH listing.pictures picture" +
-	        " WHERE picture.isCover = true AND listing.bookingCategory = :bookingCategory")
+	@Query(name = Listing.FIND_ALL_BY_BOOKING_CATEGORY_WITH_COVER_ONLY)
 	Page<Listing> findAllByBookingCategoryWithCoverOnly(Pageable pageable, BookingCategory bookingCategory);
 
-	@Query("SELECT listing from Listing listing LEFT JOIN FETCH listing.pictures picture" +
-	        " WHERE picture.isCover = true")
+	@Query(name = Listing.FIND_ALL_WITH_COVER_ONLY)
 	Page<Listing> findAllWithCoverOnly(Pageable pageable);
 
 	Optional<Listing> findByPublicId(UUID publicId);

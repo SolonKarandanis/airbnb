@@ -18,13 +18,13 @@ import com.solon.airbnb.user.domain.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> ,JpaSpecificationExecutor<User>{
 
-    @Query(User.FIND_BY_EMAIL)
-    Optional<User> findOneByEmail(String email);
+    @Query(name = User.FIND_BY_EMAIL)
+    Optional<User> findOneByEmail(@Param("email")String email);
 
-    @Query(User.FIND_BY_PUBLIC_ID)
+    @Query(name = User.FIND_BY_PUBLIC_ID)
     Optional<User> findOneByPublicId(@Param("publicId")UUID publicId);
     
-    @Query(User.FIND_BY_USERNAME)
+    @Query(name = User.FIND_BY_USERNAME)
     Optional<User> findByUsername(@Param("username")String username);
     
     @EntityGraph(value =  User.GRAPH_USERS_AUTHORITIES,type = EntityGraphType.FETCH)
