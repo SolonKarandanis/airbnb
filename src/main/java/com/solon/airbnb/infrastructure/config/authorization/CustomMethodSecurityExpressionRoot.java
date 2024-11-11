@@ -4,6 +4,7 @@ import com.solon.airbnb.booking.application.service.BookingService;
 import com.solon.airbnb.listing.application.service.LandlordService;
 import com.solon.airbnb.listing.application.service.PictureService;
 import com.solon.airbnb.listing.application.service.TenantService;
+import com.solon.airbnb.shared.exception.AirbnbException;
 import com.solon.airbnb.user.application.dto.UserDTO;
 import com.solon.airbnb.user.application.service.UserService;
 import com.solon.airbnb.user.domain.User;
@@ -83,4 +84,11 @@ public class CustomMethodSecurityExpressionRoot
     public Object getThis() {
         return this.target;
     }
+
+    protected User getUserById(Long userId) throws AirbnbException {
+        return this.usersService.findById(userId);
+    }
+
+
+
 }
