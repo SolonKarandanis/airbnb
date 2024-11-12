@@ -8,10 +8,8 @@ import com.solon.airbnb.listing.application.service.LandlordService;
 import com.solon.airbnb.shared.common.AuthorityConstants;
 import com.solon.airbnb.shared.controller.GenericController;
 import com.solon.airbnb.user.application.exception.UserException;
-import jakarta.validation.constraints.Min;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -37,7 +35,7 @@ public class LandlordController extends GenericController {
     }
 
     @GetMapping(value = "/listings")
-    @PreAuthorize("hasAnyRole('" + AuthorityConstants.ROLE_LANDLORD + "')")
+    @PreAuthorize("hasAnyRole('ROLE_LANDLORD')")
     public ResponseEntity<List<DisplayCardListingDTO>> getAllListings(Authentication authentication){
         String loggedInUserId = getLoggedInUserUUID(authentication);
         log.info("LandlordController->getAllListings->user: {}" , loggedInUserId);
@@ -46,7 +44,7 @@ public class LandlordController extends GenericController {
     }
 
     @DeleteMapping("/listings/{id}")
-    @PreAuthorize("hasAnyRole('" + AuthorityConstants.ROLE_LANDLORD + "')")
+    @PreAuthorize("hasAnyRole('ROLE_LANDLORD') && @securityService.isListingMine(#listingPublicId)")
     public ResponseEntity<List<DisplayCardListingDTO>> deleteListing(
             @PathVariable(name= "id",required=true)  String listingPublicId,
             Authentication authentication){
@@ -57,7 +55,7 @@ public class LandlordController extends GenericController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('" + AuthorityConstants.ROLE_LANDLORD + "')")
+    @PreAuthorize("hasAnyRole('ROLE_LANDLORD')")
     public ResponseEntity<CreatedListingDTO> createListing(
             @RequestPart(name = "images") MultipartFile[] images,
             @RequestPart(name = "dto") SaveListingDTO saveListingDTO,
