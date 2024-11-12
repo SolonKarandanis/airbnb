@@ -3,25 +3,32 @@ package com.solon.airbnb.booking.domain;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
-
 import com.solon.airbnb.shared.domain.DomainConstants;
+import jakarta.persistence.*;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.UuidGenerator;
 
 import com.solon.airbnb.shared.domain.AbstractAuditingEntity;
 import com.solon.airbnb.shared.domain.UuidEntity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
-
+@NamedQueries({
+        @NamedQuery(name = Booking.BOOKING_EXISTS_AT_INTERVAL,
+                query = "SELECT CASE WHEN COUNT(booking) > 0 THEN TRUE ELSE FALSE END " +
+                        "FROM Booking  booking "+
+                        "WHERE NOT (booking.endDate <= :startDate OR booking.startDate >= :endDate) " +
+                        "AND booking.fkListing = :fkListing"),
+})
 @Entity
 @Table(name = "booking")
 public class Booking extends AbstractAuditingEntity<Long> implements UuidEntity{
+
+    public static final String BOOKING_EXISTS_AT_INTERVAL= "Booking.bookingExistsAtInterval";
+    public static final String FIND_ALL_BY_FK_LISTING= "Booking.findAllByFkListing";
+    public static final String FIND_ALL_BY_FK_TENANT= "Booking.findAllByFkTenant";
+    public static final String DELETE_BOOKING_BY_FK_TENANT_AND_PUBLIC_ID= "Booking.deleteBookingByFkTenantAndPublicId";
+    public static final String DELETE_BOOKING_BY_PUBLIC_ID_AND_FK_LISTING= "Booking.deleteBookingByPublicIdAndFkListing";
+    public static final String FIND_ALL_BY_FK_LISTING_IN= "Booking.findAllByFkListingIn";
+    public static final String FIND_ALL_MATCH_WITH_DATE= "Booking.findAllMatchWithDate";
 
     @Id
     @GeneratedValue(
