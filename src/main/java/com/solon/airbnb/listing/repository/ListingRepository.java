@@ -20,8 +20,10 @@ public interface ListingRepository extends JpaRepository<Listing, Long>{
 	@Query(name = Listing.FIND_ALL_BY_LANDLORD_PUBLIC_ID_FETCH_COVER_PICTURE)
 	List<Listing> findAllByLandlordPublicIdFetchCoverPicture(UUID landlordPublicId);
 
+	@Query(name = Listing.EXISTS_BY_PUBLIC_ID_AND_LANDLORD_PUBLIC_ID)
 	Boolean existsByPublicIdAndLandlordPublicId(UUID publicId, UUID landlordPublicId);
 
+	@Query(name = Listing.FIND_BY_PUBLIC_ID_AND_LANDLORD_PUBLIC_ID)
 	Listing findByPublicIdAndLandlordPublicId(UUID publicId, UUID landlordPublicId);
 
 	@Modifying
@@ -34,12 +36,14 @@ public interface ListingRepository extends JpaRepository<Listing, Long>{
 	@Query(name = Listing.FIND_ALL_WITH_COVER_ONLY)
 	Page<Listing> findAllWithCoverOnly(Pageable pageable);
 
+	@Query(name = Listing.FIND_BY_PUBLIC_ID)
 	Optional<Listing> findByPublicId(UUID publicId);
 
+	@Query(name = Listing.FIND_ALL_BY_PUBLIC_ID_IN)
 	List<Listing> findAllByPublicIdIn(List<UUID> allListingPublicIDs);
 
-
-	Optional<Listing> findOneByPublicIdAndLandlordPublicId(UUID listingPublicId, UUID landlordPublicId);
+	@Query(name = Listing.FIND_BY_PUBLIC_ID_AND_LANDLORD_PUBLIC_ID)
+	Optional<Listing> findOneByPublicIdAndLandlordPublicId(UUID publicId, UUID landlordPublicId);
 
 	Page<Listing> findAllByLocationAndBathroomsAndBedroomsAndGuestsAndBeds(
 	  Pageable pageable, String location, int bathrooms, int bedrooms, int guests, int beds

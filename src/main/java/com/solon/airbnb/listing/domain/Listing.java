@@ -20,6 +20,17 @@ import com.solon.airbnb.shared.domain.UuidEntity;
                         "LEFT JOIN FETCH listing.pictures picture " +
                         "WHERE listing.landlordPublicId = :landlordPublicId " +
                         "AND picture.isCover = true"),
+        @NamedQuery(name = Listing.EXISTS_BY_PUBLIC_ID_AND_LANDLORD_PUBLIC_ID,
+                query = "SELECT CASE WHEN COUNT(l.id) >0 " +
+                        "THEN TRUE ELSE FALSE END "+
+                        "FROM Listing l " +
+                        "WHERE l.publicId= :publicId " +
+                        "AND l.landlordPublicId= :landlordPublicId"),
+        @NamedQuery(name = Listing.FIND_BY_PUBLIC_ID_AND_LANDLORD_PUBLIC_ID,
+                query = "SELECT l " +
+                        "FROM Listing l "+
+                        "WHERE l.publicId= :publicId " +
+                        "AND l.landlordPublicId= :landlordPublicId"),
         @NamedQuery(name = Listing.DELETE_BY_PUBLIC_ID_AND_LANDLORD_PUBLIC_ID,
                 query = "DELETE FROM Listing l "+
                         "WHERE l.publicId = :publicId " +
@@ -35,15 +46,27 @@ import com.solon.airbnb.shared.domain.UuidEntity;
                         "FROM Listing listing " +
                         "LEFT JOIN FETCH listing.pictures picture " +
                         "WHERE picture.isCover = true "),
+        @NamedQuery(name = Listing.FIND_BY_PUBLIC_ID,
+                query = "SELECT l "+
+                        "FROM Listing l " +
+                        "WHERE l.publicId= :publicId"),
+        @NamedQuery(name = Listing.FIND_ALL_BY_PUBLIC_ID_IN,
+                query = "SELECT l "+
+                        "FROM Listing l " +
+                        "WHERE l.publicId in (:allListingPublicIDs) "),
 })
 @Entity
 @Table(name = "listing")
 public class Listing extends AbstractAuditingEntity<Long> implements UuidEntity{
 
     public static final String FIND_ALL_BY_LANDLORD_PUBLIC_ID_FETCH_COVER_PICTURE= "Listing.findAllByLandlordPublicIdFetchCoverPicture";
+    public static final String EXISTS_BY_PUBLIC_ID_AND_LANDLORD_PUBLIC_ID= "Listing.existsByPublicIdAndLandlordPublicId";
+    public static final String FIND_BY_PUBLIC_ID_AND_LANDLORD_PUBLIC_ID= "Listing.findByPublicIdAndLandlordPublicId";
     public static final String DELETE_BY_PUBLIC_ID_AND_LANDLORD_PUBLIC_ID= "Listing.deleteByPublicIdAndLandlordPublicId";
     public static final String FIND_ALL_BY_BOOKING_CATEGORY_WITH_COVER_ONLY= "Listing.findAllByBookingCategoryWithCoverOnly";
     public static final String FIND_ALL_WITH_COVER_ONLY= "Listing.findAllWithCoverOnly";
+    public static final String FIND_BY_PUBLIC_ID= "Listing.findByPublicId";
+    public static final String FIND_ALL_BY_PUBLIC_ID_IN= "Listing.findAllByPublicIdIn";
 
     @Id
     @GeneratedValue(
