@@ -22,6 +22,7 @@ public class NoAuthenticationRequestMatcher implements RequestMatcher {
 
     @Autowired
     public NoAuthenticationRequestMatcher(RequestMappingHandlerMapping requestMappingHandlerMapping) {
+        log.info("----------------->NoAuthenticationRequestMatcher");
         this.requestMappingHandlerMapping = requestMappingHandlerMapping;
         Map<RequestMappingInfo, HandlerMethod> tmpSet = new HashMap<>();
         this.requestMappingHandlerMapping.getHandlerMethods().forEach((info, method) -> {

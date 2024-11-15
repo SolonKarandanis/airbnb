@@ -20,7 +20,7 @@ import com.solon.airbnb.user.application.service.JwtService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/authenticate")
+@RequestMapping
 public class AuthController extends GenericController{
 	private static final Logger log = LoggerFactory.getLogger(AuthController.class);
 
@@ -41,7 +41,7 @@ public class AuthController extends GenericController{
      * case has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping
+    @PostMapping("/authenticate")
     public ResponseEntity<JwtDTO> authenticate(@Valid @RequestBody SubmitCredentialsDTO submitCredentialsDTO) {
     	log.info("AuthController->authenticate----------->username: {}   password: {}",submitCredentialsDTO.getUsername(),submitCredentialsDTO.getPassword());
     	UserDTO authenticatedUser = authService.authenticate(submitCredentialsDTO);

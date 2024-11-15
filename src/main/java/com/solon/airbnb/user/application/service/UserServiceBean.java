@@ -97,16 +97,16 @@ public class UserServiceBean extends BaseUserAccountServiceBean implements UserS
 
     @Transactional(noRollbackFor = MailAuthenticationException.class)
     @Override
-    public User registerUser(CreateUserDTO dto, String applicationUrl) throws NotFoundException {
+    public User registerUser(CreateUserDTO dto, String applicationUrl) throws BusinessException {
         Optional<User> userNameMaybe  = userRepository.findByUsername(dto.getUsername());
 
         if(userNameMaybe.isPresent()){
-            throw new BadCredentialsException("error.username.exists");
+            throw new BusinessException("error.username.exists");
         }
 
         Optional<User> emailMaybe  = userRepository.findOneByEmail(dto.getEmail());
         if(emailMaybe.isPresent()){
-            throw new BadCredentialsException("error.email.exists");
+            throw new BusinessException("error.email.exists");
         }
 
         User user = new User();

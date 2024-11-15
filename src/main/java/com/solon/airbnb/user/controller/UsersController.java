@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +30,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 
-@PreAuthorize("isAuthenticated()")
+
 @RestController
 @RequestMapping("/users")
 public class UsersController extends GenericController{
@@ -68,9 +69,10 @@ public class UsersController extends GenericController{
 		 return ResponseEntity.ok(usersService.convertToReadUserDTO(user));
 	 }
 
+
 	 @NoAuthentication
 	 @PostMapping
-	 public ResponseEntity<ReadUserDTO> registerUser(@RequestBody @Valid CreateUserDTO user, final HttpServletRequest request) throws NotFoundException{
+	 public ResponseEntity<ReadUserDTO> registerUser(@RequestBody @Valid CreateUserDTO user, final HttpServletRequest request) throws BusinessException {
 		 log.info("UsersController->registerUser->RequestBody: {}" , user);
 		 User userSaved=usersService.registerUser(user, applicationUrl(request));
 		 ReadUserDTO dto = usersService.convertToReadUserDTO(userSaved);
