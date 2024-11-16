@@ -88,21 +88,24 @@ public class BookingServiceBean implements BookingService{
     }
 
     private List<BookedListingDTO> mapBookingToBookedListing(List<Booking> allBookings, List<DisplayCardListingDTO> allListings) {
+        List<BookedListingDTO> result = new ArrayList<>();
         if(CollectionUtils.isEmpty(allBookings) && CollectionUtils.isEmpty(allListings)){
             return new ArrayList<>();
         }
-        return allBookings.stream().map(booking -> {
-            DisplayCardListingDTO displayCardListingDTO = allListings
-                    .stream()
-                    .filter(listing -> listing.publicId().equals(booking.getFkListing()))
-                    .findFirst()
-                    .orElseThrow();
-            BookedDateDTO dates = bookingMapper.bookingToCheckAvailability(booking);
-            return new BookedListingDTO(displayCardListingDTO.cover(),
-                    displayCardListingDTO.location(),
-                    dates, new PriceVO(booking.getTotalPrice()),
-                    booking.getPublicId().toString(),displayCardListingDTO.publicId());
-        }).toList();
+        for(Booking booking : allBookings){
+            Optional<DisplayCardListingDTO> displayCardListingDTOOpt = allListings.stream()
+                    .filter(listing -> listing.publicId().equals(booking.getFkListing().toString()))
+                    .findFirst();
+            BookedDateDTO  dates = bookingMapper.bookingToCheckAvailability(booking);
+            displayCardListingDTOOpt.ifPresent(display->{
+                BookedListingDTO dto = new BookedListingDTO(display.cover(),
+                        display.location(),
+                        dates, new PriceVO(booking.getTotalPrice()),
+                        booking.getPublicId().toString(),display.publicId());
+                result.add(dto);
+            });
+        }
+        return result;
     }
 
     @Transactional
