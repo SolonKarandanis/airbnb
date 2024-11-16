@@ -3,6 +3,8 @@ package com.solon.airbnb.booking.domain;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
+
+
 import com.solon.airbnb.shared.domain.DomainConstants;
 import jakarta.persistence.*;
 import org.hibernate.annotations.NaturalId;
@@ -25,6 +27,14 @@ import com.solon.airbnb.shared.domain.UuidEntity;
                 query = "SELECT booking " +
                         "FROM Booking  booking "+
                         "WHERE booking.fkTenant = :fkTenant"),
+        @NamedQuery(name = Booking.DELETE_BOOKING_BY_FK_TENANT_AND_PUBLIC_ID,
+                query = "DELETE FROM Booking booking "+
+                        "WHERE booking.fkTenant = :tenantPublicId " +
+                        "AND booking.publicId = :bookingPublicId "),
+        @NamedQuery(name = Booking.DELETE_BOOKING_BY_PUBLIC_ID_AND_FK_LISTING,
+                query = "DELETE FROM Booking booking "+
+                        "WHERE booking.publicId = :bookingPublicId " +
+                        "AND booking.fkListing = :listingPublicId "),
         @NamedQuery(name = Booking.FIND_ALL_BY_FK_LISTING_IN,
                 query = "SELECT booking " +
                         "FROM Booking  booking "+

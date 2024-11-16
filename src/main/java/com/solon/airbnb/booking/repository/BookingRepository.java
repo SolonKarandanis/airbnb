@@ -23,9 +23,11 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findAllByFkTenant(UUID fkTenant);
 
     @Modifying
+    @Query(name = Booking.DELETE_BOOKING_BY_FK_TENANT_AND_PUBLIC_ID)
     int deleteBookingByFkTenantAndPublicId(UUID tenantPublicId, UUID bookingPublicId);
 
     @Modifying
+    @Query(name = Booking.DELETE_BOOKING_BY_PUBLIC_ID_AND_FK_LISTING)
     int deleteBookingByPublicIdAndFkListing(UUID bookingPublicId, UUID listingPublicId);
 
     @Query(name = Booking.FIND_ALL_BY_FK_LISTING_IN)
