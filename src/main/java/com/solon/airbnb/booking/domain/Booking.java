@@ -17,6 +17,23 @@ import com.solon.airbnb.shared.domain.UuidEntity;
                         "FROM Booking  booking "+
                         "WHERE NOT (booking.endDate <= :startDate OR booking.startDate >= :endDate) " +
                         "AND booking.fkListing = :fkListing"),
+        @NamedQuery(name = Booking.FIND_ALL_BY_FK_LISTING,
+                query = "SELECT booking " +
+                        "FROM Booking  booking "+
+                        "WHERE booking.fkListing = :fkListing"),
+        @NamedQuery(name = Booking.FIND_ALL_BY_FK_TENANT,
+                query = "SELECT booking " +
+                        "FROM Booking  booking "+
+                        "WHERE booking.fkTenant = :fkTenant"),
+        @NamedQuery(name = Booking.FIND_ALL_BY_FK_LISTING_IN,
+                query = "SELECT booking " +
+                        "FROM Booking  booking "+
+                        "WHERE booking.fkListing IN :allPropertyPublicIds"),
+        @NamedQuery(name = Booking.FIND_ALL_MATCH_WITH_DATE,
+                query = "SELECT booking " +
+                        "FROM Booking  booking "+
+                        "WHERE NOT (booking.endDate <= :startDate or booking.startDate >= :endDate) " +
+                        "AND booking.fkListing IN :fkListings"),
 })
 @Entity
 @Table(name = "booking")
