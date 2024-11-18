@@ -1,6 +1,7 @@
 package com.solon.airbnb.shared.service;
 
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +75,10 @@ public class GenericServiceBean {
 //	}
 
 	protected PageRequest toPageRequest(Paging paging) {
-		Sort sortBy = Sort.by(Direction.valueOf(paging.getSortingDirection()), paging.getSortingColumn());
+		Sort sortBy = Sort.by(Direction.ASC,"id");
+		if(Objects.nonNull(paging.getSortingDirection()) && Objects.nonNull(paging.getSortingColumn())){
+			sortBy = Sort.by(Direction.valueOf(paging.getSortingDirection()), paging.getSortingColumn());
+		}
 		return PageRequest.of(paging.getPagingStart(), paging.getPagingSize(), sortBy);
 	}
 	
