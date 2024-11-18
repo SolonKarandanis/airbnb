@@ -8,6 +8,7 @@ import com.solon.airbnb.user.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -27,6 +28,7 @@ public class UserRegistrationCompleteEventListener implements ApplicationListene
         this.eMailDelegateService = eMailDelegateService;
     }
 
+    @Async
     @Override
     public void onApplicationEvent(UserRegistrationCompleteEvent event) {
         // 1. Get the newly registered user
