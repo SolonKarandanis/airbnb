@@ -1,5 +1,7 @@
 package com.solon.airbnb.listing.application.service;
 
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Predicate;
 import com.solon.airbnb.booking.application.service.BookingService;
 import com.solon.airbnb.listing.application.dto.DisplayCardListingDTO;
 import com.solon.airbnb.listing.application.dto.DisplayListingDTO;
@@ -7,6 +9,7 @@ import com.solon.airbnb.listing.application.dto.ListingSearchRequestDTO;
 import com.solon.airbnb.listing.application.dto.sub.LandlordListingDTO;
 import com.solon.airbnb.listing.domain.BookingCategory;
 import com.solon.airbnb.listing.domain.Listing;
+import com.solon.airbnb.listing.domain.QListing;
 import com.solon.airbnb.listing.mapper.ListingMapper;
 import com.solon.airbnb.listing.repository.ListingRepository;
 import com.solon.airbnb.shared.exception.NotFoundException;
@@ -21,8 +24,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -74,22 +79,52 @@ public class TenantServiceBean extends GenericServiceBean implements TenantServi
     @Override
     public Page<DisplayCardListingDTO> search(ListingSearchRequestDTO searchObj) {
         PageRequest pageRequest = toPageRequest(searchObj.getPaging());
-        String location = searchObj.getLocation();
-        Integer baths  = searchObj.getBaths().value();
-        Integer bedrooms = searchObj.getBedrooms().value();
-        Integer guests = searchObj.getGuests().value();
-        Integer beds = searchObj.getBeds().value();
         String startDate = searchObj.getStartDate();
         String endDate = searchObj.getEndDate();
-        Page<Listing> allMatchedListings = listingRepository
-                .findAllByLocationAndBathroomsAndBedroomsAndGuestsAndBeds(pageRequest,location,baths,bedrooms,guests,beds);
+        Predicate searchPredicate = getListingPredicate(searchObj);
+        Page<Listing> allMatchedListings =listingRepository.findAll(searchPredicate,pageRequest);
+        log.info("TenantServiceBean --> search---> listings found: {}",allMatchedListings.getContent().size());
         List<UUID> listingUUIDs = allMatchedListings.stream()
                 .map(Listing::getPublicId)
                 .toList();
         List<UUID> bookingUUIDs = bookingService.getBookingMatchByListingIdsAndBookedDate(listingUUIDs, startDate, endDate);
+        log.info("TenantServiceBean --> search---> bookings found: {}",bookingUUIDs.size());
         List<DisplayCardListingDTO> listingsNotBooked = allMatchedListings.stream().filter(listing -> !bookingUUIDs.contains(listing.getPublicId()))
                 .map(listingMapper::listingToDisplayCardListingDTO)
                 .toList();
+        log.info("TenantServiceBean --> search---> listings not booked: {}",listingsNotBooked.size());
         return new PageImpl<>(listingsNotBooked, pageRequest, listingsNotBooked.size());
+    }
+
+    protected Predicate getListingPredicate(ListingSearchRequestDTO searchObj){
+        QListing listing = QListing.listing;
+        BooleanBuilder builder = new BooleanBuilder();
+
+        Integer baths  = searchObj.getBaths().value();
+        Integer bedrooms = searchObj.getBedrooms().value();
+        Integer guests = searchObj.getGuests().value();
+        Integer beds = searchObj.getBeds().value();
+        String location = searchObj.getLocation();
+
+        if(Objects.nonNull(baths) && baths >0){
+            builder.and(listing.bathrooms.eq(baths));
+        }
+
+        if(Objects.nonNull(bedrooms) && bedrooms >0){
+            builder.and(listing.bedrooms.eq(bedrooms));
+        }
+
+        if(Objects.nonNull(guests) && guests >0){
+            builder.and(listing.guests.eq(guests));
+        }
+
+        if(Objects.nonNull(beds)  && beds >0){
+            builder.and(listing.beds.eq(beds));
+        }
+
+        if(StringUtils.hasLength(location)){
+            builder.and(listing.location.like(location));
+        }
+        return builder;
     }
 }

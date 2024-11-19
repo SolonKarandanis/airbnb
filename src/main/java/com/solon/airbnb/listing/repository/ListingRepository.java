@@ -9,13 +9,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
 
 import com.solon.airbnb.listing.domain.BookingCategory;
 import com.solon.airbnb.listing.domain.Listing;
 
 @Repository
-public interface ListingRepository extends JpaRepository<Listing, Long>{
+public interface ListingRepository extends JpaRepository<Listing, Long>, QuerydslPredicateExecutor<Listing> {
 	
 	@Query(name = Listing.FIND_ALL_BY_LANDLORD_PUBLIC_ID_FETCH_COVER_PICTURE)
 	List<Listing> findAllByLandlordPublicIdFetchCoverPicture(UUID landlordPublicId);
