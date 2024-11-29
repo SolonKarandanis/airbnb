@@ -22,7 +22,6 @@ import static org.mockito.Mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Date;
 
@@ -69,21 +68,4 @@ public class AuthControllerTest {
         verify(authService,times(1)).authenticate(any());
         verify(jwtService,times(1)).generateToken(userDto);
     }
-
-//    @DisplayName("User does not exist")
-//    @Test
-//    void testLogin02(){
-//        SubmitCredentialsDTO credentials = new SubmitCredentialsDTO();
-//        credentials.setUsername("admin");
-//        credentials.setPassword("123");
-//
-//        when(authService.authenticate(any())).thenReturn(null);
-//
-//        UsernameNotFoundException exc = assertThrows(UsernameNotFoundException.class, ()->{
-//            controller.authenticate(credentials);
-//        });
-//
-//        assertEquals("error.user.not.found", exc.getLocalizedMessage());
-//        verify(authService,times(1)).authenticate(any());
-//    }
 }
