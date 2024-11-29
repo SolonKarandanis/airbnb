@@ -11,6 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -33,23 +34,30 @@ public class CustomAuthProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = authentication.getName();
         String password = authentication.getCredentials().toString();
+        UserDTO user = null;
 
-        UserDTO user = (UserDTO) userDetailsService.loadUserByUsername(username);
+        try{
+            user = (UserDTO) userDetailsService.loadUserByUsername(username);
+        }
+        catch (UsernameNotFoundException exc){
+            throw new BadCredentialsException("error.user.not.found");
+        }
+
         log.info("CustomAuthProvider->authenticate->user: {}" , user.getUsername());
         if (Objects.isNull(user)) {
-            throw new BadCredentialsException("User not found");
+            throw new BadCredentialsException("error.user.not.found");
         }
 
         if(Boolean.FALSE.equals(user.getVerified())){
-            throw new BadCredentialsException("User not verified");
+            throw new BadCredentialsException("error.user.not.verified");
         }
 
         if(isAccountNonActive(user.getStatus())){
-            throw new BadCredentialsException("User not active");
+            throw new BadCredentialsException("error.user.not.active");
         }
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new BadCredentialsException("Invalid password");
+            throw new BadCredentialsException("error.invalid.password");
         }
 
         return new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());
