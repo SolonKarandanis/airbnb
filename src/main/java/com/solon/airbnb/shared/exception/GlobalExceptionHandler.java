@@ -103,6 +103,28 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             return getInternalServerErrorResponse(e, request);
         }
     }
+
+    /**
+     * NOTE: Later on, message arguments have to be translated.
+     *
+     * @param e
+     *            <code>Exception</code>
+     * @return <code>ResponseEntity</code>
+     */
+    @ExceptionHandler(value = { AggregateAirbnbException.class })
+    public ResponseEntity<Object> handleAggregateEDException(final AggregateAirbnbException e, final WebRequest request) {
+        if (e instanceof AggregateAirbnbException) {
+            /* Validation error, handle as HTTP 400 and translate the error message. */
+            StringBuilder serializededMessage = new StringBuilder();
+            for (AirbnbException ed : e.getBasket()) {
+                LOG.debug(" HANDLER: handleEDException [message: {}, class: {}] ", ed.getMessage(), ed.getClass().getName());
+                serializededMessage.append(serializeErrorMessageToJson(getTranslatedErrorMessage(ed, request)));
+            }
+            return ResponseEntity.badRequest().body(serializededMessage.toString());
+        } else {
+            return getInternalServerErrorResponse(e, request);
+        }
+    }
     
     @ExceptionHandler(value = { BusinessException.class })
     public ResponseEntity<Object> handleBusinessException(final BusinessException e, final WebRequest request) {
