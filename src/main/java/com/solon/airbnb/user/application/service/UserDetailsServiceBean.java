@@ -22,7 +22,7 @@ import com.solon.airbnb.user.repository.UserRepository;
 public class UserDetailsServiceBean extends BaseUserAccountServiceBean implements UserDetailsService {
 	
 	private static final Logger log = LoggerFactory.getLogger(UserDetailsServiceBean.class);
-	private static final String USER_NOT_FOUND="User not found";
+	private static final String USER_NOT_FOUND="error.user.not.found";
 	
 	private final UserRepository userRepository;
 	

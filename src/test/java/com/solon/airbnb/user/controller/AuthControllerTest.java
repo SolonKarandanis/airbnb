@@ -14,8 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -51,7 +50,7 @@ public class AuthControllerTest {
 
     @DisplayName("Successful Login")
     @Test
-    void testSuccessfulLogin(){
+    void testLogin01(){
         SubmitCredentialsDTO credentials = new SubmitCredentialsDTO();
         credentials.setUsername("admin1");
         credentials.setPassword("123");
