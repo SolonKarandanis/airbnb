@@ -14,6 +14,7 @@ import java.util.Locale;
 import java.util.stream.Stream;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -83,6 +85,24 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             return getInternalServerErrorResponse(e, request);
         }
     }
+
+    /**
+     * NOTE: Later on, message arguments have to be translated.
+     *
+     * @param e
+     *            <code>Exception</code>
+     * @return <code>ResponseEntity</code>
+     */
+    @ExceptionHandler(value = { AirbnbException.class })
+    public ResponseEntity<Object> handleEDException(final AirbnbException e, final WebRequest request) {
+        LOG.debug(" HANDLER: handleEDException [message: {}, class: {}] ", e.getMessage(), e.getClass().getName());
+        if (e instanceof AirbnbException) {
+            /* Validation error, handle as HTTP 400 and translate the error message. */
+            return ResponseEntity.badRequest().body(serializeErrorMessageToJson(getTranslatedErrorMessage(e, request)));
+        } else {
+            return getInternalServerErrorResponse(e, request);
+        }
+    }
     
     @ExceptionHandler(value = { BusinessException.class })
     public ResponseEntity<Object> handleBusinessException(final BusinessException e, final WebRequest request) {
@@ -95,6 +115,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             return getInternalServerErrorResponse(e, request);
         }
 
+    }
+
+    /**
+     * Handler for ResourceAccessException
+     *
+     * @param e
+     *            <code>Exception</code>
+     * @return <code>ResponseEntity</code>
+     */
+    @ExceptionHandler(value = { ResourceAccessException.class })
+    public ResponseEntity<Object> handleResourceAccessException(final ResourceAccessException e, final WebRequest request) {
+        LOG.debug(" HANDLER: handleResourceAccessException [message: {}, class: {}] ", e.getMessage(), e.getClass().getName());
+        return getBadGatewayResponse(e, request);
     }
 
 //  This exception is thrown when a method parameter has the wrong type!
@@ -251,11 +284,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      */
     private String serializeErrorMessagesToJson(final List<String> errorMessages) {
         String output = "";
-       
-        JSONArray json = new JSONArray();
-        errorMessages.forEach(json::put);
-        output = json.toString();
-      
+
+        try {
+            JSONArray json = new JSONArray();
+            errorMessages.forEach(json::put);
+            output = json.toString();
+        } catch (JSONException e) {
+            LOG.error(" ERROR - Cannot serialize to JSON: ", e);
+            output = "[{Application error occurred. Please report this issue to Helpdesk.}]";
+        }
         return output;
     }
 

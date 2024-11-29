@@ -16,7 +16,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.solon.airbnb.shared.exception.AirbnbException;
 import com.solon.airbnb.shared.exception.NotFoundException;
-import com.solon.airbnb.user.application.dto.ReadUserDTO;
 import com.solon.airbnb.user.application.dto.UserDTO;
 import com.solon.airbnb.user.application.service.UserService;
 import com.solon.airbnb.user.domain.User;
@@ -27,7 +26,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @Component
 public class GenericController {
 	
-	protected static final String USER_NOT_FOUND="User not found";
+	protected static final String USER_NOT_FOUND="error.user.not.found";
 	
 	@Autowired
 	protected UserService usersService;
