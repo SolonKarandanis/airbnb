@@ -1,5 +1,6 @@
 package com.solon.airbnb.user.controller;
 
+import com.solon.airbnb.shared.exception.BusinessException;
 import com.solon.airbnb.user.application.dto.JwtDTO;
 import com.solon.airbnb.user.application.dto.SubmitCredentialsDTO;
 import com.solon.airbnb.user.application.dto.UserDTO;
@@ -51,7 +52,7 @@ public class AuthControllerTest {
 
     @DisplayName("Successful Login")
     @Test
-    void testLogin01(){
+    void testLogin01() throws BusinessException {
         SubmitCredentialsDTO credentials = new SubmitCredentialsDTO();
         credentials.setUsername("admin1");
         credentials.setPassword("123");

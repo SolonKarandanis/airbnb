@@ -2,6 +2,7 @@ package com.solon.airbnb.user.controller;
 
 import java.net.URISyntaxException;
 
+import com.solon.airbnb.shared.exception.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +43,7 @@ public class AuthController extends GenericController{
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/authenticate")
-    public ResponseEntity<JwtDTO> authenticate(@Valid @RequestBody SubmitCredentialsDTO submitCredentialsDTO) {
+    public ResponseEntity<JwtDTO> authenticate(@Valid @RequestBody SubmitCredentialsDTO submitCredentialsDTO) throws BusinessException {
     	log.info("AuthController->authenticate----------->username: {}   password: {}",submitCredentialsDTO.getUsername(),submitCredentialsDTO.getPassword());
     	UserDTO authenticatedUser = authService.authenticate(submitCredentialsDTO);
     	JwtDTO jwt = jwtService.generateToken(authenticatedUser);

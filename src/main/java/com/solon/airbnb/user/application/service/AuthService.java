@@ -1,5 +1,6 @@
 package com.solon.airbnb.user.application.service;
 
+import com.solon.airbnb.shared.exception.BusinessException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
@@ -13,5 +14,5 @@ public interface AuthService {
     public UserDTO getLoggedUser();
     public void setAuthentication(UsernamePasswordAuthenticationToken authenticationToken);
     public void setAuthentication(Authentication authentication);
-    public UserDTO authenticate(SubmitCredentialsDTO submitCredentialsDTO);
+    public UserDTO authenticate(SubmitCredentialsDTO submitCredentialsDTO) throws BusinessException;
 }

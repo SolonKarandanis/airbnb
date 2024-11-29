@@ -1,8 +1,10 @@
 package com.solon.airbnb.user.application.service;
 
+import com.solon.airbnb.shared.exception.BusinessException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -46,13 +48,17 @@ public class AuthServiceBean extends GenericServiceBean implements AuthService{
 	}
 
 	@Override
-	public UserDTO authenticate(SubmitCredentialsDTO submitCredentialsDTO) {
+	public UserDTO authenticate(SubmitCredentialsDTO submitCredentialsDTO)throws BusinessException {
 		UsernamePasswordAuthenticationToken authenticationToken
         = new UsernamePasswordAuthenticationToken(submitCredentialsDTO.getUsername(), submitCredentialsDTO.getPassword());
-
-		Authentication authentication = authenticationManager.authenticate(authenticationToken);
-		setAuthentication(authentication);
-		return (UserDTO) authentication.getPrincipal();
+		try{
+			Authentication authentication = authenticationManager.authenticate(authenticationToken);
+			setAuthentication(authentication);
+			return (UserDTO) authentication.getPrincipal();
+		}
+		catch (AuthenticationException exc){
+			throw new BusinessException(exc.getMessage());
+		}
 	}
 
 }
