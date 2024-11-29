@@ -140,6 +140,24 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     /**
+     * Handler for NoResultFoundException
+     *
+     * @param e
+     *            <code>Exception</code>
+     * @return <code>ResponseEntity</code>
+     */
+    @ExceptionHandler(value = { NotFoundException.class })
+    public ResponseEntity<Object> handleNoResultFoundException(final NotFoundException e, final WebRequest request) {
+        LOG.debug(" HANDLER: handleNoResultFoundException");
+        if (e instanceof NotFoundException) {
+            /* Empty result set, handle as HTTP 404. */
+            return ResponseEntity.notFound().build();
+        } else {
+            return getInternalServerErrorResponse(e, request);
+        }
+    }
+
+    /**
      * Handler for ResourceAccessException
      *
      * @param e
