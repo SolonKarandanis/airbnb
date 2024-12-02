@@ -4,6 +4,7 @@ import com.solon.airbnb.fileinfo.domain.FileInfo;
 import com.solon.airbnb.shared.common.AuthorityConstants;
 import com.solon.airbnb.shared.dto.Paging;
 import com.solon.airbnb.user.application.dto.UserDTO;
+import com.solon.airbnb.user.application.dto.UsersSearchRequestDTO;
 import com.solon.airbnb.user.domain.Authority;
 import com.solon.airbnb.user.domain.User;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -74,5 +75,11 @@ public class TestUtil {
         file.setFileName("catalogue_v.0.1.xls");
         file.setFileSize(15872);
         return file;
+    }
+
+    public static UsersSearchRequestDTO generateUsersSearchRequestDTO(){
+        UsersSearchRequestDTO dto = new UsersSearchRequestDTO();
+        dto.setPaging(createPaging(10,1,"id","ASC"));
+        return dto;
     }
 }
