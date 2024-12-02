@@ -7,7 +7,9 @@ import com.solon.airbnb.user.application.dto.UserDTO;
 import com.solon.airbnb.user.application.dto.UsersSearchRequestDTO;
 import com.solon.airbnb.user.application.service.UserService;
 import com.solon.airbnb.user.domain.User;
+import com.solon.airbnb.util.TestConstants;
 import com.solon.airbnb.util.TestUtil;
+import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,9 +23,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @DisplayName("UsersControllerTest")
@@ -45,9 +45,13 @@ public class UsersControllerTest {
     @Mock
     List<ReadUserDTO> dtos;
 
+    @Mock
+    protected HttpServletResponse response;
+
 
     protected User user;
     protected UserDTO userDto;
+    protected ReadUserDTO readUserDTO;
 
     protected final Long userId = 1L;
 
@@ -55,7 +59,14 @@ public class UsersControllerTest {
     public void setup(){
         user = TestUtil.createTestUser(userId);
         userDto = TestUtil.createTestUserDto(userId);
+        readUserDTO = TestUtil.createTestReadUserDTO(TestConstants.TEST_USER_PUBLIC_ID);
     }
+
+//    @DisplayName("Export to Excel")
+//    @Test
+//    void testExportToExcel(){
+//        when(usersService.findAllUsers()).thenReturn(userList);
+//    }
 
     @DisplayName("Find All Users")
     @Test
@@ -71,5 +82,19 @@ public class UsersControllerTest {
 
         verify(usersService, times(1)).findAllUsers(searchObj);
         verify(usersService, times(1)).convertToReadUserListDTO(results.getContent());
+    }
+
+    @DisplayName("View User")
+    @Test
+    void testViewUser(){
+        when(usersService.convertToReadUserDTO(user)).thenReturn(readUserDTO);
+
+        ResponseEntity<ReadUserDTO> resp = controller.viewUser("1");
+        assertNotNull(resp);
+        assertNotNull(resp.getBody());
+//        assertThat();
+        assertTrue(resp.getStatusCode().isSameCodeAs(HttpStatus.OK));
+
+        verify(usersService, times(1)).convertToReadUserDTO(user);
     }
 }

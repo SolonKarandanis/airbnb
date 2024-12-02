@@ -3,8 +3,10 @@ package com.solon.airbnb.util;
 import com.solon.airbnb.fileinfo.domain.FileInfo;
 import com.solon.airbnb.shared.common.AuthorityConstants;
 import com.solon.airbnb.shared.dto.Paging;
+import com.solon.airbnb.user.application.dto.ReadUserDTO;
 import com.solon.airbnb.user.application.dto.UserDTO;
 import com.solon.airbnb.user.application.dto.UsersSearchRequestDTO;
+import com.solon.airbnb.user.domain.AccountStatus;
 import com.solon.airbnb.user.domain.Authority;
 import com.solon.airbnb.user.domain.User;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 public class TestUtil {
 
@@ -31,6 +34,7 @@ public class TestUtil {
         user.setUsername("admin1");
         user.setPassword("123");
         user.setAuthorities(Set.of(createTestAuthority()));
+        user.setPublicId(UUID.fromString(TestConstants.TEST_USER_PUBLIC_ID));
         return user;
     }
 
@@ -41,8 +45,21 @@ public class TestUtil {
         userDto.setLastName("Smith");
         userDto.setUsername("admin1");
         userDto.setPassword("123");
+        userDto.setPublicId(UUID.fromString(TestConstants.TEST_USER_PUBLIC_ID));
         userDto.setAuthorityNames(List.of(AuthorityConstants.ROLE_LANDLORD));
         return userDto;
+    }
+
+    public static ReadUserDTO createTestReadUserDTO(final String publicId){
+        return new ReadUserDTO(
+                publicId,
+                "Robert",
+                "Smith",
+                "skarandanis@gmail.com",
+                "test",
+                AccountStatus.ACTIVE,
+                Set.of(AuthorityConstants.ROLE_LANDLORD)
+        );
     }
 
     public static Authentication getTestAuthenticationFromUserDTO(UserDTO userDto, String token) {
