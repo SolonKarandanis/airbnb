@@ -63,6 +63,7 @@ public class AuthControllerTest {
         ResponseEntity<JwtDTO> resp = controller.authenticate(credentials);
         assertNotNull(resp);
         assertNotNull(resp.getBody());
+        assertEquals(resp.getBody(), jwt);
         assertTrue(resp.getStatusCode().isSameCodeAs(HttpStatus.OK));
 
         verify(authService,times(1)).authenticate(any());

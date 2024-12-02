@@ -2,6 +2,7 @@ package com.solon.airbnb.user.controller;
 
 
 import com.solon.airbnb.shared.dto.SearchResults;
+import com.solon.airbnb.shared.exception.NotFoundException;
 import com.solon.airbnb.user.application.dto.ReadUserDTO;
 import com.solon.airbnb.user.application.dto.UserDTO;
 import com.solon.airbnb.user.application.dto.UsersSearchRequestDTO;
@@ -20,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 import java.util.Optional;
@@ -49,6 +51,9 @@ public class UsersControllerTest {
 
     @Mock
     protected HttpServletResponse response;
+
+    @Mock
+    protected Authentication authentication;
 
 
     protected User user;
@@ -93,6 +98,36 @@ public class UsersControllerTest {
         when(usersService.convertToReadUserDTO(user)).thenReturn(readUserDTO);
 
         ResponseEntity<ReadUserDTO> resp = controller.viewUser(TestConstants.TEST_USER_PUBLIC_ID);
+        assertNotNull(resp);
+        assertNotNull(resp.getBody());
+        assertEquals(resp.getBody(), readUserDTO);
+        assertTrue(resp.getStatusCode().isSameCodeAs(HttpStatus.OK));
+
+        verify(usersService, times(1)).getByPublicId(TestConstants.TEST_USER_PUBLIC_ID);
+        verify(usersService, times(1)).convertToReadUserDTO(user);
+    }
+
+    @DisplayName("View User (not found)")
+    @Test
+    void testViewUser02(){
+        when(usersService.getByPublicId(TestConstants.TEST_INVALID_USER_PUBLIC_ID)).thenReturn(Optional.empty());
+
+        NotFoundException exception = assertThrows(NotFoundException.class, () ->{
+            controller.viewUser(TestConstants.TEST_INVALID_USER_PUBLIC_ID);
+        });
+        assertEquals("error.user.not.found",exception.getLocalizedMessage());
+
+        verify(usersService,times(1)).getByPublicId(TestConstants.TEST_INVALID_USER_PUBLIC_ID);
+    }
+
+    @DisplayName("Get user by token")
+    @Test
+    void testGetUserByToken(){
+        when(authentication.getPrincipal()).thenReturn(userDto);
+        when(usersService.getByPublicId(TestConstants.TEST_USER_PUBLIC_ID)).thenReturn(Optional.of(user));
+        when(usersService.convertToReadUserDTO(user)).thenReturn(readUserDTO);
+
+        ResponseEntity<ReadUserDTO> resp = controller.getUserByToken(authentication);
         assertNotNull(resp);
         assertNotNull(resp.getBody());
         assertEquals(resp.getBody(), readUserDTO);
