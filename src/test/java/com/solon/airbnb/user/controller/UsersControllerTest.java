@@ -22,8 +22,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @DisplayName("UsersControllerTest")
@@ -87,14 +89,16 @@ public class UsersControllerTest {
     @DisplayName("View User")
     @Test
     void testViewUser(){
+        when(usersService.getByPublicId(TestConstants.TEST_USER_PUBLIC_ID)).thenReturn(Optional.of(user));
         when(usersService.convertToReadUserDTO(user)).thenReturn(readUserDTO);
 
-        ResponseEntity<ReadUserDTO> resp = controller.viewUser("1");
+        ResponseEntity<ReadUserDTO> resp = controller.viewUser(TestConstants.TEST_USER_PUBLIC_ID);
         assertNotNull(resp);
         assertNotNull(resp.getBody());
-//        assertThat();
+        assertEquals(resp.getBody(), readUserDTO);
         assertTrue(resp.getStatusCode().isSameCodeAs(HttpStatus.OK));
 
+        verify(usersService, times(1)).getByPublicId(TestConstants.TEST_USER_PUBLIC_ID);
         verify(usersService, times(1)).convertToReadUserDTO(user);
     }
 }
