@@ -2,14 +2,14 @@ package com.solon.airbnb.user.controller;
 
 
 import com.solon.airbnb.shared.dto.SearchResults;
+import com.solon.airbnb.shared.exception.BusinessException;
 import com.solon.airbnb.shared.exception.NotFoundException;
-import com.solon.airbnb.user.application.dto.ReadUserDTO;
-import com.solon.airbnb.user.application.dto.UserDTO;
-import com.solon.airbnb.user.application.dto.UsersSearchRequestDTO;
+import com.solon.airbnb.user.application.dto.*;
 import com.solon.airbnb.user.application.service.UserService;
 import com.solon.airbnb.user.domain.User;
 import com.solon.airbnb.util.TestConstants;
 import com.solon.airbnb.util.TestUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -51,6 +51,9 @@ public class UsersControllerTest {
 
     @Mock
     protected HttpServletResponse response;
+
+    @Mock
+    protected HttpServletRequest request;
 
     @Mock
     protected Authentication authentication;
@@ -134,6 +137,41 @@ public class UsersControllerTest {
         assertTrue(resp.getStatusCode().isSameCodeAs(HttpStatus.OK));
 
         verify(usersService, times(1)).getByPublicId(TestConstants.TEST_USER_PUBLIC_ID);
+        verify(usersService, times(1)).convertToReadUserDTO(user);
+    }
+
+    @DisplayName("Register user")
+    @Test
+    void testRegisterUser() throws BusinessException {
+        CreateUserDTO dto = new CreateUserDTO();
+        String url = "http://null:0null";
+        when(usersService.registerUser(dto,url)).thenReturn(user);
+        when(usersService.convertToReadUserDTO(user)).thenReturn(readUserDTO);
+
+        ResponseEntity<ReadUserDTO> resp = controller.registerUser(dto,request);
+        assertNotNull(resp);
+        assertNotNull(resp.getBody());
+        assertEquals(resp.getBody(), readUserDTO);
+        assertTrue(resp.getStatusCode().isSameCodeAs(HttpStatus.OK));
+
+        verify(usersService, times(1)).registerUser(dto,url);
+        verify(usersService, times(1)).convertToReadUserDTO(user);
+    }
+
+    @DisplayName("Register user")
+    @Test
+    void testUpdateUser(){
+        UpdateUserDTO dto = new UpdateUserDTO();
+        when(usersService.updateUser(TestConstants.TEST_USER_PUBLIC_ID,dto)).thenReturn(user);
+        when(usersService.convertToReadUserDTO(user)).thenReturn(readUserDTO);
+
+        ResponseEntity<ReadUserDTO> resp = controller.updateUser(TestConstants.TEST_USER_PUBLIC_ID,dto);
+        assertNotNull(resp);
+        assertNotNull(resp.getBody());
+        assertEquals(resp.getBody(), readUserDTO);
+        assertTrue(resp.getStatusCode().isSameCodeAs(HttpStatus.OK));
+
+        verify(usersService, times(1)).updateUser(TestConstants.TEST_USER_PUBLIC_ID,dto);
         verify(usersService, times(1)).convertToReadUserDTO(user);
     }
 }

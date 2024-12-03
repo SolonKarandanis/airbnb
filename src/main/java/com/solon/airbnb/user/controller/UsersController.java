@@ -82,7 +82,7 @@ public class UsersController extends GenericController{
 			 @PathVariable(name= "id", required=true) String publicId,
 			 @RequestBody @Valid UpdateUserDTO user) throws NotFoundException{
 		log.info("RequestBody: {}" , user);
-        User userSaved=usersService.updateUser(user);
+        User userSaved=usersService.updateUser(publicId,user);
         log.info("userSaved: {}" , userSaved);
         ReadUserDTO dto = usersService.convertToReadUserDTO(userSaved);
 		return ResponseEntity.ok(dto);

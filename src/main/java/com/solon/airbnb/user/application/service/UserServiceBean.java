@@ -129,9 +129,9 @@ public class UserServiceBean extends BaseUserAccountServiceBean implements UserS
 
     @Transactional
     @Override
-    public User updateUser(UpdateUserDTO dto) throws NotFoundException {
+    public User updateUser(String publicId,UpdateUserDTO dto) throws NotFoundException {
         User user  = userRepository
-                .findByUsername(dto.getUsername())
+                .findOneByPublicId(UUID.fromString(publicId))
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
         user.setUsername(dto.getUsername());
         user.setFirstName(dto.getFirstName());

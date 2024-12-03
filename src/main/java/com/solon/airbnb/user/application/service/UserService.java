@@ -23,7 +23,7 @@ public interface UserService extends BaseUserAccountService{
     public void deleteUser(String uuid) throws NotFoundException;
     public Page<User> findAllUsers(UsersSearchRequestDTO searchObj);
     public User registerUser(CreateUserDTO dto, String applicationUrl) throws BusinessException;
-    public User updateUser(UpdateUserDTO dto) throws NotFoundException;
+    public User updateUser(String publicId,UpdateUserDTO dto) throws NotFoundException;
     public void verifyEmail(String token) throws BusinessException;
     public User activateUser(User user) throws BusinessException;
     public User deactivateUser(User user) throws BusinessException;
