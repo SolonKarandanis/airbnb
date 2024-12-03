@@ -5,7 +5,6 @@ import com.solon.airbnb.listing.application.dto.DisplayCardListingDTO;
 import com.solon.airbnb.listing.application.dto.SaveListingDTO;
 import com.solon.airbnb.listing.application.dto.sub.PictureDTO;
 import com.solon.airbnb.listing.application.service.LandlordService;
-import com.solon.airbnb.shared.common.AuthorityConstants;
 import com.solon.airbnb.shared.controller.GenericController;
 import com.solon.airbnb.user.application.exception.UserException;
 import org.slf4j.Logger;
