@@ -158,7 +158,7 @@ public class UsersControllerTest {
         verify(usersService, times(1)).convertToReadUserDTO(user);
     }
 
-    @DisplayName("Register user")
+    @DisplayName("Update user")
     @Test
     void testUpdateUser(){
         UpdateUserDTO dto = new UpdateUserDTO();
@@ -173,5 +173,94 @@ public class UsersControllerTest {
 
         verify(usersService, times(1)).updateUser(TestConstants.TEST_USER_PUBLIC_ID,dto);
         verify(usersService, times(1)).convertToReadUserDTO(user);
+    }
+
+    @DisplayName("Delete user")
+    @Test
+    void testDeleteUser(){
+        doNothing().when(usersService).deleteUser(TestConstants.TEST_USER_PUBLIC_ID);
+
+        ResponseEntity<Void> resp = controller.deleteUser(TestConstants.TEST_USER_PUBLIC_ID);
+        assertNotNull(resp);
+        assertNull(resp.getBody());
+        assertTrue(resp.getStatusCode().isSameCodeAs(HttpStatus.NO_CONTENT));
+
+        verify(usersService, times(1)).deleteUser(TestConstants.TEST_USER_PUBLIC_ID);
+    }
+
+    @DisplayName("Activate User")
+    @Test
+    void testActivateUser() throws BusinessException {
+        when(usersService.getByPublicId(TestConstants.TEST_USER_PUBLIC_ID)).thenReturn(Optional.of(user));
+        when(usersService.activateUser(user)).thenReturn(user);
+        when(usersService.convertToReadUserDTO(user)).thenReturn(readUserDTO);
+
+        ResponseEntity<ReadUserDTO> resp = controller.activateUser(TestConstants.TEST_USER_PUBLIC_ID);
+        assertNotNull(resp);
+        assertNotNull(resp.getBody());
+        assertEquals(resp.getBody(), readUserDTO);
+        assertTrue(resp.getStatusCode().isSameCodeAs(HttpStatus.OK));
+
+        verify(usersService, times(1)).getByPublicId(TestConstants.TEST_USER_PUBLIC_ID);
+        verify(usersService, times(1)).activateUser(user);
+        verify(usersService, times(1)).convertToReadUserDTO(user);
+    }
+
+    @DisplayName("Activate User (not found)")
+    @Test
+    void testActivateUser02(){
+        when(usersService.getByPublicId(TestConstants.TEST_INVALID_USER_PUBLIC_ID)).thenReturn(Optional.empty());
+
+        NotFoundException exception = assertThrows(NotFoundException.class, () ->{
+            controller.activateUser(TestConstants.TEST_INVALID_USER_PUBLIC_ID);
+        });
+        assertEquals("error.user.not.found",exception.getLocalizedMessage());
+
+        verify(usersService,times(1)).getByPublicId(TestConstants.TEST_INVALID_USER_PUBLIC_ID);
+    }
+
+    @DisplayName("Deactivate User")
+    @Test
+    void testDeactivateUser() throws BusinessException {
+        when(usersService.getByPublicId(TestConstants.TEST_USER_PUBLIC_ID)).thenReturn(Optional.of(user));
+        when(usersService.deactivateUser(user)).thenReturn(user);
+        when(usersService.convertToReadUserDTO(user)).thenReturn(readUserDTO);
+
+        ResponseEntity<ReadUserDTO> resp = controller.deactivateUser(TestConstants.TEST_USER_PUBLIC_ID);
+        assertNotNull(resp);
+        assertNotNull(resp.getBody());
+        assertEquals(resp.getBody(), readUserDTO);
+        assertTrue(resp.getStatusCode().isSameCodeAs(HttpStatus.OK));
+
+        verify(usersService, times(1)).getByPublicId(TestConstants.TEST_USER_PUBLIC_ID);
+        verify(usersService, times(1)).deactivateUser(user);
+        verify(usersService, times(1)).convertToReadUserDTO(user);
+    }
+
+    @DisplayName("Deactivate User (not found)")
+    @Test
+    void testDeactivateUser02(){
+        when(usersService.getByPublicId(TestConstants.TEST_INVALID_USER_PUBLIC_ID)).thenReturn(Optional.empty());
+
+        NotFoundException exception = assertThrows(NotFoundException.class, () ->{
+            controller.deactivateUser(TestConstants.TEST_INVALID_USER_PUBLIC_ID);
+        });
+        assertEquals("error.user.not.found",exception.getLocalizedMessage());
+
+        verify(usersService,times(1)).getByPublicId(TestConstants.TEST_INVALID_USER_PUBLIC_ID);
+    }
+
+    @DisplayName("Verify Email")
+    @Test
+    void testVerifyEmail() throws BusinessException {
+        String token = "test_token";
+        doNothing().when(usersService).verifyEmail(token);
+
+        ResponseEntity<Void> resp = controller.verifyEmail(token);
+        assertNotNull(resp);
+        assertNull(resp.getBody());
+        assertTrue(resp.getStatusCode().isSameCodeAs(HttpStatus.NO_CONTENT));
+
+        verify(usersService,times(1)).verifyEmail(token);
     }
 }
