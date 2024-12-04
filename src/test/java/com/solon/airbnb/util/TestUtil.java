@@ -1,6 +1,11 @@
 package com.solon.airbnb.util;
 
 import com.solon.airbnb.fileinfo.domain.FileInfo;
+import com.solon.airbnb.listing.application.dto.SaveListingDTO;
+import com.solon.airbnb.listing.application.dto.sub.DescriptionDTO;
+import com.solon.airbnb.listing.application.dto.sub.ListingInfoDTO;
+import com.solon.airbnb.listing.application.dto.vo.*;
+import com.solon.airbnb.listing.domain.BookingCategory;
 import com.solon.airbnb.shared.common.AuthorityConstants;
 import com.solon.airbnb.shared.dto.Paging;
 import com.solon.airbnb.user.application.dto.ReadUserDTO;
@@ -99,4 +104,51 @@ public class TestUtil {
         dto.setPaging(createPaging(10,1,"id","ASC"));
         return dto;
     }
+
+    public static SaveListingDTO generateSaveListingDTO(){
+        SaveListingDTO dto = new SaveListingDTO();
+        dto.setCategory(BookingCategory.ALL);
+        dto.setLocation("Greece");
+        dto.setDescription(generateDescriptionDTO());
+        dto.setPrice(generatePriceVO(5));
+        dto.setInfos(generateListingInfoDTO());
+        return dto;
+    }
+
+    public static PriceVO generatePriceVO(int price){
+        return new PriceVO(price);
+    }
+
+    public static TitleVO generateTitleVO(String title){
+        return new TitleVO(title);
+    }
+
+    public static DescriptionVO generateDescriptionVO(String description){
+        return new DescriptionVO(description);
+    }
+
+    public static DescriptionDTO generateDescriptionDTO(){
+        return new DescriptionDTO(generateTitleVO("title"),generateDescriptionVO("description"));
+    }
+
+    public static GuestsVO generateGuestsVO(int value){
+        return new GuestsVO(value);
+    }
+
+    public static BedroomsVO generateBedroomsVO(int value){
+        return new BedroomsVO(value);
+    }
+
+    public static BedsVO generateBedsVO(int value){
+        return new BedsVO(value);
+    }
+
+    public static BathsVO generateBathsVO(int value){
+        return new BathsVO(value);
+    }
+
+    public static ListingInfoDTO generateListingInfoDTO(){
+        return new ListingInfoDTO(generateGuestsVO(5),generateBedroomsVO(5),generateBedsVO(5),generateBathsVO(5));
+    }
+
 }
