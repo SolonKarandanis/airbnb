@@ -88,6 +88,8 @@ public class UsersControllerTest {
         ResponseEntity<SearchResults<ReadUserDTO>> resp = controller.findAllUsers(searchObj);
         assertNotNull(resp);
         assertNotNull(resp.getBody());
+        assertEquals(resp.getBody().getCountRows(),Math.toIntExact(results.getTotalElements()));
+        assertEquals(resp.getBody().getList(),dtos);
         assertTrue(resp.getStatusCode().isSameCodeAs(HttpStatus.OK));
 
         verify(usersService, times(1)).findAllUsers(searchObj);
