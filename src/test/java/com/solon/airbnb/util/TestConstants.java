@@ -1,7 +1,6 @@
 package com.solon.airbnb.util;
 
 import java.util.HexFormat;
-import java.util.UUID;
 
 public class TestConstants {
 

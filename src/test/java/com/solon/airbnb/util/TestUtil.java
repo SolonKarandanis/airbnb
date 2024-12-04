@@ -1,9 +1,12 @@
 package com.solon.airbnb.util;
 
 import com.solon.airbnb.fileinfo.domain.FileInfo;
+import com.solon.airbnb.listing.application.dto.CreatedListingDTO;
+import com.solon.airbnb.listing.application.dto.DisplayCardListingDTO;
 import com.solon.airbnb.listing.application.dto.SaveListingDTO;
 import com.solon.airbnb.listing.application.dto.sub.DescriptionDTO;
 import com.solon.airbnb.listing.application.dto.sub.ListingInfoDTO;
+import com.solon.airbnb.listing.application.dto.sub.PictureDTO;
 import com.solon.airbnb.listing.application.dto.vo.*;
 import com.solon.airbnb.listing.domain.BookingCategory;
 import com.solon.airbnb.shared.common.AuthorityConstants;
@@ -149,6 +152,18 @@ public class TestUtil {
 
     public static ListingInfoDTO generateListingInfoDTO(){
         return new ListingInfoDTO(generateGuestsVO(5),generateBedroomsVO(5),generateBedsVO(5),generateBathsVO(5));
+    }
+
+    public static PictureDTO generatePictureDTO(){
+        return new PictureDTO(TestConstants.TEST_FILE_CONTENT,"/jpeg",true);
+    }
+
+    public static DisplayCardListingDTO generateDisplayCardListingDTO(){
+        return new DisplayCardListingDTO(generatePriceVO(5),"Greece",generatePictureDTO(),BookingCategory.ALL,TestConstants.TEST_USER_PUBLIC_ID);
+    }
+
+    public static CreatedListingDTO generateCreatedListingDTO(){
+        return new CreatedListingDTO(TestConstants.TEST_USER_PUBLIC_ID);
     }
 
 }
