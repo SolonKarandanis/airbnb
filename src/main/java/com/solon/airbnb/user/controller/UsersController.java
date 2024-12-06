@@ -21,7 +21,7 @@ import com.solon.airbnb.shared.exception.NotFoundException;
 import com.solon.airbnb.user.application.dto.ReadUserDTO;
 import com.solon.airbnb.user.application.dto.CreateUserDTO;
 import com.solon.airbnb.user.application.dto.UsersSearchRequestDTO;
-import com.solon.airbnb.user.application.utils.UserExcelExportUtils;
+import com.solon.airbnb.user.application.utils.UserCsvExporter;
 import com.solon.airbnb.user.domain.User;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -43,7 +43,7 @@ public class UsersController extends GenericController{
         String headerValue = "attachment; filename=Customers_Information.xlsx";
         response.setHeader(headerKey, headerValue);
         List<User> allUsers = usersService.findAllUsers();
-        UserExcelExportUtils exportUtils = new UserExcelExportUtils(allUsers);
+        UserCsvExporter exportUtils = new UserCsvExporter(allUsers);
     }
 	
 	 @PostMapping("/search")

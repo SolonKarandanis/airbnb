@@ -11,7 +11,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 
-public abstract class AbstractExcelExportUtils {
+public abstract class AbstractCsvExporter {
 	
 	protected XSSFWorkbook workbook;
 	protected XSSFSheet sheet;
@@ -19,7 +19,7 @@ public abstract class AbstractExcelExportUtils {
     protected abstract void createHeaderRow();
     protected abstract void writeData();
     
-    public AbstractExcelExportUtils() {
+    public AbstractCsvExporter() {
     	workbook = new XSSFWorkbook();
     }
     

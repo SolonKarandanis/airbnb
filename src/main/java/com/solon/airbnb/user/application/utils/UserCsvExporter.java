@@ -8,15 +8,15 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 
-import com.solon.airbnb.shared.utils.AbstractExcelExportUtils;
+import com.solon.airbnb.shared.utils.AbstractCsvExporter;
 import com.solon.airbnb.user.domain.User;
 
-public class UserExcelExportUtils extends AbstractExcelExportUtils{
+public class UserCsvExporter extends AbstractCsvExporter {
 	
 	private List<User> userList;
 	
 
-	public UserExcelExportUtils(List<User> userList) {
+	public UserCsvExporter(List<User> userList) {
 		super();
 		this.userList = userList;
 	}
