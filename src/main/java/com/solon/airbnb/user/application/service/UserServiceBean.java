@@ -8,6 +8,7 @@ import com.solon.airbnb.user.application.dto.CreateUserDTO;
 import com.solon.airbnb.user.application.dto.UpdateUserDTO;
 import com.solon.airbnb.user.application.dto.UsersSearchRequestDTO;
 import com.solon.airbnb.user.application.event.UserRegistrationCompleteEvent;
+import com.solon.airbnb.user.application.utils.UserCsvExporter;
 import com.solon.airbnb.user.domain.AccountStatus;
 import com.solon.airbnb.user.domain.Authority;
 import com.solon.airbnb.user.domain.User;
@@ -97,12 +98,22 @@ public class UserServiceBean extends BaseUserAccountServiceBean implements UserS
 
     @Override
     public Long countUsers(UsersSearchRequestDTO searchObj) throws AirbnbException {
-        return 0L;
+        User user = new User();
+        BeanUtils.copyProperties(searchObj, user);
+        user.setStatus(AccountStatus.valueOf(searchObj.getStatus()));
+        return userRepository.count(new UsersSpecification(user));
     }
 
     @Override
-    public byte[] exportAuditsToCsv(UsersSearchRequestDTO searchObj) throws AirbnbException {
-        return new byte[0];
+    public byte[] exportUsersToCsv(UsersSearchRequestDTO searchObj) throws AirbnbException {
+        User user = new User();
+        BeanUtils.copyProperties(searchObj, user);
+        user.setStatus(AccountStatus.valueOf(searchObj.getStatus()));
+        List<User> users = userRepository.findAll(new UsersSpecification(user));
+        log.info("UserServiceBean --> exportUsersToCsv --> results: {}", users.size());
+        List<ReadUserDTO> dtos = convertToReadUserListDTO(users);
+        UserCsvExporter exporter = new UserCsvExporter(dtos);
+        return exporter.exportDataToByteArray();
     }
 
 

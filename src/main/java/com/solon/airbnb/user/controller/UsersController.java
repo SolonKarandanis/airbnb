@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.util.List;
 
 import com.solon.airbnb.infrastructure.security.NoAuthentication;
+import com.solon.airbnb.shared.common.AirbnbConstants;
+import com.solon.airbnb.shared.exception.AirbnbException;
 import com.solon.airbnb.shared.exception.BusinessException;
+import com.solon.airbnb.shared.utils.HttpUtil;
 import com.solon.airbnb.user.application.dto.UpdateUserDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -21,7 +24,6 @@ import com.solon.airbnb.shared.exception.NotFoundException;
 import com.solon.airbnb.user.application.dto.ReadUserDTO;
 import com.solon.airbnb.user.application.dto.CreateUserDTO;
 import com.solon.airbnb.user.application.dto.UsersSearchRequestDTO;
-import com.solon.airbnb.user.application.utils.UserCsvExporter;
 import com.solon.airbnb.user.domain.User;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -36,14 +38,15 @@ public class UsersController extends GenericController{
 	private static final Logger log = LoggerFactory.getLogger(UsersController.class);
 	
 	
-	@GetMapping("/export-to-excel")
-    public void exportToExcel(HttpServletResponse response) throws IOException{
-        response.setContentType("application/octet-stream");
-        String headerKey = "Content-Disposition";
-        String headerValue = "attachment; filename=Customers_Information.xlsx";
-        response.setHeader(headerKey, headerValue);
-        List<User> allUsers = usersService.findAllUsers();
-        
+	@GetMapping("/export/csv")
+    public ResponseEntity<byte[]> exportToExcel(@RequestBody @Valid UsersSearchRequestDTO searchObj) throws BusinessException, AirbnbException {
+		Long resultsCount = usersService.countUsers(searchObj);
+		if (resultsCount >= AirbnbConstants.MAX_RESULTS_CSV_EXPORT) {
+			throw new BusinessException("error.max.csv.results");
+		}
+		byte[] data = usersService.exportUsersToCsv(searchObj);
+		String fileName = "users-results.csv";
+		return HttpUtil.getByteArrayResponseFromFile(fileName, HttpUtil.MEDIA_TYPE_CSV, data);
     }
 	
 	 @PostMapping("/search")

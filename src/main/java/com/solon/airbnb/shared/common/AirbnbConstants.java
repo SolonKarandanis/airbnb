@@ -113,4 +113,6 @@ public class AirbnbConstants {
 	public static final String LANG_ISO_EN = "en";
 	public static final String DOCUMENT_INDEX_NAME = "gppd";
 
+	public static final Integer MAX_RESULTS_CSV_EXPORT=10000;
+
 }
