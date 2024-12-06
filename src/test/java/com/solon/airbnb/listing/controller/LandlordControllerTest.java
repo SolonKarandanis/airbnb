@@ -33,7 +33,7 @@ public class LandlordControllerTest {
     protected LandlordService landlordService;
 
     @Mock
-    protected MultipartFile[] images;
+    protected MultipartFile image;
 
     @Mock
     protected Authentication authentication;
@@ -43,6 +43,7 @@ public class LandlordControllerTest {
 
     protected UserDTO userDto;
 
+
     protected final Long userId = 1L;
 
     protected final String userPublicId = TestConstants.TEST_USER_PUBLIC_ID;
@@ -50,6 +51,7 @@ public class LandlordControllerTest {
     @BeforeEach
     public void setup(){
         userDto = TestUtil.createTestUserDto(userId);
+        authentication = TestUtil.getTestAuthenticationFromUserDTO(userDto);
     }
 
     @DisplayName("Find All Listings")
