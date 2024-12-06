@@ -26,7 +26,6 @@ import com.solon.airbnb.user.application.dto.CreateUserDTO;
 import com.solon.airbnb.user.application.dto.UsersSearchRequestDTO;
 import com.solon.airbnb.user.domain.User;
 
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 
