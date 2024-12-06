@@ -3,6 +3,7 @@ package com.solon.airbnb.user.application.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.solon.airbnb.shared.exception.AirbnbException;
 import com.solon.airbnb.shared.exception.BusinessException;
 import com.solon.airbnb.user.application.dto.UpdateUserDTO;
 import org.springframework.data.domain.Page;
@@ -22,6 +23,8 @@ public interface UserService extends BaseUserAccountService{
     public Optional<User> getByPublicId(String publicId)throws NotFoundException;
     public void deleteUser(String uuid) throws NotFoundException;
     public Page<User> findAllUsers(UsersSearchRequestDTO searchObj);
+    public Long countUsers(UsersSearchRequestDTO searchObj) throws AirbnbException;
+    public byte[] exportAuditsToCsv(UsersSearchRequestDTO searchObj) throws AirbnbException;
     public User registerUser(CreateUserDTO dto, String applicationUrl) throws BusinessException;
     public User updateUser(String publicId,UpdateUserDTO dto) throws NotFoundException;
     public void verifyEmail(String token) throws BusinessException;

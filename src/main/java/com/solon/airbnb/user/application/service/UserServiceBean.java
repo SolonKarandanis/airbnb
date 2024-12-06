@@ -1,5 +1,6 @@
 package com.solon.airbnb.user.application.service;
 
+import com.solon.airbnb.shared.exception.AirbnbException;
 import com.solon.airbnb.shared.exception.BusinessException;
 import com.solon.airbnb.shared.exception.NotFoundException;
 import com.solon.airbnb.user.application.dto.ReadUserDTO;
@@ -92,6 +93,16 @@ public class UserServiceBean extends BaseUserAccountServiceBean implements UserS
         user.setStatus(AccountStatus.valueOf(searchObj.getStatus()));
         PageRequest pageRequest = toPageRequest(searchObj.getPaging());
         return  userRepository.findAll( new UsersSpecification(user),pageRequest);
+    }
+
+    @Override
+    public Long countUsers(UsersSearchRequestDTO searchObj) throws AirbnbException {
+        return 0L;
+    }
+
+    @Override
+    public byte[] exportAuditsToCsv(UsersSearchRequestDTO searchObj) throws AirbnbException {
+        return new byte[0];
     }
 
 

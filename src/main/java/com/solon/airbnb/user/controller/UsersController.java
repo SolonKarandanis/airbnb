@@ -43,7 +43,7 @@ public class UsersController extends GenericController{
         String headerValue = "attachment; filename=Customers_Information.xlsx";
         response.setHeader(headerKey, headerValue);
         List<User> allUsers = usersService.findAllUsers();
-        UserCsvExporter exportUtils = new UserCsvExporter(allUsers);
+        
     }
 	
 	 @PostMapping("/search")

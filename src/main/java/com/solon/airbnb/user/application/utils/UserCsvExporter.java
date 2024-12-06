@@ -2,6 +2,7 @@ package com.solon.airbnb.user.application.utils;
 
 import java.util.List;
 
+import com.solon.airbnb.user.application.dto.ReadUserDTO;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
@@ -13,17 +14,17 @@ import com.solon.airbnb.user.domain.User;
 
 public class UserCsvExporter extends AbstractCsvExporter {
 	
-	private List<User> userList;
+	private List<ReadUserDTO> userList;
 	
 
-	public UserCsvExporter(List<User> userList) {
+	public UserCsvExporter(List<ReadUserDTO> userList) {
 		super();
 		this.userList = userList;
 	}
 
 	@Override
 	protected void createHeaderRow() {
-		sheet   = workbook.createSheet("Customer Information");
+		sheet   = workbook.createSheet("User Results");
         Row row = sheet.createRow(0);
         CellStyle style = workbook.createCellStyle();
         XSSFFont font = workbook.createFont();
@@ -31,7 +32,7 @@ public class UserCsvExporter extends AbstractCsvExporter {
         font.setFontHeight(20);
         style.setFont(font);
         style.setAlignment(HorizontalAlignment.CENTER);
-        createCell(row, 0, "Customer Information", style);
+        createCell(row, 0, "User Results", style);
         sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 8));
         font.setFontHeightInPoints((short) 10);
 
@@ -58,14 +59,14 @@ public class UserCsvExporter extends AbstractCsvExporter {
 	        font.setFontHeight(14);
 	        style.setFont(font);
 
-	        for (User user : userList){
+	        for (ReadUserDTO user : userList){
 	            Row row = sheet.createRow(rowCount++);
 	            int columnCount = 0;
-	            createCell(row, columnCount++, user.getUsername(), style);
-	            createCell(row, columnCount++, user.getFirstName(), style);
-	            createCell(row, columnCount++, user.getLastName(), style);
-	            createCell(row, columnCount++, user.getEmail(), style);
-	            createCell(row, columnCount++, user.getStatus(), style);
+	            createCell(row, columnCount++, user.publicId(), style);
+	            createCell(row, columnCount++, user.firstName(), style);
+	            createCell(row, columnCount++, user.lastName(), style);
+	            createCell(row, columnCount++, user.email(), style);
+	            createCell(row, columnCount++, user.status(), style);
 	        }
 	}
 

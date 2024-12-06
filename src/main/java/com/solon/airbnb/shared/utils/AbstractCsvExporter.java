@@ -1,5 +1,6 @@
 package com.solon.airbnb.shared.utils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -8,10 +9,11 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import jakarta.servlet.ServletOutputStream;
-import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractCsvExporter {
+    private static Logger log = LoggerFactory.getLogger(AbstractCsvExporter.class);
 	
 	protected XSSFWorkbook workbook;
 	protected XSSFSheet sheet;
@@ -39,14 +41,19 @@ public abstract class AbstractCsvExporter {
         }
         cell.setCellStyle(style);
     }
-    
-    public void exportDataToExcel(HttpServletResponse response) throws IOException {
-        createHeaderRow();
-        writeData();
-        ServletOutputStream outputStream = response.getOutputStream();
-        workbook.write(outputStream);
-        workbook.close();
-        outputStream.close();
+
+    public byte[] exportDataToByteArray() {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            createHeaderRow();
+            writeData();
+            workbook.write(baos);
+            workbook.close();
+        } catch (IOException ioex) {
+            log.error(ioex.getMessage(), ioex);
+        }
+        return baos.toByteArray();
+
     }
 
 }
