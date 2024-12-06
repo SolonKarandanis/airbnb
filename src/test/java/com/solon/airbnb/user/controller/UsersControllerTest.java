@@ -2,6 +2,7 @@ package com.solon.airbnb.user.controller;
 
 
 import com.solon.airbnb.shared.dto.SearchResults;
+import com.solon.airbnb.shared.exception.AirbnbException;
 import com.solon.airbnb.shared.exception.BusinessException;
 import com.solon.airbnb.shared.exception.NotFoundException;
 import com.solon.airbnb.user.application.dto.*;
@@ -72,11 +73,36 @@ public class UsersControllerTest {
         readUserDTO = TestUtil.createTestReadUserDTO(TestConstants.TEST_USER_PUBLIC_ID);
     }
 
-//    @DisplayName("Export to Excel")
-//    @Test
-//    void testExportToExcel(){
-//        when(usersService.findAllUsers()).thenReturn(userList);
-//    }
+    @DisplayName("Export to csv ( max results)")
+    @Test
+    void testExportUsersToCsv() throws AirbnbException {
+        UsersSearchRequestDTO searchObj = TestUtil.generateUsersSearchRequestDTO();
+        when(usersService.countUsers(searchObj)).thenReturn(11000L);
+
+        BusinessException exception = assertThrows(BusinessException.class,()->{
+            controller.exportUsersToCsv(searchObj);
+        });
+        assertEquals("error.max.csv.results",exception.getLocalizedMessage());
+
+        verify(usersService,times(1)).countUsers(searchObj);
+    }
+
+    @DisplayName("Export to csv")
+    @Test
+    void testExportUsersToCsv02() throws AirbnbException, BusinessException {
+        UsersSearchRequestDTO searchObj = TestUtil.generateUsersSearchRequestDTO();
+        when(usersService.countUsers(searchObj)).thenReturn(500L);
+        when(usersService.exportUsersToCsv(searchObj)).thenReturn(TestConstants.TEST_FILE_CONTENT);
+
+        ResponseEntity<byte[]> resp = controller.exportUsersToCsv(searchObj);
+        assertNotNull(resp);
+        assertNotNull(resp.getBody());
+        assertEquals(resp.getBody(),TestConstants.TEST_FILE_CONTENT);
+        assertTrue(resp.getStatusCode().isSameCodeAs(HttpStatus.OK));
+
+        verify(usersService,times(1)).countUsers(searchObj);
+        verify(usersService,times(1)).exportUsersToCsv(searchObj);
+    }
 
     @DisplayName("Find All Users")
     @Test

@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @DisplayName("LandlordControllerTest")
@@ -66,5 +67,20 @@ public class LandlordControllerTest {
         assertTrue(resp.getStatusCode().isSameCodeAs(HttpStatus.OK));
 
         verify(landlordService, times(1)).getAllProperties(userPublicId);
+    }
+
+    @DisplayName("Delete Listing")
+    @Test
+    void testDeleteListing(){
+        String listingPublicId = TestConstants.TEST_USER_PUBLIC_ID;
+        when(landlordService.delete(listingPublicId,userPublicId)).thenReturn(list);
+
+        ResponseEntity<List<DisplayCardListingDTO>> resp =controller.deleteListing(listingPublicId,authentication);
+        assertNotNull(resp);
+        assertNotNull(resp.getBody());
+        assertEquals(resp.getBody(), list);
+        assertTrue(resp.getStatusCode().isSameCodeAs(HttpStatus.OK));
+
+        verify(landlordService, times(1)).delete(listingPublicId,userPublicId);
     }
 }

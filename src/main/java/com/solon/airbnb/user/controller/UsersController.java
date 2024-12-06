@@ -39,7 +39,7 @@ public class UsersController extends GenericController{
 	
 	
 	@GetMapping("/export/csv")
-    public ResponseEntity<byte[]> exportToExcel(@RequestBody @Valid UsersSearchRequestDTO searchObj) throws BusinessException, AirbnbException {
+    public ResponseEntity<byte[]> exportUsersToCsv(@RequestBody @Valid UsersSearchRequestDTO searchObj) throws BusinessException, AirbnbException {
 		Long resultsCount = usersService.countUsers(searchObj);
 		if (resultsCount >= AirbnbConstants.MAX_RESULTS_CSV_EXPORT) {
 			throw new BusinessException("error.max.csv.results");
