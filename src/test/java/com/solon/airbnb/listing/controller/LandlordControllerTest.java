@@ -1,8 +1,12 @@
 package com.solon.airbnb.listing.controller;
 
+import com.solon.airbnb.listing.application.dto.CreatedListingDTO;
 import com.solon.airbnb.listing.application.dto.DisplayCardListingDTO;
+import com.solon.airbnb.listing.application.dto.SaveListingDTO;
+import com.solon.airbnb.listing.application.dto.sub.PictureDTO;
 import com.solon.airbnb.listing.application.service.LandlordService;
 import com.solon.airbnb.user.application.dto.UserDTO;
+import com.solon.airbnb.user.application.exception.UserException;
 import com.solon.airbnb.util.TestConstants;
 import com.solon.airbnb.util.TestUtil;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +21,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,6 +48,7 @@ public class LandlordControllerTest {
 
     @Mock
     protected List<DisplayCardListingDTO> list;
+
 
     protected UserDTO userDto;
 
@@ -82,5 +90,36 @@ public class LandlordControllerTest {
         assertTrue(resp.getStatusCode().isSameCodeAs(HttpStatus.OK));
 
         verify(landlordService, times(1)).delete(listingPublicId,userPublicId);
+    }
+
+    @DisplayName("Create Listing")
+    @Test
+    void testCreateListing(){
+        MultipartFile[] images = {image};
+        SaveListingDTO saveListingDTO = TestUtil.generateSaveListingDTO();
+        CreatedListingDTO newListing =TestUtil.generateCreatedListingDTO();
+        List<MultipartFile> imageList  = Arrays.asList(images);
+        List<PictureDTO> pictures = imageList.stream()
+                .map(mapMultipartFileToPictureDTO())
+                .toList();
+        when(landlordService.create(userPublicId,saveListingDTO,pictures)).thenReturn(newListing);
+
+        ResponseEntity<CreatedListingDTO> resp = controller.createListing(images,saveListingDTO,authentication);
+        assertNotNull(resp);
+        assertNotNull(resp.getBody());
+        assertEquals(resp.getBody(), newListing);
+        assertTrue(resp.getStatusCode().isSameCodeAs(HttpStatus.OK));
+
+        verify(landlordService, times(1)).create(userPublicId,saveListingDTO,pictures);
+    }
+
+    private static Function<MultipartFile, PictureDTO> mapMultipartFileToPictureDTO() {
+        return multipartFile -> {
+            try {
+                return new PictureDTO(multipartFile.getBytes(), multipartFile.getContentType(), false);
+            } catch (IOException ioe) {
+                throw new UserException(String.format("Cannot parse multipart file: %s", multipartFile.getOriginalFilename()));
+            }
+        };
     }
 }
