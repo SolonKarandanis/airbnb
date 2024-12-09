@@ -1,5 +1,7 @@
 package com.solon.airbnb.util;
 
+import com.solon.airbnb.booking.application.dto.BookedDateDTO;
+import com.solon.airbnb.booking.application.dto.BookedListingDTO;
 import com.solon.airbnb.fileinfo.domain.FileInfo;
 import com.solon.airbnb.listing.application.dto.*;
 import com.solon.airbnb.listing.application.dto.sub.DescriptionDTO;
@@ -174,6 +176,20 @@ public class TestUtil {
     public static DisplayListingDTO generateDisplayListingDTO(){
         DisplayListingDTO dto = new DisplayListingDTO();
         return dto;
+    }
+
+    public static BookedDateDTO generateBookedDateDTO(){
+        return new BookedDateDTO("test","test");
+    }
+
+    public static BookedListingDTO generateBookedListingDTO(){
+        return new BookedListingDTO(
+                generatePictureDTO(),
+                "test",
+                generateBookedDateDTO(),
+                generatePriceVO(5),
+                TestConstants.TEST_USER_PUBLIC_ID,
+                TestConstants.TEST_USER_PUBLIC_ID);
     }
 
 }
