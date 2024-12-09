@@ -1,9 +1,7 @@
 package com.solon.airbnb.util;
 
 import com.solon.airbnb.fileinfo.domain.FileInfo;
-import com.solon.airbnb.listing.application.dto.CreatedListingDTO;
-import com.solon.airbnb.listing.application.dto.DisplayCardListingDTO;
-import com.solon.airbnb.listing.application.dto.SaveListingDTO;
+import com.solon.airbnb.listing.application.dto.*;
 import com.solon.airbnb.listing.application.dto.sub.DescriptionDTO;
 import com.solon.airbnb.listing.application.dto.sub.ListingInfoDTO;
 import com.solon.airbnb.listing.application.dto.sub.PictureDTO;
@@ -109,6 +107,12 @@ public class TestUtil {
         return dto;
     }
 
+    public static ListingSearchRequestDTO generateListingSearchRequestDTO(){
+        ListingSearchRequestDTO dto = new ListingSearchRequestDTO();
+        dto.setPaging(createPaging(10,1,"id","ASC"));
+        return dto;
+    }
+
     public static SaveListingDTO generateSaveListingDTO(){
         SaveListingDTO dto = new SaveListingDTO();
         dto.setCategory(BookingCategory.ALL);
@@ -165,6 +169,11 @@ public class TestUtil {
 
     public static CreatedListingDTO generateCreatedListingDTO(){
         return new CreatedListingDTO(TestConstants.TEST_USER_PUBLIC_ID);
+    }
+
+    public static DisplayListingDTO generateDisplayListingDTO(){
+        DisplayListingDTO dto = new DisplayListingDTO();
+        return dto;
     }
 
 }
