@@ -2,6 +2,9 @@ package com.solon.airbnb.util;
 
 import com.solon.airbnb.booking.application.dto.BookedDateDTO;
 import com.solon.airbnb.booking.application.dto.BookedListingDTO;
+import com.solon.airbnb.booking.application.dto.BookingDTO;
+import com.solon.airbnb.booking.application.dto.NewBookingDTO;
+import com.solon.airbnb.booking.domain.Booking;
 import com.solon.airbnb.fileinfo.domain.FileInfo;
 import com.solon.airbnb.listing.application.dto.*;
 import com.solon.airbnb.listing.application.dto.sub.DescriptionDTO;
@@ -22,6 +25,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -190,6 +194,34 @@ public class TestUtil {
                 generatePriceVO(5),
                 TestConstants.TEST_USER_PUBLIC_ID,
                 TestConstants.TEST_USER_PUBLIC_ID);
+    }
+
+    public static Booking generateBooking(OffsetDateTime startDate,OffsetDateTime endDate){
+        Booking booking = new Booking();
+        booking.setPublicId(UUID.fromString(TestConstants.TEST_USER_PUBLIC_ID));
+        booking.setStartDate(startDate);
+        booking.setEndDate(endDate);
+        booking.setTotalPrice(5);
+        booking.setNumberOfTravelers(5);
+        booking.setFkListing(UUID.fromString(TestConstants.TEST_USER_PUBLIC_ID));
+        booking.setFkTenant(UUID.fromString(TestConstants.TEST_USER_PUBLIC_ID));
+        return booking;
+    }
+
+    public static BookingDTO generateBookingDTO(String startDate,String endDate){
+        return new BookingDTO(
+                TestConstants.TEST_USER_PUBLIC_ID,
+                startDate,
+                endDate,
+                5,
+                5,
+                TestConstants.TEST_USER_PUBLIC_ID,
+                TestConstants.TEST_USER_PUBLIC_ID
+        );
+    }
+
+    public static NewBookingDTO generateNewBookingDTO(){
+        return new NewBookingDTO("test","test",TestConstants.TEST_USER_PUBLIC_ID);
     }
 
 }
