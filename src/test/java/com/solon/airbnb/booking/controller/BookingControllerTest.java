@@ -1,5 +1,29 @@
 package com.solon.airbnb.booking.controller;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+
+import com.solon.airbnb.booking.application.dto.BookedDateDTO;
 import com.solon.airbnb.booking.application.dto.BookedListingDTO;
 import com.solon.airbnb.booking.application.dto.BookingDTO;
 import com.solon.airbnb.booking.application.dto.NewBookingDTO;
@@ -11,22 +35,6 @@ import com.solon.airbnb.user.application.service.UserService;
 import com.solon.airbnb.user.domain.User;
 import com.solon.airbnb.util.TestConstants;
 import com.solon.airbnb.util.TestUtil;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.*;
 
 @DisplayName("BookingControllerTest")
 @ExtendWith(MockitoExtension.class)
@@ -76,5 +84,36 @@ public class BookingControllerTest {
         verify(usersService, times(1)).getByPublicId(TestConstants.TEST_USER_PUBLIC_ID);
         verify(bookingService,times(1)).create(dto,user.getPublicId().toString());
         verify(bookingService,times(1)).convertToDTO(booking);
+    }
+    
+    @DisplayName("Check Availability")
+    @Test
+    void testCheckAvailability() {
+    	List<BookedDateDTO> result = List.of(TestUtil.generateBookedDateDTO());
+    	when(bookingService.checkAvailability(TestConstants.TEST_USER_PUBLIC_ID)).thenReturn(result);
+    	
+    	ResponseEntity<List<BookedDateDTO>> resp = controller.checkAvailability(TestConstants.TEST_USER_PUBLIC_ID);
+    	assertNotNull(resp);
+        assertNotNull(resp.getBody());
+        assertEquals(resp.getBody(),result);
+        assertTrue(resp.getStatusCode().isSameCodeAs(HttpStatus.OK));
+    	
+    	verify(bookingService,times(1)).checkAvailability(TestConstants.TEST_USER_PUBLIC_ID);
+    }
+    
+    @DisplayName("Get Tenant Booking Listings")
+    @Test
+    void testGetTenantBookedListings() {
+    	List<BookedListingDTO> result = List.of(TestUtil.generateBookedListingDTO());
+    	when(authentication.getPrincipal()).thenReturn(userDto);
+    	when(bookingService.getBookedListings(TestConstants.TEST_USER_PUBLIC_ID)).thenReturn(result);
+    	
+    	ResponseEntity<List<BookedListingDTO>> resp = controller.getTenantBookedListings(authentication);
+    	assertNotNull(resp);
+        assertNotNull(resp.getBody());
+        assertEquals(resp.getBody(),result);
+        assertTrue(resp.getStatusCode().isSameCodeAs(HttpStatus.OK));
+    	
+    	verify(bookingService,times(1)).getBookedListings(TestConstants.TEST_USER_PUBLIC_ID);
     }
 }
