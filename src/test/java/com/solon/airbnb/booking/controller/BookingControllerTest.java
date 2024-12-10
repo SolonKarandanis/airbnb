@@ -2,7 +2,9 @@ package com.solon.airbnb.booking.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -115,5 +117,44 @@ public class BookingControllerTest {
         assertTrue(resp.getStatusCode().isSameCodeAs(HttpStatus.OK));
     	
     	verify(bookingService,times(1)).getBookedListings(TestConstants.TEST_USER_PUBLIC_ID);
+    }
+    
+    @DisplayName("Get Tenant Booking Listings")
+//    @Test
+    void testCancelBooking() throws AirbnbException {
+    	String id = TestConstants.TEST_USER_PUBLIC_ID;
+    	when(authentication.getPrincipal()).thenReturn(userDto);
+    	doNothing().when(bookingService).cancel(
+    			id,
+    			id,
+    			true,
+    			user);
+    	
+    	ResponseEntity<Void> resp = controller.cancelBooking(id,id,true,authentication);
+    	assertNotNull(resp);
+    	assertNull(resp.getBody());
+        assertTrue(resp.getStatusCode().isSameCodeAs(HttpStatus.NO_CONTENT));
+    	
+    	verify(bookingService, times(1)).cancel(
+    			id,
+    			id,
+    			true,
+    			user);
+    }
+    
+    @DisplayName("Get Landlord Booked Listings")
+    @Test
+    void testGetLandlordBookedListings() {
+    	List<BookedListingDTO> result = List.of(TestUtil.generateBookedListingDTO());
+    	when(authentication.getPrincipal()).thenReturn(userDto);
+    	when(bookingService.getBookedListingsForLandlord(TestConstants.TEST_USER_PUBLIC_ID)).thenReturn(result);
+    	
+    	ResponseEntity<List<BookedListingDTO>> resp = controller.getLandlordBookedListings(authentication);
+    	assertNotNull(resp);
+        assertNotNull(resp.getBody());
+        assertEquals(resp.getBody(),result);
+        assertTrue(resp.getStatusCode().isSameCodeAs(HttpStatus.OK));
+    	
+    	verify(bookingService,times(1)).getBookedListingsForLandlord(TestConstants.TEST_USER_PUBLIC_ID);
     }
 }
