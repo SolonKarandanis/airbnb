@@ -1,5 +1,15 @@
 package com.solon.airbnb.shared.domain.antivirus;
 
-public class InputStreamVirusScannable {
+import java.io.InputStream;
 
+import lombok.Builder;
+import lombok.Value;
+
+@Builder
+@Value
+public class InputStreamVirusScannable implements VirusScannable{
+
+    private InputStream inputStream;
+    private String originalFilename;
+    private long size;
 }
