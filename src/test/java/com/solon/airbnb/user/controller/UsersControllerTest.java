@@ -11,6 +11,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +25,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.core.Authentication;
 
 import com.solon.airbnb.shared.dto.SearchResults;
@@ -41,7 +43,6 @@ import com.solon.airbnb.util.TestConstants;
 import com.solon.airbnb.util.TestUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 @DisplayName("UsersControllerTest")
 @ExtendWith(MockitoExtension.class)
@@ -60,12 +61,6 @@ public class UsersControllerTest {
     protected Page<User> results;
 
     @Mock
-    protected List<ReadUserDTO> dtos;
-
-    @Mock
-    protected HttpServletResponse response;
-
-    @Mock
     protected HttpServletRequest request;
 
     @Mock
@@ -75,6 +70,8 @@ public class UsersControllerTest {
     protected User user;
     protected UserDTO userDto;
     protected ReadUserDTO readUserDTO;
+    protected List<ReadUserDTO> dtos;
+    protected MockHttpServletResponse response;
 
     protected final Long userId = 1L;
 
@@ -83,6 +80,9 @@ public class UsersControllerTest {
         user = TestUtil.createTestUser(userId);
         userDto = TestUtil.createTestUserDto(userId);
         readUserDTO = TestUtil.createTestReadUserDTO(TestConstants.TEST_USER_PUBLIC_ID);
+        response = new MockHttpServletResponse();
+        dtos = new ArrayList<>();
+        dtos.add(readUserDTO);
     }
 
     @DisplayName("Export to csv ( max results)")
@@ -102,7 +102,9 @@ public class UsersControllerTest {
     @DisplayName("Export to csv")
     @Test
     void testExportUsersToCsv02() throws Exception {
+    	response.setOutputStreamAccessAllowed(true);
         UsersSearchRequestDTO searchObj = TestUtil.generateUsersSearchRequestDTO();
+        
         when(usersService.countUsers(searchObj)).thenReturn(500L);
         when(usersService.findAllUsersForExport(searchObj)).thenReturn(dtos);
 
