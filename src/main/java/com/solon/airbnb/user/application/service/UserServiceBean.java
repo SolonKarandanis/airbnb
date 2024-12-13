@@ -1,14 +1,28 @@
 package com.solon.airbnb.user.application.service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.mail.MailAuthenticationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.solon.airbnb.shared.exception.AirbnbException;
 import com.solon.airbnb.shared.exception.BusinessException;
 import com.solon.airbnb.shared.exception.NotFoundException;
-import com.solon.airbnb.user.application.dto.ReadUserDTO;
 import com.solon.airbnb.user.application.dto.CreateUserDTO;
+import com.solon.airbnb.user.application.dto.ReadUserDTO;
 import com.solon.airbnb.user.application.dto.UpdateUserDTO;
 import com.solon.airbnb.user.application.dto.UsersSearchRequestDTO;
 import com.solon.airbnb.user.application.event.UserRegistrationCompleteEvent;
-import com.solon.airbnb.user.application.utils.UserCsvExporter;
 import com.solon.airbnb.user.domain.AccountStatus;
 import com.solon.airbnb.user.domain.Authority;
 import com.solon.airbnb.user.domain.User;
@@ -16,21 +30,6 @@ import com.solon.airbnb.user.domain.VerificationToken;
 import com.solon.airbnb.user.repository.AuthorityRepository;
 import com.solon.airbnb.user.repository.UserRepository;
 import com.solon.airbnb.user.repository.UsersSpecification;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.mail.MailAuthenticationException;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
 
 @Service
 @Transactional(readOnly = true)
@@ -104,17 +103,15 @@ public class UserServiceBean extends BaseUserAccountServiceBean implements UserS
         return userRepository.count(new UsersSpecification(user));
     }
 
+    
     @Override
-    public byte[] exportUsersToCsv(UsersSearchRequestDTO searchObj) throws AirbnbException {
-        User user = new User();
+	public List<ReadUserDTO> findAllUsersForExport(UsersSearchRequestDTO searchObj) throws AirbnbException {
+    	User user = new User();
         BeanUtils.copyProperties(searchObj, user);
         user.setStatus(AccountStatus.valueOf(searchObj.getStatus()));
         List<User> users = userRepository.findAll(new UsersSpecification(user));
-        log.info("UserServiceBean --> exportUsersToCsv --> results: {}", users.size());
-        List<ReadUserDTO> dtos = convertToReadUserListDTO(users);
-        UserCsvExporter exporter = new UserCsvExporter(dtos);
-        return exporter.exportDataToByteArray();
-    }
+        return convertToReadUserListDTO(users);
+	}
 
 
     @Transactional(noRollbackFor = MailAuthenticationException.class)

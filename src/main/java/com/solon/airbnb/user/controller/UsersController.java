@@ -1,31 +1,40 @@
 package com.solon.airbnb.user.controller;
 
-import java.io.IOException;
 import java.util.List;
 
-import com.solon.airbnb.infrastructure.security.NoAuthentication;
-import com.solon.airbnb.shared.common.AirbnbConstants;
-import com.solon.airbnb.shared.exception.AirbnbException;
-import com.solon.airbnb.shared.exception.BusinessException;
-import com.solon.airbnb.shared.utils.HttpUtil;
-import com.solon.airbnb.user.application.dto.UpdateUserDTO;
-import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.solon.airbnb.infrastructure.security.NoAuthentication;
+import com.solon.airbnb.shared.common.AirbnbConstants;
 import com.solon.airbnb.shared.controller.GenericController;
 import com.solon.airbnb.shared.dto.SearchResults;
+import com.solon.airbnb.shared.exception.BusinessException;
 import com.solon.airbnb.shared.exception.NotFoundException;
-import com.solon.airbnb.user.application.dto.ReadUserDTO;
+import com.solon.airbnb.shared.utils.HttpUtil;
 import com.solon.airbnb.user.application.dto.CreateUserDTO;
+import com.solon.airbnb.user.application.dto.ReadUserDTO;
+import com.solon.airbnb.user.application.dto.UpdateUserDTO;
 import com.solon.airbnb.user.application.dto.UsersSearchRequestDTO;
+import com.solon.airbnb.user.application.utils.UserCsvExporter;
 import com.solon.airbnb.user.domain.User;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 
@@ -38,14 +47,18 @@ public class UsersController extends GenericController{
 	
 	
 	@GetMapping("/export/csv")
-    public ResponseEntity<byte[]> exportUsersToCsv(@RequestBody @Valid UsersSearchRequestDTO searchObj) throws BusinessException, AirbnbException {
+    public void exportUsersToCsv(@RequestBody @Valid UsersSearchRequestDTO searchObj, HttpServletResponse response) throws Exception {
 		Long resultsCount = usersService.countUsers(searchObj);
+		log.info("UsersController --> exportUsersToCsv --> results: {}", resultsCount);
 		if (resultsCount >= AirbnbConstants.MAX_RESULTS_CSV_EXPORT) {
 			throw new BusinessException("error.max.csv.results");
 		}
-		byte[] data = usersService.exportUsersToCsv(searchObj);
-		String fileName = "users-results.csv";
-		return HttpUtil.getByteArrayResponseFromFile(fileName, HttpUtil.MEDIA_TYPE_CSV, data);
+		response.setContentType(HttpUtil.MEDIA_TYPE_CSV);
+		response.setCharacterEncoding("UTF-8");
+		response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"users-results.csv\"");
+		List<ReadUserDTO> results = usersService.findAllUsersForExport(searchObj);
+		UserCsvExporter exporter= new UserCsvExporter(results, response);
+		exporter.exportData();
     }
 	
 	 @PostMapping("/search")

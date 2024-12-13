@@ -1,17 +1,19 @@
 package com.solon.airbnb.user.controller;
 
 
-import com.solon.airbnb.shared.dto.SearchResults;
-import com.solon.airbnb.shared.exception.AirbnbException;
-import com.solon.airbnb.shared.exception.BusinessException;
-import com.solon.airbnb.shared.exception.NotFoundException;
-import com.solon.airbnb.user.application.dto.*;
-import com.solon.airbnb.user.application.service.UserService;
-import com.solon.airbnb.user.domain.User;
-import com.solon.airbnb.util.TestConstants;
-import com.solon.airbnb.util.TestUtil;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,12 +26,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
-import java.util.List;
-import java.util.Optional;
+import com.solon.airbnb.shared.dto.SearchResults;
+import com.solon.airbnb.shared.exception.AirbnbException;
+import com.solon.airbnb.shared.exception.BusinessException;
+import com.solon.airbnb.shared.exception.NotFoundException;
+import com.solon.airbnb.user.application.dto.CreateUserDTO;
+import com.solon.airbnb.user.application.dto.ReadUserDTO;
+import com.solon.airbnb.user.application.dto.UpdateUserDTO;
+import com.solon.airbnb.user.application.dto.UserDTO;
+import com.solon.airbnb.user.application.dto.UsersSearchRequestDTO;
+import com.solon.airbnb.user.application.service.UserService;
+import com.solon.airbnb.user.domain.User;
+import com.solon.airbnb.util.TestConstants;
+import com.solon.airbnb.util.TestUtil;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @DisplayName("UsersControllerTest")
 @ExtendWith(MockitoExtension.class)
@@ -48,7 +60,7 @@ public class UsersControllerTest {
     protected Page<User> results;
 
     @Mock
-    List<ReadUserDTO> dtos;
+    protected List<ReadUserDTO> dtos;
 
     @Mock
     protected HttpServletResponse response;
@@ -80,7 +92,7 @@ public class UsersControllerTest {
         when(usersService.countUsers(searchObj)).thenReturn(11000L);
 
         BusinessException exception = assertThrows(BusinessException.class,()->{
-            controller.exportUsersToCsv(searchObj);
+            controller.exportUsersToCsv(searchObj,response);
         });
         assertEquals("error.max.csv.results",exception.getLocalizedMessage());
 
@@ -89,19 +101,15 @@ public class UsersControllerTest {
 
     @DisplayName("Export to csv")
     @Test
-    void testExportUsersToCsv02() throws AirbnbException, BusinessException {
+    void testExportUsersToCsv02() throws Exception {
         UsersSearchRequestDTO searchObj = TestUtil.generateUsersSearchRequestDTO();
         when(usersService.countUsers(searchObj)).thenReturn(500L);
-        when(usersService.exportUsersToCsv(searchObj)).thenReturn(TestConstants.TEST_FILE_CONTENT);
+        when(usersService.findAllUsersForExport(searchObj)).thenReturn(dtos);
 
-        ResponseEntity<byte[]> resp = controller.exportUsersToCsv(searchObj);
-        assertNotNull(resp);
-        assertNotNull(resp.getBody());
-        assertEquals(resp.getBody(),TestConstants.TEST_FILE_CONTENT);
-        assertTrue(resp.getStatusCode().isSameCodeAs(HttpStatus.OK));
+        controller.exportUsersToCsv(searchObj,response);
 
         verify(usersService,times(1)).countUsers(searchObj);
-        verify(usersService,times(1)).exportUsersToCsv(searchObj);
+        verify(usersService,times(1)).findAllUsersForExport(searchObj);
     }
 
     @DisplayName("Find All Users")
