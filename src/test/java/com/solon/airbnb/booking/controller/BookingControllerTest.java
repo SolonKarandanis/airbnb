@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -67,7 +68,8 @@ public class BookingControllerTest {
     }
 
     @DisplayName("Create Booking")
-//    @Test
+    @Test
+    @Disabled("Not working")
     void testCreateBooking() throws AirbnbException {
         NewBookingDTO dto = TestUtil.generateNewBookingDTO();
         OffsetDateTime startDate = OffsetDateTime.now(ZoneOffset.UTC);
@@ -120,7 +122,8 @@ public class BookingControllerTest {
     }
     
     @DisplayName("Get Tenant Booking Listings")
-//    @Test
+    @Test
+    @Disabled("Not working")
     void testCancelBooking() throws AirbnbException {
     	String id = TestConstants.TEST_USER_PUBLIC_ID;
     	when(authentication.getPrincipal()).thenReturn(userDto);
