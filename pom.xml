@@ -140,6 +140,11 @@
 			<version>${test-containers.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>test</scope>
+		</dependency>
 		
 		<!-- Utility Dependencies Start-->
 		<dependency>
