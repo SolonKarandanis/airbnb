@@ -68,7 +68,7 @@ public class DatasourceConfiguration {
     @Bean
     @Primary
     @ConfigurationProperties("spring.datasource")
-    public DataSourceProperties dutDatasourceProperties(){
+    public DataSourceProperties dataSourceProperties(){
         return new DataSourceProperties();
     }
     
@@ -76,8 +76,8 @@ public class DatasourceConfiguration {
     @Primary
     //spring.datasource.configuration
     @ConfigurationProperties("spring.datasource.hikari")
-    public HikariDataSource dutDatasource(){
-        HikariDataSource datasource = dutDatasourceProperties()
+    public HikariDataSource datasource(){
+        HikariDataSource datasource = dataSourceProperties()
                 .initializeDataSourceBuilder()
                 .type(HikariDataSource.class)
                 .build();
@@ -95,7 +95,7 @@ public class DatasourceConfiguration {
     @Bean(name = "airbnbManagerFactory")
     public LocalContainerEntityManagerFactoryBean dutManagerFactory(EntityManagerFactoryBuilder builder){
         return builder
-                .dataSource(dutDatasource())
+                .dataSource(datasource())
                 .packages(ENTITY_CLASSES)
                 .build();
     }
