@@ -107,5 +107,4 @@ public class WebSecurityConfiguration {
     public WebSecurityCustomizer webSecurityCustomizer(){
         return web -> web.ignoring().requestMatchers(noAuthenticationRequestMatcher);
     }
-
 }
